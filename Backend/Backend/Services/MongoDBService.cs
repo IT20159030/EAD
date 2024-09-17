@@ -25,5 +25,5 @@ public class MongoDBService
     _database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
   }
 
-  public IMongoDatabase? Database => _database;
+  public IMongoDatabase Database => _database;
 }

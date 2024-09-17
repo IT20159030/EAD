@@ -19,10 +19,10 @@ public class UserController : ControllerBase
 {
   private readonly ILogger<UserController> _logger;
   private readonly IMongoCollection<User> _users;
-  public UserController(ILogger<UserController> logger, MongoDBService mongoDbService)
+  public UserController(ILogger<UserController> logger, MongoDBService mongoDBService)
   {
     _logger = logger;
-    _users = mongoDbService.Database?.GetCollection<User>("TEST_USERS") ?? throw new InvalidOperationException("Cannot read MongoDB connection settings");
+    _users = mongoDBService.Database.GetCollection<User>("TEST_USERS");
   }
 
   [HttpGet(Name = "GetUsers")]
