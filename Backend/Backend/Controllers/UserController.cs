@@ -4,9 +4,8 @@
 * It contains the CRUD operations for the User model.
 */
 
-using System.Security.Claims;
 using Backend.Models;
-using Backend.Services;
+using Backend.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -30,10 +29,6 @@ public class UserController : ControllerBase
   [HttpGet(Name = "GetUsers")]
   public async Task<IEnumerable<User>> Get()
   {
-    // Get the identity of the user making the request
-    var identity = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    _logger.LogInformation($"User {identity} is requesting all users");
-
     return await _users.Find(new BsonDocument()).ToListAsync();
   }
 
