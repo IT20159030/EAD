@@ -3,6 +3,7 @@ using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using Backend.Models;
 using Backend.Services;
+using Backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -42,10 +43,15 @@ var mongoDBIdentityConfiguration = new MongoDbIdentityConfiguration
     }
 };
 
-builder.Services.ConfigureMongoDbIdentity<WebApplicationUser, ApplicationRole, Guid>(mongoDBIdentityConfiguration)
-    .AddUserManager<UserManager<WebApplicationUser>>()
-    .AddSignInManager<SignInManager<WebApplicationUser>>()
+builder.Services.ConfigureMongoDbIdentity<WebUser, ApplicationRole, Guid>(mongoDBIdentityConfiguration)
+    .AddUserManager<UserManager<WebUser>>()
+    .AddSignInManager<SignInManager<WebUser>>()
     .AddRoleManager<RoleManager<ApplicationRole>>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureMongoDbIdentity<Customer, ApplicationRole, Guid>(mongoDBIdentityConfiguration)
+    .AddUserManager<UserManager<Customer>>()
+    .AddSignInManager<SignInManager<Customer>>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(x =>
@@ -76,6 +82,10 @@ builder.Services.AddSwaggerGen();
 
 // MARK: - MongoDB Service
 builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddScoped<WebUserAuthService>();
+builder.Services.AddScoped<MobileUserAuthService>();
+
+
 
 var app = builder.Build();
 
