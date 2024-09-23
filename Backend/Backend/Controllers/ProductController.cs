@@ -32,10 +32,46 @@ public class ProductController : ControllerBase
         return await _products.Find(new BsonDocument()).ToListAsync();
     }
 
+    [HttpGet("active", Name = "GetActiveProducts")]
+    public async Task<IEnumerable<Product>> GetActive()
+    {
+        return await _products.Find(p => p.IsActive).ToListAsync();
+    }
+
     [HttpGet("{id}", Name = "GetProduct")]
     public async Task<Product> Get(string id)
     {
         return await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
+    }
+
+    [HttpGet("vendor/{vendorId}", Name = "GetProductsByVendor")]
+    public async Task<IEnumerable<Product>> GetByVendor(string vendorId)
+    {
+        return await _products.Find(p => p.VendorId == vendorId).ToListAsync();
+    }
+
+    [HttpGet("vendor/{vendorId}/active", Name = "GetActiveProductsByVendor")]
+    public async Task<IEnumerable<Product>> GetActiveByVendor(string vendorId)
+    {
+        return await _products.Find(p => p.VendorId == vendorId && p.IsActive).ToListAsync();
+    }
+
+    [HttpGet("vendor/{vendorId}/inactive", Name = "GetInactiveProductsByVendor")]
+    public async Task<IEnumerable<Product>> GetInactiveByVendor(string vendorId)
+    {
+        return await _products.Find(p => p.VendorId == vendorId && !p.IsActive).ToListAsync();
+    }
+
+    [HttpGet("category/{categoryId}/active", Name = "GetActiveProductsByCategory")]
+    public async Task<IEnumerable<Product>> GetActiveByCategory(string categoryId)
+    {
+        return await _products.Find(p => p.Category == categoryId && p.IsActive).ToListAsync();
+    }
+
+    [HttpGet("search", Name = "SearchProducts")]
+    public async Task<IEnumerable<Product>> Search([FromQuery] string query)
+    {
+        return await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
     }
 
     [HttpPut("{id}", Name = "UpdateProduct")]

@@ -12,6 +12,10 @@ public class Product
     [BsonElement("name")]
     public required string Name { get; set; }
 
+    [BsonElement("category")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public required string Category { get; set; }
+
     [BsonElement("description")]
     public required string Description { get; set; }
 
