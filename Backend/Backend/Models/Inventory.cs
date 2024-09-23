@@ -16,6 +16,9 @@ public class Inventory
     [BsonElement("quantity")]
     public required int Quantity { get; set; }
 
+    [BsonElement("alertThreshold")]
+    public int AlertThreshold { get; set; } = 10;
+
     [BsonElement("lowStockAlert")]
     public bool LowStockAlert { get; set; } = false;
 }
