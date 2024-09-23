@@ -5,16 +5,17 @@
 */
 
 using Backend.Models;
-using Backend.Services;
+using Backend.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Backend.Controllers;
 
-
+[Authorize(Roles = "admin")]
 [ApiController]
-[Route("[controller]")]
+[Route("api/v1/[controller]")]
 public class UserController : ControllerBase
 {
   private readonly ILogger<UserController> _logger;
@@ -28,15 +29,19 @@ public class UserController : ControllerBase
   [HttpGet(Name = "GetUsers")]
   public async Task<IEnumerable<User>> Get()
   {
-    _logger.LogInformation("Getting users");
     return await _users.Find(new BsonDocument()).ToListAsync();
   }
 
   [HttpPost(Name = "CreateUser")]
   public async Task<IActionResult> Post([FromBody] User user)
   {
+
+
+
     await _users.InsertOneAsync(user);
     return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+
+
   }
 
   [HttpPut(Name = "UpdateUser")]

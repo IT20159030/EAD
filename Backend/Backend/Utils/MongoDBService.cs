@@ -2,7 +2,7 @@
 
 using MongoDB.Driver;
 
-namespace Backend.Services;
+namespace Backend.Utils;
 public class MongoDBService
 {
   private readonly IConfiguration _configuration;
