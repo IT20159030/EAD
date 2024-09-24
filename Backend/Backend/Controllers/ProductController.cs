@@ -9,7 +9,7 @@ using MongoDB.Driver;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     [Authorize]
     public class ProductController : ControllerBase
     {
