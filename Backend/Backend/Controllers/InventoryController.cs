@@ -1,66 +1,134 @@
 using Backend.Models;
-using Backend.Services;
+using Backend.Dtos;
+using Backend.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using MongoDB.Bson; 
+using MongoDB.Bson;
 
-namespace Backend.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class InventoryController : ControllerBase
+namespace Backend.Controllers
 {
-    private readonly IMongoCollection<Inventory> _inventory;
-    private readonly IMongoCollection<Product>? _products;
-    private readonly ILogger<InventoryController> _logger;
-
-    public InventoryController(ILogger<InventoryController> logger, MongoDBService mongoDBService)
+    [Authorize]
+    [ApiController]
+    [Route("api/v1/[controller]")]
+    public class InventoryController : ControllerBase
     {
-        _logger = logger;
-        _inventory = mongoDBService.Database.GetCollection<Inventory>("Inventory");
-    }
+        private readonly IMongoCollection<Inventory> _inventory;
+        private readonly IMongoCollection<Product>? _products;
+        private readonly ILogger<InventoryController> _logger;
 
-    [HttpPost(Name = "AddInventoryByProductId")]
-    public async Task<IActionResult> Post([FromBody] Inventory inventory)
-    {
-        var product = await _products.Find(p => p.Id == inventory.ProductId).FirstOrDefaultAsync();
-        if (product == null)
+        public InventoryController(ILogger<InventoryController> logger, MongoDBService mongoDBService)
         {
-            return BadRequest("Invalid ProductId: Product does not exist.");
+            _logger = logger;
+            _inventory = mongoDBService.Database.GetCollection<Inventory>("Inventory");
+            _products = mongoDBService.Database.GetCollection<Product>("Product");
         }
 
-        await _inventory.InsertOneAsync(inventory);
-        return CreatedAtAction(nameof(Get), new { id = inventory.Id }, inventory);
+        [HttpPost(Name = "AddInventoryByProductId")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Post([FromBody] AddInventoryByProductIdDto dto)
+        {
+            var product = await _products.Find(p => p.Id == dto.ProductId).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                return BadRequest("Invalid ProductId: Product does not exist.");
+            }
+
+            var inventory = new Inventory
+            {
+                ProductId = dto.ProductId,
+                Quantity = dto.Quantity,
+                AlertThreshold = dto.AlertThreshold
+            };
+
+            await _inventory.InsertOneAsync(inventory);
+
+            var responseDto = new InventoryDto
+            {
+                Id = inventory.Id!,
+                ProductId = inventory.ProductId,
+                Quantity = inventory.Quantity,
+                AlertThreshold = inventory.AlertThreshold,
+                LowStockAlert = inventory.LowStockAlert
+            };
+
+            return CreatedAtAction(nameof(Get), new { id = inventory.Id }, responseDto);
+        }
+
+        [HttpGet(Name = "GetAllInventories")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IEnumerable<InventoryDto>> Get()
+        {
+            var inventories = await _inventory.Find(new BsonDocument()).ToListAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                Id = i.Id!,
+                ProductId = i.ProductId,
+                Quantity = i.Quantity,
+                AlertThreshold = i.AlertThreshold,
+                LowStockAlert = i.LowStockAlert
+            });
+        }
+
+        [HttpGet("{id}", Name = "GetInventoryById")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var inventory = await _inventory.Find(i => i.Id == id).FirstOrDefaultAsync();
+            if (inventory == null) return NotFound();
+
+            var responseDto = new InventoryDto
+            {
+                Id = inventory.Id!,
+                ProductId = inventory.ProductId,
+                Quantity = inventory.Quantity,
+                AlertThreshold = inventory.AlertThreshold,
+                LowStockAlert = inventory.LowStockAlert
+            };
+
+            return Ok(responseDto);
+        }
+
+        [HttpGet("product/{productId}", Name = "GetInventoryByProductId")]
+        public async Task<IEnumerable<InventoryDto>> GetByProductId(string productId)
+        {
+            var inventories = await _inventory.Find(i => i.ProductId == productId).ToListAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                Id = i.Id!,
+                ProductId = i.ProductId,
+                Quantity = i.Quantity,
+                AlertThreshold = i.AlertThreshold,
+                LowStockAlert = i.LowStockAlert
+            });
+        }
+
+        [HttpPut("{id}", Name = "UpdateInventoryById")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Put(string id, [FromBody] UpdateInventoryByProductIdDto dto)
+        {
+            var existingInventory = await _inventory.Find(i => i.Id == id).FirstOrDefaultAsync();
+            if (existingInventory == null) return NotFound();
+
+            var update = Builders<Inventory>.Update
+                .Set(i => i.Quantity, dto.Quantity)
+                .Set(i => i.AlertThreshold, dto.AlertThreshold);
+
+            var result = await _inventory.UpdateOneAsync(i => i.Id == id, update);
+            if (result.ModifiedCount == 0) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/lowStockAlert", Name = "SetLowStockAlert")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> SetLowStockAlert(string id, [FromBody] SetLowStockAlertDto dto)
+        {
+            var update = Builders<Inventory>.Update.Set(i => i.LowStockAlert, dto.LowStockAlert);
+            var result = await _inventory.UpdateOneAsync(i => i.Id == id, update);
+            if (result.ModifiedCount == 0) return NotFound();
+
+            return NoContent();
+        }
     }
-
-    [HttpGet(Name = "GetInventoryByProductId")]
-    public async Task<IEnumerable<Inventory>> Get(string productId)
-    {
-        return await _inventory.Find(i => i.ProductId == productId).ToListAsync();
-    }
-
-
-    [HttpPut("{id}", Name = "UpdateInventoryByProductId")]
-    public async Task<IActionResult> Put(string id, [FromBody] Inventory inventory)
-    {
-        await _inventory.ReplaceOneAsync(i => i.Id == id, inventory);
-        return NoContent();
-    }
-
-    [HttpDelete("{id}", Name = "DeleteInventoryByProductId")]
-    public async Task<IActionResult> Delete(string id)
-    {
-        await _inventory.DeleteOneAsync(i => i.Id == id);
-        return NoContent();
-    }
-
-    [HttpPut("{id}/lowStockAlert", Name = "SetLowStockAlert")]
-    public async Task<IActionResult> SetLowStockAlert(string id, bool lowStockAlert)
-    {
-        var update = Builders<Inventory>.Update.Set(i => i.LowStockAlert, lowStockAlert);
-        await _inventory.UpdateOneAsync(i => i.Id == id, update);
-        return NoContent();
-    }
-
 }
-    

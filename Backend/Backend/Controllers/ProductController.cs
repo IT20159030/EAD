@@ -1,106 +1,168 @@
+using Backend.Dtos;
 using Backend.Models;
-using Backend.Services;
+using Backend.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
-namespace Backend.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class ProductController : ControllerBase
+namespace Backend.Controllers
 {
-    private readonly IMongoCollection<Product> _products;
-    private readonly ILogger<ProductController> _logger;
-
-    public ProductController(ILogger<ProductController> logger, MongoDBService mongoDBService)
+    [ApiController]
+    [Route("[controller]")]
+    [Authorize]
+    public class ProductController : ControllerBase
     {
-        _logger = logger;
-        _products = mongoDBService.Database.GetCollection<Product>("Products");
-    }
+        private readonly IMongoCollection<Product> _products;
+        private readonly ILogger<ProductController> _logger;
 
-    [HttpPost(Name = "CreateProduct")]
-    public async Task<IActionResult> Post([FromBody] Product product)
-    {
-        await _products.InsertOneAsync(product);
-        return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
-    }
+        public ProductController(ILogger<ProductController> logger, MongoDBService mongoDBService)
+        {
+            _logger = logger;
+            _products = mongoDBService.Database.GetCollection<Product>("Products");
+        }
 
-    [HttpGet(Name = "GetAllProducts")]
-    public async Task<IEnumerable<Product>> Get()
-    {
-        return await _products.Find(new BsonDocument()).ToListAsync();
-    }
+        private ProductDto ConvertToDto(Product product) => new ProductDto
+        {
+            Id = product.Id!,
+            Name = product.Name,
+            Category = product.Category,
+            Description = product.Description,
+            Price = product.Price,
+            IsActive = product.IsActive,
+            VendorId = product.VendorId
+        };
 
-    [HttpGet("active", Name = "GetActiveProducts")]
-    public async Task<IEnumerable<Product>> GetActive()
-    {
-        return await _products.Find(p => p.IsActive).ToListAsync();
-    }
+        private Product ConvertToModel(CreateProductRequestDto dto) => new Product
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Name = dto.Name,
+            Category = dto.Category,
+            Description = dto.Description,
+            Price = dto.Price,
+            IsActive = true,
+            VendorId = dto.VendorId
+        };
 
-    [HttpGet("{id}", Name = "GetProduct")]
-    public async Task<Product> Get(string id)
-    {
-        return await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
-    }
 
-    [HttpGet("vendor/{vendorId}", Name = "GetProductsByVendor")]
-    public async Task<IEnumerable<Product>> GetByVendor(string vendorId)
-    {
-        return await _products.Find(p => p.VendorId == vendorId).ToListAsync();
-    }
+        private Product ConvertToModel(UpdateProductRequestDto dto) => new Product
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Category = dto.Category,
+            Description = dto.Description,
+            Price = dto.Price,
+            IsActive = dto.IsActive,
+            VendorId = dto.VendorId
+        };
 
-    [HttpGet("vendor/{vendorId}/active", Name = "GetActiveProductsByVendor")]
-    public async Task<IEnumerable<Product>> GetActiveByVendor(string vendorId)
-    {
-        return await _products.Find(p => p.VendorId == vendorId && p.IsActive).ToListAsync();
-    }
+        [HttpPost(Name = "CreateProduct")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Post([FromBody] CreateProductRequestDto dto)
+        {
+            var product = ConvertToModel(dto);
+            await _products.InsertOneAsync(product);
+            return CreatedAtAction(nameof(Get), new { id = product.Id }, ConvertToDto(product));
+        }
 
-    [HttpGet("vendor/{vendorId}/inactive", Name = "GetInactiveProductsByVendor")]
-    public async Task<IEnumerable<Product>> GetInactiveByVendor(string vendorId)
-    {
-        return await _products.Find(p => p.VendorId == vendorId && !p.IsActive).ToListAsync();
-    }
+        [HttpGet(Name = "GetAllProducts")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IEnumerable<ProductDto>> Get()
+        {
+            var products = await _products.Find(new BsonDocument()).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
 
-    [HttpGet("category/{categoryId}/active", Name = "GetActiveProductsByCategory")]
-    public async Task<IEnumerable<Product>> GetActiveByCategory(string categoryId)
-    {
-        return await _products.Find(p => p.Category == categoryId && p.IsActive).ToListAsync();
-    }
+        [HttpGet("active", Name = "GetActiveProducts")]
+        public async Task<IEnumerable<ProductDto>> GetActive()
+        {
+            var products = await _products.Find(p => p.IsActive).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
 
-    [HttpGet("search", Name = "SearchProducts")]
-    public async Task<IEnumerable<Product>> Search([FromQuery] string query)
-    {
-        return await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
-    }
+        [HttpGet("{id}", Name = "GetProduct")]
+        public async Task<ActionResult<ProductDto>> Get(string id)
+        {
+            var product = await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
+            if (product == null)
+                return NotFound();
+            return Ok(ConvertToDto(product));
+        }
 
-    [HttpPut("{id}", Name = "UpdateProduct")]
-    public async Task<IActionResult> Put(string id, [FromBody] Product product)
-    {
-        await _products.ReplaceOneAsync(p => p.Id == id, product);
-        return NoContent();
-    }
+        [HttpGet("vendor/{vendorId}", Name = "GetProductsByVendor")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IEnumerable<ProductDto>> GetByVendor(string vendorId)
+        {
+            var products = await _products.Find(p => p.VendorId == vendorId).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
 
-    [HttpDelete("{id}", Name = "DeleteProduct")]
-    public async Task<IActionResult> Delete(string id)
-    {
-        await _products.DeleteOneAsync(p => p.Id == id);
-        return NoContent();
-    }
+        [HttpGet("vendor/{vendorId}/active", Name = "GetActiveProductsByVendor")]
+        public async Task<IEnumerable<ProductDto>> GetActiveByVendor(string vendorId)
+        {
+            var products = await _products.Find(p => p.VendorId == vendorId && p.IsActive).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
 
-    [HttpPut("{id}/activate", Name = "ActivateProduct")]
-    public async Task<IActionResult> Activate(string id)
-    {
-        var update = Builders<Product>.Update.Set(p => p.IsActive, true);
-        await _products.UpdateOneAsync(p => p.Id == id, update);
-        return NoContent();
-    }
+        [HttpGet("vendor/{vendorId}/inactive", Name = "GetInactiveProductsByVendor")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IEnumerable<ProductDto>> GetInactiveByVendor(string vendorId)
+        {
+            var products = await _products.Find(p => p.VendorId == vendorId && !p.IsActive).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
 
-    [HttpPut("{id}/deactivate", Name = "DeactivateProduct")]
-    public async Task<IActionResult> Deactivate(string id)
-    {
-        var update = Builders<Product>.Update.Set(p => p.IsActive, false);
-        await _products.UpdateOneAsync(p => p.Id == id, update);
-        return NoContent();
+        [HttpGet("category/{categoryId}/active", Name = "GetActiveProductsByCategory")]
+        public async Task<IEnumerable<ProductDto>> GetActiveByCategory(string categoryId)
+        {
+            var products = await _products.Find(p => p.Category == categoryId && p.IsActive).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
+
+        [HttpGet("search", Name = "SearchProducts")]
+        public async Task<IEnumerable<ProductDto>> Search([FromQuery] string query)
+        {
+            var products = await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
+            return products.Select(ConvertToDto);
+        }
+
+        [HttpPut("{id}", Name = "UpdateProduct")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Put(string id, [FromBody] UpdateProductRequestDto dto)
+        {
+            var existingProduct = await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
+            if (existingProduct == null)
+                return NotFound();
+
+            var updatedProduct = ConvertToModel(dto);
+            await _products.ReplaceOneAsync(p => p.Id == id, updatedProduct);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}", Name = "DeleteProduct")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _products.DeleteOneAsync(p => p.Id == id);
+            return NoContent();
+        }
+
+        [HttpPut("{id}/activate", Name = "ActivateProduct")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Activate(string id)
+        {
+            var update = Builders<Product>.Update.Set(p => p.IsActive, true);
+            await _products.UpdateOneAsync(p => p.Id == id, update);
+            return NoContent();
+        }
+
+        [HttpPut("{id}/deactivate", Name = "DeactivateProduct")]
+        [Authorize(Roles = "Admin, Vendor")]
+        public async Task<IActionResult> Deactivate(string id)
+        {
+            var update = Builders<Product>.Update.Set(p => p.IsActive, false);
+            await _products.UpdateOneAsync(p => p.Id == id, update);
+            return NoContent();
+        }
     }
 }
