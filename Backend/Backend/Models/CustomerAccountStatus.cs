@@ -1,6 +1,6 @@
 namespace Backend.Models
 {
-    public enum CustomerAccountStatus
+    public enum AccountStatus
     {
         Unapproved,
         Active,

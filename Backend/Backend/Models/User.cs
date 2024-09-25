@@ -1,27 +1,17 @@
-using MongoDB.Bson;
+using System;
+using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Text.Json.Serialization;
-
 namespace Backend.Models;
-public class User
+public class User : MongoIdentityUser<Guid>
 {
-  [BsonId]
-  [BsonRepresentation(BsonType.ObjectId)]
-  public string? Id { get; set; }
+  public string Name { get; set; } = string.Empty;
 
-  [BsonElement("name")]
-  public required string Name { get; set; }
+  public AccountStatus Status { get; set; } = AccountStatus.Unapproved;
 
-  [BsonElement("email")]
-  public required string Email { get; set; }
+  [BsonElement("createdAt")]
+  public DateTime CreatedAt { get; set; }
 
-  [BsonElement("password")]
-  public required string Password { get; set; }
-
-  [BsonElement("role")]
-  public required string Role { get; set; }
-
-  [BsonElement("status")]
-  public required string Status { get; set; }
-
+  [BsonElement("updatedAt")]
+  public DateTime UpdatedAt { get; set; }
 }
+

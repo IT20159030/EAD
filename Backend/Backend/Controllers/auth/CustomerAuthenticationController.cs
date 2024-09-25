@@ -16,16 +16,16 @@ namespace Backend.Controllers;
 [Produces("application/json")]
 public class CustomerAuthenticationController : ControllerBase
 {
-  private readonly ILogger<UserController> _logger;
+  private readonly ILogger<CustomerAuthenticationController> _logger;
   private readonly IConfiguration _configuration;
-  private readonly MobileUserAuthService _webUserAuthService;
+  private readonly MobileUserAuthService _userAuthService;
 
 
-  public CustomerAuthenticationController(ILogger<UserController> logger, IConfiguration configuration, MobileUserAuthService webUserAuthService)
+  public CustomerAuthenticationController(ILogger<CustomerAuthenticationController> logger, IConfiguration configuration, MobileUserAuthService userAuthService)
   {
     _logger = logger;
     _configuration = configuration;
-    _webUserAuthService = webUserAuthService;
+    _userAuthService = userAuthService;
   }
 
 
@@ -36,7 +36,7 @@ public class CustomerAuthenticationController : ControllerBase
   {
     try
     {
-      var result = await _webUserAuthService.LoginAsync(loginRequest.Email, loginRequest.Password);
+      var result = await _userAuthService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
       return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
     }
@@ -52,12 +52,12 @@ public class CustomerAuthenticationController : ControllerBase
 
 
   [HttpPost("register", Name = "Mobile Register")]
-  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(CreateRoleResponse))]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MRegisterResponse))]
   public async Task<IActionResult> Register([FromBody] MRegisterRequest registerRequest)
   {
     try
     {
-      var result = await _webUserAuthService.RegisterUserAsync(registerRequest);
+      var result = await _userAuthService.RegisterUserAsync(registerRequest);
 
       return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
     }
