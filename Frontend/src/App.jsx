@@ -1,36 +1,51 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Navbar from "./components/common/Navbar/Navbar";
+import Sidebar from "./components/common/Sidebar/Sidebar";
 import "./App.css";
-import Button from "react-bootstrap/Button";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      refetchOnWindowFocus: false,
+      staleTime: 300000,
+      onError: (error) => {
+        console.error("Error fetching data:", error);
+      },
+    },
+    mutations: {
+      onError: (error) => {
+        console.error("Error performing mutation:", error);
+      },
+    },
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <Button>Bootstap button</Button>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className="app-container">
+          <Sidebar />
+          <div className="main-content">
+            <Navbar />
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+            </main>
+          </div>
+        </div>
+      </Router>
+      {/* <Footer /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

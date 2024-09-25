@@ -1,0 +1,98 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--tertiary-color);
+  height: 70px;
+  padding: 0 20px;
+  color: var(--text-color);
+  position: relative;
+}
+
+.notification-overlay,
+.avatar-menu-overlay {
+  background-color: var(--tertiary-color);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 1000;
+}
+
+.notification-overlay {
+  width: 350px;
+  top: 70px;
+  right: 60px;
+  padding: 10px;
+}
+
+.avatar-menu-overlay {
+  width: 150px;
+  top: 70px;
+  right: 20px;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 24px;
+  margin-left: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.icon:hover {
+  color: var(--primary-color);
+}
+
+.notification-item {
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.avatar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.avatar-menu-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.notification-link {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.avatar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.item-title {
+  margin-left: 10px;
+}
+
+.details {
+  display: block;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.role {
+  font-size: 12px;
+}
