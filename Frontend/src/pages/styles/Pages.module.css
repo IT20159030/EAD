@@ -1,0 +1,53 @@
+.container {
+  margin-top: 2rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table {
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.actionGap {
+  margin-right: 1rem;
+}
+
+.pageActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.search {
+  background-color: var(--tertiary-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  border: 1px solid #ced4da;
+  width: 250px;
+  margin-right: 1rem;
+}
+
+.btn-download {
+  margin: 0;
+}
+
+th,
+td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 1.5rem;
+}

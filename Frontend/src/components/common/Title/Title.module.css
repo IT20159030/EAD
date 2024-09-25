@@ -1,0 +1,26 @@
+.commonTitle {
+  margin-bottom: 1.5rem;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 1rem 0;
+}

@@ -9,8 +9,8 @@
   position: relative;
 }
 
-.notification-overlay,
-.avatar-menu-overlay {
+.notificationOverlay,
+.avatarMenuOverlay {
   background-color: var(--tertiary-color);
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -19,20 +19,20 @@
   z-index: 1000;
 }
 
-.notification-overlay {
+.notificationOverlay {
   width: 350px;
   top: 70px;
   right: 60px;
   padding: 10px;
 }
 
-.avatar-menu-overlay {
+.avatarMenuOverlay {
   width: 150px;
   top: 70px;
   right: 20px;
 }
 
-.navbar-actions {
+.navbarActions {
   display: flex;
   align-items: center;
 }
@@ -48,12 +48,12 @@
   color: var(--primary-color);
 }
 
-.notification-item {
+.notificationItem {
   margin-bottom: 10px;
   text-decoration: none;
 }
 
-.avatar-menu-item {
+.avatarMenuItem {
   display: flex;
   align-items: center;
   padding: 5px;
@@ -61,16 +61,16 @@
   text-decoration: none;
 }
 
-.avatar-menu-item:hover {
+.avatarMenuItem:hover {
   background-color: var(--secondary-color);
 }
 
-.notification-link {
+.notificationLink {
   color: var(--text-color);
   text-decoration: none;
 }
 
-.avatar-link {
+.avatarLink {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,7 +78,7 @@
   text-decoration: none;
 }
 
-.item-title {
+.itemTitle {
   margin-left: 10px;
 }
 
