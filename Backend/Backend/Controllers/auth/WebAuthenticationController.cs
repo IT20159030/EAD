@@ -15,13 +15,13 @@ namespace Backend.Controllers;
 [Route("api/v1/web-auth")]
 public class WebAuthenticationController : ControllerBase
 {
-  private readonly ILogger<UserController> _logger;
-  private readonly WebUserAuthService _webUserAuthService;
+  private readonly ILogger<WebAuthenticationController> _logger;
+  private readonly WebUserAuthService _userAuthService;
 
-  public WebAuthenticationController(ILogger<UserController> logger, IConfiguration configuration, WebUserAuthService webUserAuthService)
+  public WebAuthenticationController(ILogger<WebAuthenticationController> logger, WebUserAuthService userAuthService)
   {
     _logger = logger;
-    _webUserAuthService = webUserAuthService;
+    _userAuthService = userAuthService;
   }
 
   [HttpPost("login", Name = "Login")]
@@ -30,7 +30,7 @@ public class WebAuthenticationController : ControllerBase
   {
     try
     {
-      var result = await _webUserAuthService.LoginAsync(loginRequest.Email, loginRequest.Password);
+      var result = await _userAuthService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
       return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
     }
@@ -41,20 +41,5 @@ public class WebAuthenticationController : ControllerBase
     }
   }
 
-  [HttpPost("register", Name = "Register")]
-  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(CreateRoleResponse))]
-  public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
-  {
-    try
-    {
-      var result = await _webUserAuthService.RegisterUserAsync(registerRequest);
 
-      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Error registering user");
-      return BadRequest(ex.Message);
-    }
-  }
 }

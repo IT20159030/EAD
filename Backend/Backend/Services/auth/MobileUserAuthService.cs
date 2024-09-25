@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services;
-public class WebUserAuthService : IWebUserAuthService
+public class MobileUserAuthService : IMobileUserAuthService
 {
-  private readonly UserManager<WebUser> _userManager;
+  private readonly UserManager<User> _userManager;
   private readonly IConfiguration _configuration;
 
-  public WebUserAuthService(UserManager<WebUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
+  public MobileUserAuthService(UserManager<User> userManager, IConfiguration configuration)
   {
     _userManager = userManager;
     _configuration = configuration;
@@ -23,19 +23,19 @@ public class WebUserAuthService : IWebUserAuthService
 
 
 
-  public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request)
+  public async Task<MRegisterResponse> RegisterUserAsync(MRegisterRequest request)
   {
     var user = await _userManager.FindByEmailAsync(request.Email);
     if (user != null)
     {
-      return new RegisterResponse
+      return new MRegisterResponse
       {
         IsSuccess = false,
         Message = "User already exists"
       };
     }
 
-    var newUser = new WebUser
+    var newUser = new User
     {
       Name = request.Name,
       Email = request.Email,
@@ -49,24 +49,24 @@ public class WebUserAuthService : IWebUserAuthService
 
     if (!result.Succeeded)
     {
-      return new RegisterResponse
+      return new MRegisterResponse
       {
         IsSuccess = false,
         Message = $"User creation failed: {result.Errors.FirstOrDefault()?.Description}"
       };
     }
 
-    var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
+    var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, "customer");
     if (!addUserToRoleResult.Succeeded)
     {
-      return new RegisterResponse
+      return new MRegisterResponse
       {
         IsSuccess = false,
         Message = $"User creation failed: {addUserToRoleResult.Errors.FirstOrDefault()?.Description}"
       };
     }
 
-    return new RegisterResponse
+    return new MRegisterResponse
     {
       IsSuccess = result.Succeeded,
       Message = "User created successfully"
@@ -85,6 +85,16 @@ public class WebUserAuthService : IWebUserAuthService
         Message = "Invalid email or password"
       };
     }
+
+    if (user.Status == AccountStatus.Unapproved || user.Status == AccountStatus.Deactivated || user.Status == AccountStatus.Rejected)
+    {
+      return new LoginResponse
+      {
+        IsSuccess = false,
+        Message = user.Status == AccountStatus.Unapproved ? "Account not approved" : user.Status == AccountStatus.Deactivated ? "Account deactivated" : "Account rejected"
+      };
+    }
+
 
     var claims = new List<Claim>
   {
@@ -120,5 +130,6 @@ public class WebUserAuthService : IWebUserAuthService
     };
 
   }
+
 
 }

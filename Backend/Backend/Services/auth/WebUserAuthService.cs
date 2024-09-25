@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services;
-public class MobileUserAuthService : IMobileUserAuthService
+public class WebUserAuthService : IWebUserAuthService
 {
-  private readonly UserManager<Customer> _userManager;
+  private readonly UserManager<User> _userManager;
   private readonly IConfiguration _configuration;
 
-  public MobileUserAuthService(UserManager<Customer> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
+  public WebUserAuthService(UserManager<User> userManager, IConfiguration configuration)
   {
     _userManager = userManager;
     _configuration = configuration;
@@ -23,25 +23,26 @@ public class MobileUserAuthService : IMobileUserAuthService
 
 
 
-  public async Task<MRegisterResponse> RegisterUserAsync(MRegisterRequest request)
+  public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request)
   {
     var user = await _userManager.FindByEmailAsync(request.Email);
     if (user != null)
     {
-      return new MRegisterResponse
+      return new CreateUserResponse
       {
         IsSuccess = false,
         Message = "User already exists"
       };
     }
 
-    var newUser = new Customer
+    var newUser = new User
     {
       Name = request.Name,
       Email = request.Email,
       UserName = request.Email,
       UpdatedAt = DateTime.Now,
       CreatedAt = DateTime.Now,
+      Status = AccountStatus.Active,
       ConcurrencyStamp = Guid.NewGuid().ToString()
     };
 
@@ -49,24 +50,24 @@ public class MobileUserAuthService : IMobileUserAuthService
 
     if (!result.Succeeded)
     {
-      return new MRegisterResponse
+      return new CreateUserResponse
       {
         IsSuccess = false,
         Message = $"User creation failed: {result.Errors.FirstOrDefault()?.Description}"
       };
     }
 
-    var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, "customer");
+    var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
     if (!addUserToRoleResult.Succeeded)
     {
-      return new MRegisterResponse
+      return new CreateUserResponse
       {
         IsSuccess = false,
         Message = $"User creation failed: {addUserToRoleResult.Errors.FirstOrDefault()?.Description}"
       };
     }
 
-    return new MRegisterResponse
+    return new CreateUserResponse
     {
       IsSuccess = result.Succeeded,
       Message = "User created successfully"
@@ -83,6 +84,15 @@ public class MobileUserAuthService : IMobileUserAuthService
       {
         IsSuccess = false,
         Message = "Invalid email or password"
+      };
+    }
+
+    if (user.Status == AccountStatus.Unapproved || user.Status == AccountStatus.Deactivated || user.Status == AccountStatus.Rejected)
+    {
+      return new LoginResponse
+      {
+        IsSuccess = false,
+        Message = "Account is not active"
       };
     }
 
@@ -120,6 +130,5 @@ public class MobileUserAuthService : IMobileUserAuthService
     };
 
   }
-
 
 }
