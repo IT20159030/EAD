@@ -1,7 +1,5 @@
 /**
-* UserController.cs
-* This file contains the controller for the User model.
-* It contains the CRUD operations for the User model.
+* CustomerAuthenticationController.cs provides the endpoints for the customer authentication for the mobile application.
 */
 
 using System.Net;
