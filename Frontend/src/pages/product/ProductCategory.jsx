@@ -4,11 +4,15 @@ import { MdDelete, MdEdit, MdDownload } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
 import { downloadPDF } from "../../utils/downloadPDF";
 import styles from "../styles/Pages.module.css";
-import { useGetAllProductCategories } from "../../hooks/productCategoryHooks";
+import {
+  useGetAllProductCategories,
+  useCreateProductCategory,
+} from "../../hooks/productCategoryHooks";
 
 const ProductCategory = () => {
   const [search, setSearch] = useState("");
   const { data: categories, isLoading, error } = useGetAllProductCategories();
+  const { mutate: createProductCategory } = useCreateProductCategory();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -23,6 +27,10 @@ const ProductCategory = () => {
     const data = categories.map((category) => [category.id, category.name]);
 
     downloadPDF("Product Categories Report", columns, data, "report.pdf");
+  };
+
+  const handleAddCategory = (categoryName) => {
+    createProductCategory({ name: categoryName });
   };
 
   return (
