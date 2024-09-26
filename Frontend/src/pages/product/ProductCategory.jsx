@@ -22,7 +22,7 @@ const ProductCategory = () => {
   const [categoryToEdit, setCategoryToEdit] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("s"); // Control the toast type
+  const [toastType, setToastType] = useState("success");
 
   const { data: categories, isLoading: isLoadingProductCategories } =
     useGetAllProductCategories();
