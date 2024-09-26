@@ -1,34 +1,22 @@
-import React from "react";
+import { useState } from "react";
 import { Button, Table, Form } from "react-bootstrap";
 import { MdDelete, MdEdit, MdDownload } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
 import { downloadPDF } from "../../utils/downloadPDF";
 import styles from "../styles/Pages.module.css";
+import { useGetAllProductCategories } from "../../hooks/productCategoryHooks";
 
 const ProductCategory = () => {
-  const [search, setSearch] = React.useState("");
-  const categories = [
-    {
-      id: 1,
-      name: "Electronics",
-    },
-    {
-      id: 2,
-      name: "Clothing",
-    },
-    {
-      id: 3,
-      name: "Books",
-    },
-    {
-      id: 4,
-      name: "Home & Kitchen",
-    },
-    {
-      id: 5,
-      name: "Sports",
-    },
-  ];
+  const [search, setSearch] = useState("");
+  const { data: categories, isLoading, error } = useGetAllProductCategories();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const handleDownload = () => {
     const columns = ["#", "Category Name"];
