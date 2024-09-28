@@ -1,3 +1,16 @@
+/**
+Description: Dtos for Vendor.
+The VendorDto class is used to represent the vendor object in the application. It contains the following properties:
+    vendorId: the unique identifier of the vendor.
+    vendorName: the name of the vendor.
+    vendorEmail: the email address of the vendor.
+    vendorPhone: the phone number of the vendor.
+    vendorAddress: the address of the vendor.
+    vendorCity: the city of the vendor.
+    vendorRating: the rating of the vendor.
+    vendorRatingCount: the number of ratings the vendor has received.
+*/
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Dtos;
