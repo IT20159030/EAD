@@ -19,27 +19,13 @@ namespace Backend.Dtos;
 
 public class OrderDto
 {
-    [Required]
     public string Id { get; set; } = string.Empty;
-
-    [Required]
     public string OrderId { get; set; } = string.Empty;
-
-    [Required]
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
-
-    [Required]
     public DateTime OrderDate { get; set; }
-
-    [required]
     public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
-
-    [Required]
     public decimal TotalPrice { get; set; }
-
-    [Required]
     public string CustomerId { get; set; } = string.Empty;
-
     public string? CustomerName { get; set; }
 }
 
@@ -54,7 +40,6 @@ public class CreateOrderRequestDto
     [Required]
     public DateTime OrderDate { get; set; }
 
-    [required]
     public List<CreateOrderItemRequestDto> OrderItems { get; set; } = new List<CreateOrderItemRequestDto>();
 
     [Required]
@@ -78,7 +63,6 @@ public class UpdateOrderRequestDto
     [Required]
     public DateTime OrderDate { get; set; }
 
-    [required]
     public List<UpdateOrderItemRequestDto> OrderItems { get; set; } = new List<UpdateOrderItemRequestDto>();
 
     [Required]

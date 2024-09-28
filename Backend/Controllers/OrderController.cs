@@ -48,7 +48,16 @@ public class OrderController : ControllerBase
         OrderId = order.OrderId,
         Status = order.Status,
         OrderDate = order.OrderDate,
-        OrderItems = order.OrderItems,
+        OrderItems = order.OrderItems.Select(item => new OrderItemDto
+        {
+            Id = item.Id!,
+            OrderItemId = item.OrderItemId,
+            ProductId = item.ProductId,
+            ProductName = item.ProductName,
+            Quantity = item.Quantity,
+            Price = item.Price,
+            Status = item.Status
+        }).ToList(),
         TotalPrice = order.TotalPrice,
         CustomerId = order.CustomerId,
         CustomerName = order.CustomerName
