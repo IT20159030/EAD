@@ -4,21 +4,21 @@ namespace Backend.Dtos
 
 {
     // DTO for creating a cancellation request
-    public class CreateCancellationRequest
+    public class CreateCancellationRequestDto
     {
         [Required]
-        public string OrderId { get; set; }
+        public string OrderId { get; set; } = string.Empty;
 
         [Required]
-        public string CustomerId { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(500, MinimumLength = 5)]
-        public string Reason { get; set; }
+        [StringLength(500, MinimumLength = 2)]
+        public string Reason { get; set; } = string.Empty;
     }
 
     // DTO for processing a cancellation request
-    public class ProcessCancellationRequest
+    public class ProcessCancellationRequestDto
     {
         [Required]
         public string ProcessedBy { get; set; } // CSR or Admin ID

@@ -17,6 +17,9 @@ public class Notification
     [BsonElement("RecipientId")]
     public string? RecipientId { get; set; } // Vendor, CSR, Customer, or Admin ID
 
+    [BsonElement("Role")]
+    public string? Role { get; set; } // Vendor, CSR, Customer, or Admin
+
     [BsonElement("Message")]
     public string? Message { get; set; }
 
