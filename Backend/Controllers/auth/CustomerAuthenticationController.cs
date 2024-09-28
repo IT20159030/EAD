@@ -3,13 +3,16 @@
 */
 
 using System.Net;
+using System.Security.Claims;
 using Backend.Dtos;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/customer-auth")]
 [Produces("application/json")]
 public class CustomerAuthenticationController : ControllerBase
@@ -27,7 +30,7 @@ public class CustomerAuthenticationController : ControllerBase
   }
 
 
-
+  [AllowAnonymous]
   [HttpPost("login", Name = "Mobile Login")]
   [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(LoginResponse))]
   public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
@@ -48,7 +51,7 @@ public class CustomerAuthenticationController : ControllerBase
 
 
 
-
+  [AllowAnonymous]
   [HttpPost("register", Name = "Mobile Register")]
   [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MRegisterResponse))]
   public async Task<IActionResult> Register([FromBody] MRegisterRequest registerRequest)
@@ -62,6 +65,30 @@ public class CustomerAuthenticationController : ControllerBase
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error registering user");
+      return BadRequest(ex.Message);
+    }
+  }
+
+  [HttpGet("user", Name = "Mobile Get User")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MUserResponse))]
+  public async Task<IActionResult> GetUser()
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+
+      var result = await _userAuthService.UserDetailsAsync(userId);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error getting user");
       return BadRequest(ex.Message);
     }
   }

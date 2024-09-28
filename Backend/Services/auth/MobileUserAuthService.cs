@@ -1,5 +1,3 @@
-
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -19,9 +17,6 @@ public class MobileUserAuthService : IMobileUserAuthService
     _userManager = userManager;
     _configuration = configuration;
   }
-
-
-
 
   public async Task<MRegisterResponse> RegisterUserAsync(MRegisterRequest request)
   {
@@ -131,5 +126,27 @@ public class MobileUserAuthService : IMobileUserAuthService
 
   }
 
+  public async Task<MUserResponse> UserDetailsAsync(string userId)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new MUserResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
 
+    return new MUserResponse
+    {
+      IsSuccess = true,
+      Data = new UserInfoDto
+      {
+        UserId = user.Id.ToString(),
+        Name = user.Name,
+        Email = user.Email ?? string.Empty,
+      }
+    };
+  }
 }

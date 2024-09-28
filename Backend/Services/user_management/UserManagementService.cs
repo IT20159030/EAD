@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.OpenApi.Extensions;
 
 namespace Backend.Services;
 
@@ -114,8 +115,10 @@ public class UserManagementService : IUserManagementService
       var userDtos = users.Select(u => new UserDto
       {
         Id = u.Id.ToString(),
-        UserName = u.UserName,
+        Name = u.Name,
         Email = u.Email,
+        Status = u.Status.ToString().ToLower(),
+        CreatedAt = u.CreatedAt
         // Add other properties as needed
       }).ToList();
 
