@@ -3,6 +3,7 @@ using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using Backend.Models;
 using Backend.Services;
+using Backend.Services.notification;
 using Backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,6 @@ using MongoDB.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
@@ -74,7 +74,8 @@ builder.Services.AddCors(options =>
         policy => policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 builder.Services.AddControllers();
@@ -85,6 +86,36 @@ builder.Services.AddSwaggerGen();
 
 // MARK: - MongoDB Service
 builder.Services.AddSingleton<MongoDBService>();
+
+// MARK: - Register MongoDB Collections
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var settings = MongoClientSettings.FromConnectionString(builder.Configuration.GetConnectionString("MongoDB"));
+    return new MongoClient(settings);
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Inventory>("Inventory");
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Notification>("Notification");
+});
+
+// MARK: - Register StockMonitoringService
+builder.Services.AddSingleton<StockMonitoringService>();
+
+// MARK: - SignalR Service
+builder.Services.AddSignalR();
+
+// Register hosted service for monitoring stock levels
+builder.Services.AddHostedService<StockMonitoringWorker>();
 
 builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
@@ -106,5 +137,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Register NotificationHub
+app.MapHub<Backend.Hubs.NotificationHub>("/notificationHub");
 
 app.Run();
