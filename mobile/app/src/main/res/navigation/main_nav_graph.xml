@@ -9,26 +9,37 @@
         android:id="@+id/navigation_home"
         android:name="com.example.mobile.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"
+        app:defaultNavHost="true"
+        />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.mobile.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard"
+        app:defaultNavHost="true"
+
+        />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.mobile.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile"
+        app:defaultNavHost="true"
+        >
         <action
             android:id="@+id/action_navigation_profile_to_editProfile"
             app:destination="@id/editProfile" />
     </fragment>
     <fragment
         android:id="@+id/editProfile"
-        android:name="com.example.mobile.EditProfile"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+        android:name="com.example.mobile.ui.profileEdit.EditProfile"
+        android:label="Edit Account Details"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfile_to_navigation_profile3"
+            app:popUpTo="@id/navigation_profile" />
+    </fragment>
 </navigation>

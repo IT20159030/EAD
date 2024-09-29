@@ -74,6 +74,12 @@ class ProfileFragment : Fragment() {
                 tokenViewModel.deleteToken()
             }
 
+            // TODO: GUIDE TO IMPLEMENT NAVIGATION
+            //  (check the edit profile setup using navigation component with fragments)
+            //  1. create a new fragment
+            //  2. add the new fragment to the navigation graph in main_nav_graph.xml
+            //  3. navigate to the new fragment using the navigation component
+
             cartButton.setOnClickListener {
                 // TODO: Navigate to cart
             }
@@ -91,7 +97,7 @@ class ProfileFragment : Fragment() {
             }
 
             editProfileButton.setOnClickListener {
-                // TODO: Navigate to edit profile
+               navController.navigate(R.id.action_navigation_profile_to_editProfile)
             }
         }
     }

@@ -44,6 +44,11 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
+        binding.registerTextView.setOnClickListener {
+            // Handle navigation to registration page
+           navController.navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+
         setupObservers()
         setupClickListeners()
     }

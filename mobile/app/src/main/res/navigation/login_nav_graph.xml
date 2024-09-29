@@ -29,7 +29,7 @@
             app:destination="@id/login_fragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <include app:graph="@navigation/mobile_navigation" />
+    <include app:graph="@navigation/main_nav_graph" />
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/login_fragment"
