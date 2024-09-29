@@ -93,4 +93,12 @@ namespace Backend.Dtos
 
         public string Role { get; set; } = string.Empty;
     }
+
+    // DTO for CreateLowStockNotificationDto
+    public class CreateLowStockNotificationDto
+    {
+        public string RecipientId { get; set; } = null!;
+        public string ProductId { get; set; } = null!;
+        public int CurrentQuantity { get; set; }
+    }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using Backend.Services.notification;
 
 namespace Backend.Controllers
 {
@@ -15,13 +16,15 @@ namespace Backend.Controllers
     {
         private readonly IMongoCollection<Inventory> _inventory;
         private readonly IMongoCollection<Product>? _products;
+        private readonly StockMonitoringService _stockMonitoringService;
         private readonly ILogger<InventoryController> _logger;
 
-        public InventoryController(ILogger<InventoryController> logger, MongoDBService mongoDBService)
+        public InventoryController(ILogger<InventoryController> logger, MongoDBService mongoDBService, StockMonitoringService stockMonitoringService)
         {
             _logger = logger;
             _inventory = mongoDBService.Database.GetCollection<Inventory>("Inventory");
             _products = mongoDBService.Database.GetCollection<Product>("Product");
+            _stockMonitoringService = stockMonitoringService;
         }
 
         [HttpPost(Name = "AddInventoryByProductId")]
@@ -38,7 +41,8 @@ namespace Backend.Controllers
             {
                 ProductId = dto.ProductId,
                 Quantity = dto.Quantity,
-                AlertThreshold = dto.AlertThreshold
+                AlertThreshold = dto.AlertThreshold,
+                VendorId = dto.VendorId
             };
 
             await _inventory.InsertOneAsync(inventory);
@@ -49,7 +53,8 @@ namespace Backend.Controllers
                 ProductId = inventory.ProductId,
                 Quantity = inventory.Quantity,
                 AlertThreshold = inventory.AlertThreshold,
-                LowStockAlert = inventory.LowStockAlert
+                LowStockAlert = inventory.LowStockAlert,
+                VendorId = inventory.VendorId
             };
 
             return CreatedAtAction(nameof(Get), new { id = inventory.Id }, responseDto);
@@ -66,7 +71,8 @@ namespace Backend.Controllers
                 ProductId = i.ProductId,
                 Quantity = i.Quantity,
                 AlertThreshold = i.AlertThreshold,
-                LowStockAlert = i.LowStockAlert
+                LowStockAlert = i.LowStockAlert,
+                VendorId = i.VendorId
             });
         }
 
@@ -83,7 +89,8 @@ namespace Backend.Controllers
                 ProductId = inventory.ProductId,
                 Quantity = inventory.Quantity,
                 AlertThreshold = inventory.AlertThreshold,
-                LowStockAlert = inventory.LowStockAlert
+                LowStockAlert = inventory.LowStockAlert,
+                VendorId = inventory.VendorId
             };
 
             return Ok(responseDto);
@@ -99,7 +106,8 @@ namespace Backend.Controllers
                 ProductId = i.ProductId,
                 Quantity = i.Quantity,
                 AlertThreshold = i.AlertThreshold,
-                LowStockAlert = i.LowStockAlert
+                LowStockAlert = i.LowStockAlert,
+                VendorId = i.VendorId
             });
         }
 
@@ -129,6 +137,15 @@ namespace Backend.Controllers
             if (result.ModifiedCount == 0) return NotFound();
 
             return NoContent();
+        }
+
+        // New Endpoint to Trigger Stock Monitoring
+        [HttpGet("trigger-stock-check", Name = "TriggerStockCheck")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> TriggerStockCheck()
+        {
+            await _stockMonitoringService.MonitorStockLevelsAsync();
+            return Ok("Stock levels monitored and notifications sent if applicable.");
         }
     }
 }

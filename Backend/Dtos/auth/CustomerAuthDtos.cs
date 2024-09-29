@@ -47,14 +47,20 @@ public class MRegisterResponse
 }
 
 
-public class MCreateRoleRequest
-{
-  [Required]
-  public string Role { get; set; } = string.Empty;
-}
 
-public class MCreateRoleResponse
+
+public class MUserResponse
 {
   public bool IsSuccess { get; set; }
   public string Message { get; set; } = string.Empty;
+
+  public UserInfoDto Data { get; set; } = new UserInfoDto();
+
+}
+
+public class UserInfoDto
+{
+  public string UserId { get; set; } = string.Empty;
+  public string Name { get; set; } = string.Empty;
+  public string Email { get; set; } = string.Empty;
 }

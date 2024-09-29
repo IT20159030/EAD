@@ -1,3 +1,6 @@
+/*
+* This file contains the controller for user management.
+*/
 using System.Net;
 using Backend.Dtos;
 using Backend.Services;

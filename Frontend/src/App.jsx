@@ -21,12 +21,12 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 300000,
       onError: (error) => {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       },
     },
     mutations: {
       onError: (error) => {
-        console.error("Error performing mutation:", error);
+        console.error('Error performing mutation:', error);
       },
     },
   },
@@ -49,6 +49,7 @@ function App() {
             <Route path="staff" element={<About />} />
             <Route path="inventory" element={<About />} />
             <Route path="reports" element={<About />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
           </Route>
           <Route path="/" element={<AuthLayout />}>
             <Route path="login" element={<Login />} />
