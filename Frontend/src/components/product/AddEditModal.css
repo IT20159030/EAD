@@ -1,0 +1,13 @@
+.darkModal .modalHeader {
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.productImage {
+  max-height: 150px;
+}
+
+.imageUploadContainer {
+  display: block;
+  position: relative;
+  width: 100%;
+}

@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { useGetAllNotifications } from '../../hooks/notificationHooks';
-import { Link } from 'react-router-dom';
-import './Notifications.css';
+import { useEffect } from "react";
+import { useGetAllNotifications } from "../../hooks/notificationHooks";
+import { Link } from "react-router-dom";
+import "./Notifications.css";
 
 const NotificationsPage = () => {
   const { data: notifications, refetch } = useGetAllNotifications();
@@ -17,7 +17,7 @@ const NotificationsPage = () => {
         notifications.map((notification) => (
           <div key={notification.id} className="notificationItem">
             <Link
-              to={notification.type === 'LowStock' ? '/inventory' : '/orders'}
+              to={notification.type === "LowStock" ? "/inventory" : "/orders"}
               className="notificationLink"
             >
               <p className="message">{notification.message}</p>

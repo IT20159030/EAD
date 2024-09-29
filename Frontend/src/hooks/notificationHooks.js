@@ -1,25 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllNotifications,
   createNotification,
   deleteNotification,
   updateNotification,
   markAsRead,
-} from '../api/notificationApi';
+} from "../api/notificationApi";
 
 export const useCreateNotification = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createNotification,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
 
 export const useGetAllNotifications = () => {
   return useQuery({
-    queryKey: ['notifications'],
+    queryKey: ["notifications"],
     queryFn: getAllNotifications,
   });
 };
@@ -29,7 +29,7 @@ export const useUpdateNotification = () => {
   return useMutation({
     mutationFn: updateNotification,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
@@ -39,7 +39,7 @@ export const useDeleteNotification = () => {
   return useMutation({
     mutationFn: deleteNotification,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
@@ -49,7 +49,7 @@ export const useMarkAsRead = () => {
   return useMutation({
     mutationFn: markAsRead,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
