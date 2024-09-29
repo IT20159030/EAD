@@ -51,7 +51,7 @@ namespace Backend.Services.notification
                 var notification = new Notification
                 {
                     RecipientId = item.VendorId,
-                    Role = "Vendor",
+                    Role = "vendor",
                     Message = $"{productName} is low on stock",
                     MessageID = item.ProductId,
                     CreatedAt = DateTime.UtcNow,

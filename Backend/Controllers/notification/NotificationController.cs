@@ -160,7 +160,7 @@ namespace Backend.Controllers.notification
             var notification = new Notification
             {
                 RecipientId = dto.RecipientId,
-                Role = "Vendor",
+                Role = "vendor",
                 Message = $"{dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
                 MessageID = dto.ProductId,
                 Type = "LowStock",

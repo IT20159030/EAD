@@ -18,7 +18,7 @@ public class CustomerAccountRequest
     [BsonElement("RequestDate")]
     public DateTime RequestDate { get; set; }
 
-    [BsonElement("Status")] // Pending, Approved, Denied
+    [BsonElement("Status")] // Unapproved, Active, Rejected, Deactivated
     public string? Status { get; set; }
 
     [BsonElement("ProcessedBy")]

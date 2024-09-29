@@ -125,11 +125,14 @@ builder.Services.AddSingleton(sp =>
 // MARK: - Register StockMonitoringService
 builder.Services.AddSingleton<StockMonitoringService>();
 
+// MARK: - Register UserMonitoringService
+builder.Services.AddSingleton<UserMonitoringService>();
+
 // MARK: - SignalR Service
 builder.Services.AddSignalR();
 
 // Register hosted service for monitoring stock levels
-builder.Services.AddHostedService<StockMonitoringWorker>();
+builder.Services.AddHostedService<MonitoringWorker>();
 
 //Services
 builder.Services.AddScoped<WebUserAuthService>();

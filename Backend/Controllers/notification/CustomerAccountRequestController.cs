@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Backend.Controllers
+namespace Backend.Controllers.notification
 {
     [ApiController]
     [Route("api/v1/customer-account-request")]
@@ -82,7 +82,7 @@ namespace Backend.Controllers
                 return NotFound();
             }
 
-            if (request.Status != "Pending")
+            if (request.Status != "Unapproved")
             {
                 return BadRequest("Request has already been processed");
             }
