@@ -1,3 +1,13 @@
+/*
+* VendorController.cs provides the API endpoints for the Vendor model.
+* It contains the following routes:
+*   1. POST /api/v1/Vendor: Create a new vendor.
+*   2. GET /api/v1/Vendor: Get all vendors.
+*   3. GET /api/v1/Vendor/{id}: Get a vendor by id.
+*   4. PUT /api/v1/Vendor/{id}: Update a vendor by id.
+*   5. DELETE /api/v1/Vendor/{id}: Delete a vendor by id.
+*/
+
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Utils;
