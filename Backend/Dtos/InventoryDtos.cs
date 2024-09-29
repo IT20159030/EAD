@@ -18,6 +18,8 @@ namespace Backend.Dtos
         public int AlertThreshold { get; set; } = 10;
 
         public bool LowStockAlert { get; set; } = false;
+
+        public string VendorId { get; set; } = string.Empty;
     }
 
     public class AddInventoryByProductIdDto
@@ -31,6 +33,8 @@ namespace Backend.Dtos
 
         [Range(0, int.MaxValue, ErrorMessage = "Alert Threshold must be a positive number.")]
         public int AlertThreshold { get; set; } = 10;
+
+        public string VendorId { get; set; } = string.Empty;
     }
 
     public class UpdateInventoryByProductIdDto
