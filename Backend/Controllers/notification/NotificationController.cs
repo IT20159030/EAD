@@ -52,6 +52,7 @@ namespace Backend.Controllers.notification
                 RecipientId = n.RecipientId,
                 Role = n.Role,
                 Message = n.Message,
+                MessageID = n.MessageID,
                 CreatedAt = n.CreatedAt,
                 Type = n.Type,
                 IsRead = n.IsRead
@@ -74,6 +75,7 @@ namespace Backend.Controllers.notification
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -89,6 +91,7 @@ namespace Backend.Controllers.notification
                 RecipientId = dto.RecipientId,
                 Role = dto.Role,
                 Message = dto.Message,
+                MessageID = dto.MessageID,
                 Type = dto.Type,
                 IsRead = dto.IsRead,
                 CreatedAt = DateTime.UtcNow
@@ -102,6 +105,7 @@ namespace Backend.Controllers.notification
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -128,6 +132,7 @@ namespace Backend.Controllers.notification
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -157,6 +162,7 @@ namespace Backend.Controllers.notification
                 RecipientId = dto.RecipientId,
                 Role = "Vendor",
                 Message = $"{dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
+                MessageID = dto.ProductId,
                 Type = "LowStock",
                 IsRead = false,
                 CreatedAt = DateTime.UtcNow
@@ -170,6 +176,7 @@ namespace Backend.Controllers.notification
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -197,6 +204,7 @@ namespace Backend.Controllers.notification
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead

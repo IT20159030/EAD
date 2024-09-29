@@ -15,6 +15,9 @@ namespace Backend.Dtos
         [Required]
         public string Message { get; set; } = string.Empty;
 
+        [Required]
+        public string MessageID { get; set; } = string.Empty;
+
         public string Type { get; set; } = string.Empty;
 
         public bool IsRead { get; set; } = false;
@@ -30,6 +33,8 @@ namespace Backend.Dtos
         public string Role { get; set; } = string.Empty;
 
         public string Message { get; set; } = string.Empty;
+
+        public string MessageID { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
 

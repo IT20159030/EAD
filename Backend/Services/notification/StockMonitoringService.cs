@@ -22,7 +22,7 @@ namespace Backend.Services.notification
 
         public StockMonitoringService(IMongoCollection<Inventory> inventoryCollection,
                                    IMongoCollection<Notification> notifications,
-                                   IMongoCollection<Product> products, // Add this parameter
+                                   IMongoCollection<Product> products,
                                    ILogger<StockMonitoringService> logger,
                                    IHubContext<NotificationHub> hubContext)
         {
@@ -53,6 +53,7 @@ namespace Backend.Services.notification
                     RecipientId = item.VendorId,
                     Role = "Vendor",
                     Message = $"{productName} is low on stock",
+                    MessageID = item.ProductId,
                     CreatedAt = DateTime.UtcNow,
                     Type = "LowStock",
                     IsRead = false
