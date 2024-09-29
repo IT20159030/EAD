@@ -79,7 +79,8 @@ namespace Backend.Controllers
                 Role = dto.Role,
                 Message = dto.Message,
                 Type = dto.Type,
-                IsRead = dto.IsRead
+                IsRead = dto.IsRead,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _notifications.InsertOneAsync(notification);
@@ -136,6 +137,34 @@ namespace Backend.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("lowStock", Name = "CreateLowStockNotification")]
+        public async Task<IActionResult> CreateLowStockNotification([FromBody] CreateLowStockNotificationDto dto)
+        {
+            var notification = new Notification
+            {
+                RecipientId = dto.RecipientId,
+                Role = "Vendor",
+                Message = $"Product {dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
+                Type = "LowStock",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _notifications.InsertOneAsync(notification);
+
+            return CreatedAtAction(nameof(Get), new { id = notification.Id }, new NotificationDto
+            {
+                Id = notification.Id!,
+                RecipientId = notification.RecipientId,
+                Role = notification.Role,
+                Message = notification.Message,
+                CreatedAt = notification.CreatedAt,
+                Type = notification.Type,
+                IsRead = notification.IsRead
+            });
+        }
+
 
         private NotificationDto ConvertToDto(Notification notification)
         {
