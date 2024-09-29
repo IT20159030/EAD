@@ -16,4 +16,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="cart">Cart</string>
+    <string name="orders">Orders</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="addresses">Addresses</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="logout">Logout</string>
+
+
 </resources>

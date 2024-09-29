@@ -13,7 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.mobile.R
-import com.example.mobile.services.api.dto.AuthRequest
+import com.example.mobile.databinding.FragmentLoginBinding
+import com.example.mobile.dto.LoginRequest
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.AuthViewModel
 import com.example.mobile.viewModels.CoroutinesErrorHandler
@@ -26,192 +27,110 @@ class LoginFragment : Fragment() {
     private val viewModel: AuthViewModel by viewModels()
     private val tokenViewModel: TokenViewModel by activityViewModels()
 
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false)
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        val loginTV = view.findViewById<TextView>(R.id.loginTV)
 
+        setupObservers()
+        setupClickListeners()
+    }
+
+    private fun setupObservers() {
         tokenViewModel.token.observe(viewLifecycleOwner) { token ->
-            if (token != null)
+            if (token != null) {
                 navController.navigate(R.id.action_loginFragment_to_main_nav_graph)
-
-        }
-
-        viewModel.loginResponse.observe(viewLifecycleOwner) {
-            when(it) {
-                is ApiResponse.Failure -> loginTV.text = it.errorMessage
-                ApiResponse.Loading -> loginTV.text = "Loading"
-                is ApiResponse.Success -> {
-                    tokenViewModel.saveToken(it.data.token)
-                }
             }
         }
 
-        view.findViewById<Button>(R.id.login_temp_button).setOnClickListener {
-            viewModel.login(
-                AuthRequest("customer@example.com", "password"),
-                object: CoroutinesErrorHandler {
-                    override fun onError(message: String) {
-                        loginTV.text = "Error! $message"
-                    }
+        viewModel.loginResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+                is ApiResponse.Success -> {
+                    showLoading(false)
+                    tokenViewModel.saveToken(response.data.token)
                 }
-            )
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    showError(response.errorMessage)
+                }
+            }
         }
     }
 
-//
-//import androidx.lifecycle.Observer
-//import androidx.lifecycle.ViewModelProvider
-//import androidx.annotation.StringRes
-//import androidx.fragment.app.Fragment
-//import android.os.Bundle
-//import android.text.Editable
-//import android.text.TextWatcher
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.view.inputmethod.EditorInfo
-//import android.widget.Toast
-//import androidx.fragment.app.activityViewModels
-//import androidx.fragment.app.viewModels
-//import androidx.navigation.NavController
-//import com.example.mobile.databinding.FragmentLoginBinding
-//
-//import com.example.mobile.R
-//import com.example.mobile.ui.login.LoggedInUserView
-//import com.example.mobile.ui.login.LoginViewModel
-//import com.example.mobile.ui.login.LoginViewModelFactory
-//import com.example.mobile.viewModels.AuthViewModel
-//import com.example.mobile.viewModels.TokenViewModel
-//import dagger.hilt.android.AndroidEntryPoint
-//
-//@AndroidEntryPoint
-//class LoginFragment : Fragment() {
-//
-//    private val viewModel: AuthViewModel by viewModels()
-//    private val tokenViewModel: TokenViewModel by activityViewModels()
-//
-//    private lateinit var navController: NavController
-//
-////    private lateinit var loginViewModel: LoginViewModel
-//    private var _binding: FragmentLoginBinding? = null
-//
-//    // This property is only valid between onCreateView and
-//    // onDestroyView.
-//
-//    private val binding get() = _binding!!
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//
-//        tokenViewModel.token.observe(viewLifecycleOwner) { token ->
-//            if (token != null)
-//                navController.navigate(R.id.action_loginFragment_to_main_nav_graph)
-//        }
-//
-//        _binding = FragmentLoginBinding.inflate(inflater, container, false)
-//        return binding.root
-//    }
-//
-////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-////        super.onViewCreated(view, savedInstanceState)
-////        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-////            .get(LoginViewModel::class.java)
-////
-////        val usernameEditText = binding.email
-////        val passwordEditText = binding.password
-////        val loginButton = binding.login
-////        val loadingProgressBar = binding.loading
-////
-////        loginViewModel.loginFormState.observe(viewLifecycleOwner,
-////            Observer { loginFormState ->
-////                if (loginFormState == null) {
-////                    return@Observer
-////                }
-////                loginButton.isEnabled = loginFormState.isDataValid
-////                loginFormState.usernameError?.let {
-////                    usernameEditText.error = getString(it)
-////                }
-////                loginFormState.passwordError?.let {
-////                    passwordEditText.error = getString(it)
-////                }
-////            })
-////
-////        loginViewModel.loginResult.observe(viewLifecycleOwner,
-////            Observer { loginResult ->
-////                loginResult ?: return@Observer
-////                loadingProgressBar.visibility = View.GONE
-////                loginResult.error?.let {
-////                    showLoginFailed(it)
-////                }
-////                loginResult.success?.let {
-////                    updateUiWithUser(it)
-////                }
-////            })
-////
-////        val afterTextChangedListener = object : TextWatcher {
-////            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-////                // ignore
-////            }
-////
-////            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-////                // ignore
-////            }
-////
-////            override fun afterTextChanged(s: Editable) {
-////                loginViewModel.loginDataChanged(
-////                    usernameEditText.text.toString(),
-////                    passwordEditText.text.toString()
-////                )
-////            }
-////        }
-////        usernameEditText.addTextChangedListener(afterTextChangedListener)
-////        passwordEditText.addTextChangedListener(afterTextChangedListener)
-////        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-////            if (actionId == EditorInfo.IME_ACTION_DONE) {
-////                loginViewModel.login(
-////                    usernameEditText.text.toString(),
-////                    passwordEditText.text.toString()
-////                )
-////            }
-////            false
-////        }
-////
-////        loginButton.setOnClickListener {
-////            loadingProgressBar.visibility = View.VISIBLE
-////            loginViewModel.login(
-////                usernameEditText.text.toString(),
-////                passwordEditText.text.toString()
-////            )
-////        }
-////    }
-////
-////    private fun updateUiWithUser(model: LoggedInUserView) {
-////        val welcome = getString(R.string.welcome) + model.displayName
-////        // TODO : initiate successful logged in experience
-////        val appContext = context?.applicationContext ?: return
-////        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
-////    }
-////
-////    private fun showLoginFailed(@StringRes errorString: Int) {
-////        val appContext = context?.applicationContext ?: return
-////        Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
-////    }
-////
-////    override fun onDestroyView() {
-////        super.onDestroyView()
-////        _binding = null
-////    }
+    private fun setupClickListeners() {
+        binding.loginButton.setOnClickListener {
+            val email = binding.emailEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            if (validateInput(email, password)) {
+                login(email, password)
+            }
+        }
+    }
+
+    private fun validateInput(email: String, password: String): Boolean {
+        var isValid = true
+
+        if (email.isEmpty()) {
+            binding.emailInputLayout.error = "Error_email_required"
+            isValid = false
+
+        } else {
+            binding.emailInputLayout.error = null
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.emailInputLayout.error = "Error_invalid_email"
+            isValid = false
+            binding.emailEditText.requestFocus()
+        }
+
+        if (password.isEmpty()) {
+            binding.passwordInputLayout.error = "Error_password_required"
+            isValid = false
+        } else {
+            binding.passwordInputLayout.error = null
+        }
+
+        return isValid
+    }
+
+    private fun login(email: String, password: String) {
+        viewModel.login(
+            LoginRequest(email, password),
+            object : CoroutinesErrorHandler {
+                override fun onError(message: String) {
+                    showLoading(false)
+                    showError(message)
+                }
+            }
+        )
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.loadingProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loginButton.isEnabled = !isLoading
+    }
+
+    private fun showError(message: String) {
+        binding.errorTextView.text = message
+        binding.errorTextView.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
