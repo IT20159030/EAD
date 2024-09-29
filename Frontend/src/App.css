@@ -19,3 +19,9 @@ main {
   background-color: var(--background-color);
   overflow-y: auto;
 }
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures footer sticks to the bottom if content is short */
+}
