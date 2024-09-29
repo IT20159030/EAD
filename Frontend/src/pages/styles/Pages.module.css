@@ -11,18 +11,14 @@
 
 .table {
   margin-top: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  border-collapse: separate;
 }
 
 .actions {
   display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.actionGap {
-  margin-right: 1rem;
+  gap: 1rem;
 }
 
 .pageActions {
@@ -33,21 +29,24 @@
 }
 
 .search {
-  background-color: var(--tertiary-color);
-  color: var(--text-color);
   border-radius: 0.5rem;
   border: 1px solid #ced4da;
-  width: 250px;
+  width: 350px;
   margin-right: 1rem;
 }
 
-.btn-download {
-  margin: 0;
+.button {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.button:hover {
+  background-color: var(--tertiary-color);
+  border-color: var(--tertiary-color);
 }
 
 th,
 td {
   vertical-align: middle;
-  text-align: center;
-  padding: 1.5rem;
+  border-color: transparent;
 }

@@ -5,7 +5,7 @@
   background-color: var(--tertiary-color);
   height: 70px;
   padding: 0 20px;
-  color: var(--text-color);
+  color: var(--text-secondary-color);
   position: relative;
 }
 
@@ -41,11 +41,11 @@
   font-size: 24px;
   margin-left: 20px;
   cursor: pointer;
-  color: var(--text-color);
+  color: var(--text-secondary-color);
 }
 
 .icon:hover {
-  color: var(--primary-color);
+  color: var(--primary-secondary-color);
 }
 
 .notificationItem {
@@ -66,7 +66,7 @@
 }
 
 .notificationLink {
-  color: var(--text-color);
+  color: var(--text-secondary-color);
   text-decoration: none;
 }
 
@@ -74,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color);
+  color: var(--text-secondary-color);
   text-decoration: none;
 }
 

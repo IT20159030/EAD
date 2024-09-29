@@ -1,36 +1,104 @@
 import { useState } from "react";
-import { Button, Table, Form } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table";
 import { MdDelete, MdEdit, MdDownload } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
+import LoadingTableBody from "../../components/common/TableLoader/TableLoader"; // Use your TableLoader for the body
+import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
+import AddEditCategoryModal from "../../components/product/AddEditCategoryModal";
 import { downloadPDF } from "../../utils/downloadPDF";
 import styles from "../styles/Pages.module.css";
 import {
   useGetAllProductCategories,
   useCreateProductCategory,
+  useUpdateProductCategory,
+  useDeleteProductCategory,
 } from "../../hooks/productCategoryHooks";
 
 const ProductCategory = () => {
   const [search, setSearch] = useState("");
-  const { data: categories, isLoading, error } = useGetAllProductCategories();
-  const { mutate: createProductCategory } = useCreateProductCategory();
+  const [showModal, setShowModal] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("s"); // Control the toast type
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const { data: categories, isLoading: isLoadingProductCategories } =
+    useGetAllProductCategories();
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const { mutate: createProductCategory, isLoading: isCreating } =
+    useCreateProductCategory();
 
-  const handleDownload = () => {
-    const columns = ["#", "Category Name"];
-    const data = categories.map((category) => [category.id, category.name]);
+  const { mutate: updateProductCategory, isLoading: isUpdating } =
+    useUpdateProductCategory();
 
-    downloadPDF("Product Categories Report", columns, data, "report.pdf");
+  const { mutate: deleteProductCategory } = useDeleteProductCategory();
+
+  const handleToast = (message, type = "success") => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
-  const handleAddCategory = (categoryName) => {
-    createProductCategory({ name: categoryName });
+  const handleAddCategory = (categoryData) => {
+    createProductCategory(categoryData, {
+      onSuccess: () => {
+        handleToast("Category added successfully!", "success");
+        setShowModal(isCreating);
+      },
+      onError: () => {
+        handleToast("Failed to add category", "bg-danger");
+      },
+    });
+  };
+
+  const handleSaveCategory = (categoryData) => {
+    if (categoryToEdit) {
+      updateProductCategory(
+        { id: categoryToEdit.id, ...categoryData },
+        {
+          onSuccess: () => {
+            handleToast("Category updated successfully!", "success");
+            setShowModal(isUpdating);
+          },
+          onError: () => {
+            handleToast("Failed to update category", "bg-danger");
+          },
+        }
+      );
+    } else {
+      handleAddCategory(categoryData);
+    }
+  };
+
+  const handleDeleteCategory = (categoryId) => {
+    deleteProductCategory(categoryId, {
+      onSuccess: () => {
+        handleToast("Category deleted successfully!", "success");
+      },
+      onError: () => {
+        handleToast("Failed to delete category", "bg-danger");
+      },
+    });
+  };
+
+  const handleModalOpen = () => {
+    setCategoryToEdit(null);
+    setShowModal(true);
+  };
+
+  const handleDownload = () => {
+    // title, columns, data, fileName
+    downloadPDF(
+      "Product Categories",
+      ["ID", "Category Name"],
+      categories.map((category, index) => [index + 1, category.name]),
+      "Product categories.pdf"
+    );
   };
 
   return (
@@ -38,7 +106,7 @@ const ProductCategory = () => {
       <CommonTitle
         title="Product Categories"
         buttonLabel="Add New Category"
-        onButtonClick={() => console.log("Add Category clicked")}
+        onButtonClick={handleModalOpen}
       />
       <div className={styles.pageActions}>
         <Form className={`${styles.controls}`}>
@@ -51,46 +119,75 @@ const ProductCategory = () => {
           />
         </Form>
         <Button
-          variant="success"
-          className="btn-download"
+          variant="primary"
+          className={styles.button}
           onClick={handleDownload}
         >
           <MdDownload className="me-2" /> Download Report
         </Button>
       </div>
-      <Table striped hover responsive variant="dark" className={styles.table}>
+      <Table striped hover responsive className={styles.table}>
         <thead>
           <tr>
-            <th>#</th>
+            <th>ID</th>
             <th>Category Name</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {categories.map((category) => (
-            <tr key={category.id}>
-              <td>{category.id}</td>
-              <td>{category.name}</td>
-              <td className={styles.action}>
-                <Button
-                  variant="warning"
-                  onClick={() => console.log("Edit", category.id)}
-                  className={styles.actionGap}
-                >
-                  <MdEdit /> Edit
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => console.log("Delete", category.id)}
-                  className={styles.actionGap}
-                >
-                  <MdDelete /> Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {isLoadingProductCategories ? (
+          <LoadingTableBody loading={isLoadingProductCategories} />
+        ) : (
+          <tbody>
+            {categories &&
+              categories
+                .filter((category) =>
+                  category.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((category, index) => (
+                  <tr key={category.id}>
+                    <td>{index + 1}</td>
+                    <td>{category.name}</td>
+                    <td className={styles.actions}>
+                      <Button
+                        className={styles.button}
+                        onClick={() => {
+                          setCategoryToEdit(category);
+                          setShowModal(true);
+                        }}
+                      >
+                        <MdEdit />
+                        <span className="ms-2">Edit</span>
+                      </Button>
+                      <Button
+                        className={styles.button}
+                        onClick={() => handleDeleteCategory(category.id)}
+                      >
+                        <MdDelete />
+                        <span className="ms-2">Delete</span>
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+          </tbody>
+        )}
       </Table>
+
+      {showModal && (
+        <AddEditCategoryModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          handleSaveCategory={handleSaveCategory}
+          categoryToEdit={categoryToEdit}
+        />
+      )}
+
+      {showToast && (
+        <AutoClosingToast
+          title="Notification"
+          description={toastMessage}
+          type={toastType}
+        />
+      )}
     </div>
   );
 };

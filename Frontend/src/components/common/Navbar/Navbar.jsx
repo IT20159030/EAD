@@ -7,7 +7,7 @@ import {
 } from "react-icons/bs";
 import Overlay from "react-bootstrap/Overlay";
 import { Link } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -61,14 +61,14 @@ const Navbar = () => {
   const role = "Admin";
 
   const NotificationOverlay = () => (
-    <div className={styles.notificationOverlay}>
-      <h6>Notifications</h6>
+    <div className="notificationOverlay">
+      <h6 className="text-white">Notifications</h6>
       {notifications.map((notification) => (
-        <div key={notification.id} className={styles.notificationItem}>
+        <div key={notification.id} className="notificationItem">
           <Link
             to={notification.link}
             onClick={() => setShowNotifications(false)}
-            className={styles.notificationLink}
+            className="notificationLink"
           >
             <strong>{notification.title}</strong>
             <p>{notification.message}</p>
@@ -79,16 +79,16 @@ const Navbar = () => {
   );
 
   const AvatarMenuOverlay = () => (
-    <div className={styles.avatarMenuOverlay}>
+    <div className="avatarMenuOverlay">
       {avatarMenuItems.map((item, index) => (
         <div
           key={index}
-          className={styles.avatarMenuItem}
+          className="avatarMenuItem"
           onClick={item.action ? item.action : () => setShowAvatarMenu(false)}
         >
-          <Link to={item.link} className={styles.avatarLink}>
+          <Link to={item.link} className="avatarLink">
             {item.icon}
-            <span className={styles.itemTitle}>{item.title}</span>
+            <span className="itemTitle">{item.title}</span>
           </Link>
         </div>
       ))}
@@ -96,9 +96,9 @@ const Navbar = () => {
   );
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.navbarBrand}></div>
-      <div className={styles.navbarActions}>
+    <nav className="navbar">
+      <div className="navbarBrand"></div>
+      <div className="navbarActions">
         <div
           ref={notificationRef}
           onClick={() => {
@@ -106,7 +106,7 @@ const Navbar = () => {
             setShowAvatarMenu(false);
           }}
         >
-          <BsBell className={styles.icon} />
+          <BsBell className="icon" />
         </div>
         <Overlay
           target={notificationRef.current}
@@ -122,7 +122,7 @@ const Navbar = () => {
             setShowNotifications(false);
           }}
         >
-          <BsPersonCircle className={styles.icon} />
+          <BsPersonCircle className="icon" />
         </div>
         <Overlay
           target={avatarRef.current}
@@ -131,9 +131,9 @@ const Navbar = () => {
         >
           <AvatarMenuOverlay />
         </Overlay>
-        <div className={styles.details}>
-          <div className={styles.name}>{name}</div>
-          <div className={styles.role}>{role}</div>
+        <div className="details">
+          <div className="name">{name}</div>
+          <div className="role">{role}</div>
         </div>
       </div>
     </nav>

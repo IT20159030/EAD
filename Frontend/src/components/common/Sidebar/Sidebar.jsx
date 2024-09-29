@@ -13,7 +13,7 @@ import {
   BsCaretUpFill,
 } from "react-icons/bs";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./Sidebar.module.css";
+import "./Sidebar.css";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -52,45 +52,45 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.sidebarLogo}>
+    <div className="sidebar">
+      <div className="sidebarLogo">
         <h1>Logo</h1>
       </div>
-      <div className={styles.sidebarContent}>
+      <div className="sidebarContent">
         {navLinks.map((link, index) => (
           <div key={index}>
             {link.subLinks ? (
-              <div className={styles.navItem} onClick={() => toggleOpen(index)}>
+              <div className="navItem" onClick={() => toggleOpen(index)}>
                 {link.icon}
-                <span className={styles.ms2}>{link.title}</span>
-                <span className={styles.toggleIcon}>
+                <span className="ms-2">{link.title}</span>
+                <span className="toggleIcon">
                   {openItems[index] ? <BsCaretUpFill /> : <BsCaretDownFill />}
                 </span>
               </div>
             ) : (
               <Link
                 to={link.path}
-                className={`${styles.navItem} ${
-                  currentPath === link.path ? styles.active : ""
+                className={`navItem ${
+                  currentPath === link.path ? "active" : ""
                 }`}
               >
                 {link.icon}
-                <span className={styles.ms2}>{link.title}</span>
+                <span className="ms-2">{link.title}</span>
               </Link>
             )}
 
             {link.subLinks && openItems[index] && (
-              <div className={styles.subLinks}>
+              <div className="subLinks">
                 {link.subLinks.map((subLink, subIndex) => (
                   <Link
                     to={subLink.path}
                     key={subIndex}
-                    className={`${styles.navItem} ${styles.subItem} ${
-                      currentPath === subLink.path ? styles.active : ""
+                    className={`navItem subItem ${
+                      currentPath === subLink.path ? "active" : ""
                     }`}
                   >
                     {subLink.icon}
-                    <span className={styles.ms2}>{subLink.title}</span>
+                    <span className="ms-2">{subLink.title}</span>
                   </Link>
                 ))}
               </div>

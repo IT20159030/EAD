@@ -6,12 +6,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --primary-color: #0295db;
-  --secondary-color: #003e5b;
-  --tertiary-color: #131f30;
-  --background-color: #111827;
-  --text-color: #d0d4da;
-  --text-secondary-color: #fefefe;
+  --primary-color: #0071bd;
+  --secondary-color: #072a55;
+  --tertiary-color: #041731;
+  --background-color: #dce2ea;
+  --text-color: #111822;
+  --text-secondary-color: #d0d4da;
+  --success-color: #b0ffda;
+  --error-color: #ffc5c1;
 }
 
 body {

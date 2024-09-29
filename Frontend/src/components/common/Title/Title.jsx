@@ -1,20 +1,20 @@
 import { Button } from "react-bootstrap";
-import styles from "./Title.module.css"; // Import the CSS module
+import "./Title.css";
 
 const Title = ({ title, buttonLabel, onButtonClick }) => {
   return (
-    <div className={styles.commonTitle}>
-      <div className={styles.titleContainer}>
-        <h1 className={styles.title}>{title}</h1>
-        <div className={styles.buttonContainer}>
+    <div className="commonTitle">
+      <div className="titleContainer">
+        <h1 className="title">{title}</h1>
+        <div className="buttonContainer">
           {buttonLabel && (
-            <Button variant="primary" onClick={onButtonClick}>
+            <Button onClick={onButtonClick} className="button">
               {buttonLabel}
             </Button>
           )}
         </div>
       </div>
-      <hr className={styles.separator} />
+      <hr className="separator" />
     </div>
   );
 };
