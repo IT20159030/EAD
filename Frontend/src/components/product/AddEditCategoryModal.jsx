@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import "./AddEditCategoryModal.css";
+import "./AddEditModal.css";
 
 const AddEditCategoryModal = ({
   show,

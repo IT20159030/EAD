@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import ProductCategory from "./pages/product/ProductCategory";
+import Products from "./pages/product/Products";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
@@ -40,7 +41,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products" element={<About />} />
+            <Route path="products" element={<Products />} />
             <Route path="categories" element={<ProductCategory />} />
             <Route path="orders" element={<About />} />
             <Route path="customers" element={<About />} />

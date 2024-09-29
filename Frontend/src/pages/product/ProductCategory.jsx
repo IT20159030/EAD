@@ -178,6 +178,7 @@ const ProductCategory = () => {
           handleClose={() => setShowModal(false)}
           handleSaveCategory={handleSaveCategory}
           categoryToEdit={categoryToEdit}
+          isInProgress={isCreating || isUpdating}
         />
       )}
 
