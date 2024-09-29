@@ -38,7 +38,8 @@ namespace Backend.Controllers
             {
                 ProductId = dto.ProductId,
                 Quantity = dto.Quantity,
-                AlertThreshold = dto.AlertThreshold
+                AlertThreshold = dto.AlertThreshold,
+                VendorId = dto.VendorId
             };
 
             await _inventory.InsertOneAsync(inventory);
@@ -49,7 +50,8 @@ namespace Backend.Controllers
                 ProductId = inventory.ProductId,
                 Quantity = inventory.Quantity,
                 AlertThreshold = inventory.AlertThreshold,
-                LowStockAlert = inventory.LowStockAlert
+                LowStockAlert = inventory.LowStockAlert,
+                VendorId = inventory.VendorId
             };
 
             return CreatedAtAction(nameof(Get), new { id = inventory.Id }, responseDto);
@@ -66,7 +68,8 @@ namespace Backend.Controllers
                 ProductId = i.ProductId,
                 Quantity = i.Quantity,
                 AlertThreshold = i.AlertThreshold,
-                LowStockAlert = i.LowStockAlert
+                LowStockAlert = i.LowStockAlert,
+                VendorId = i.VendorId
             });
         }
 
@@ -83,7 +86,8 @@ namespace Backend.Controllers
                 ProductId = inventory.ProductId,
                 Quantity = inventory.Quantity,
                 AlertThreshold = inventory.AlertThreshold,
-                LowStockAlert = inventory.LowStockAlert
+                LowStockAlert = inventory.LowStockAlert,
+                VendorId = inventory.VendorId
             };
 
             return Ok(responseDto);
@@ -99,7 +103,8 @@ namespace Backend.Controllers
                 ProductId = i.ProductId,
                 Quantity = i.Quantity,
                 AlertThreshold = i.AlertThreshold,
-                LowStockAlert = i.LowStockAlert
+                LowStockAlert = i.LowStockAlert,
+                VendorId = i.VendorId
             });
         }
 
