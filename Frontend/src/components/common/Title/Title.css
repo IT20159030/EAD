@@ -1,0 +1,36 @@
+.commonTitle {
+  margin-bottom: 1.5rem;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+.button {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.button:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid var(--secondary-color);
+  margin: 1rem 0;
+}
