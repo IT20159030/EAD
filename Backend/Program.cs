@@ -13,10 +13,13 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
 BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
+// MARK: - Authentication
 var mongoDBIdentityConfiguration = new MongoDbIdentityConfiguration
 {
     MongoDbSettings = new MongoDbSettings
@@ -32,6 +35,7 @@ var mongoDBIdentityConfiguration = new MongoDbIdentityConfiguration
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireDigit = false;
 
+        // Lockout settings
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.MaxFailedAccessAttempts = 5;
 
@@ -75,9 +79,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// MARK: - MongoDB Service
 builder.Services.AddSingleton<MongoDBService>();
 
 builder.Services.AddScoped<WebUserAuthService>();
@@ -86,6 +92,7 @@ builder.Services.AddScoped<UserManagementService>();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -95,6 +102,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
