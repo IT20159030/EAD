@@ -1,86 +1,122 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BsBell,
   BsPersonCircle,
   BsGear,
   BsBoxArrowRight,
-} from "react-icons/bs";
-import Overlay from "react-bootstrap/Overlay";
-import { Link } from "react-router-dom";
-import "./Navbar.css";
+} from 'react-icons/bs';
+import { MdNotificationsActive } from 'react-icons/md';
+import Overlay from 'react-bootstrap/Overlay';
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import {
+  useGetAllNotifications,
+  useMarkAsRead,
+} from '../../../hooks/notificationHooks';
+import './Navbar.css';
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const notificationRef = useRef(null);
   const avatarRef = useRef(null);
+  const [connection, setConnection] = useState(null);
+  const { data: notifications, refetch: refetchNotifications } =
+    useGetAllNotifications();
+  const { mutate: markNotificationAsRead } = useMarkAsRead();
 
-  // TODO: Replace with real data
-  const notifications = [
-    {
-      id: 1,
-      title: "New Order",
-      message: "You have a new order from John Doe",
-      link: "/orders/123",
-    },
-    {
-      id: 2,
-      title: "Low Stock",
-      message: "Product X is running low on stock",
-      link: "/products/456",
-    },
-    {
-      id: 3,
-      title: "New Message",
-      message: "You have a new message from Jane Doe",
-      link: "/messages/789",
-    },
-  ];
+  useEffect(() => {
+    const connectSignalR = async () => {
+      try {
+        const connection = new HubConnectionBuilder()
+          .withUrl('http://localhost:5159/api/v1/notificationHub')
+          .configureLogging(LogLevel.Information)
+          .build();
 
-  const avatarMenuItems = [
-    {
-      title: "Profile",
-      icon: <BsPersonCircle />,
-      link: "/profile",
-    },
-    {
-      title: "Settings",
-      icon: <BsGear />,
-      link: "/settings",
-    },
-    {
-      title: "Logout",
-      icon: <BsBoxArrowRight />,
-      action: () => {
-        console.log("Logging out...");
-      },
-    },
-  ];
+        await connection.start();
+        console.log('SignalR Connected');
 
-  const name = "Jane Smith";
-  const role = "Admin";
+        connection.on('ReceiveNotification', () => {
+          refetchNotifications();
+        });
+
+        setConnection(connection);
+      } catch (err) {
+        console.error('Error connecting to SignalR:', err);
+      }
+    };
+
+    connectSignalR();
+
+    return () => {
+      if (connection) {
+        connection.stop();
+      }
+    };
+  }, []);
+
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+    if (!showNotifications) {
+      refetchNotifications();
+    }
+    setShowAvatarMenu(false);
+  };
+
+  const name = 'Jane Smith';
+  const role = 'Admin';
 
   const NotificationOverlay = () => (
     <div className="notificationOverlay">
-      <h6 className="text-white">Notifications</h6>
-      {notifications.map((notification) => (
-        <div key={notification.id} className="notificationItem">
-          <Link
-            to={notification.link}
-            onClick={() => setShowNotifications(false)}
-            className="notificationLink"
-          >
-            <strong>{notification.title}</strong>
-            <p>{notification.message}</p>
-          </Link>
-        </div>
-      ))}
+      <div className="notificationHeader">
+        <h6 className="text-white">Notifications</h6>
+        <Link to="/notifications" className="seeAllLink">
+          See All
+        </Link>
+      </div>
+      {notifications?.length > 0 ? (
+        notifications.map((notification) => (
+          <div key={notification.id} className="notificationItem">
+            <Link
+              to={notification.type === 'LowStock' ? '/inventory' : '/orders'}
+              onClick={() => {
+                setShowNotifications(false);
+                markNotificationAsRead(notification.id);
+              }}
+              className="notificationLink"
+            >
+              <div className="notificationContent">
+                <p className="message">{notification.message}</p>
+                <div className="readIcon">
+                  {!notification.isRead && (
+                    <MdNotificationsActive
+                      onClick={() => markNotificationAsRead(notification.id)}
+                    />
+                  )}
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <p>No new notifications</p>
+      )}
     </div>
   );
 
   const AvatarMenuOverlay = () => (
     <div className="avatarMenuOverlay">
-      {avatarMenuItems.map((item, index) => (
+      {[
+        { title: 'Profile', icon: <BsPersonCircle />, link: '/profile' },
+        { title: 'Settings', icon: <BsGear />, link: '/settings' },
+        {
+          title: 'Logout',
+          icon: <BsBoxArrowRight />,
+          action: () => {
+            console.log('Logging out...');
+          },
+        },
+      ].map((item, index) => (
         <div
           key={index}
           className="avatarMenuItem"
@@ -97,16 +133,21 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbarBrand"></div>
+      <div></div>
       <div className="navbarActions">
         <div
           ref={notificationRef}
-          onClick={() => {
-            setShowNotifications(!showNotifications);
-            setShowAvatarMenu(false);
-          }}
+          onClick={handleNotificationClick}
+          className="notificationIcon"
         >
-          <BsBell className="icon" />
+          {notifications?.some((notification) => !notification.isRead) ? (
+            <>
+              <MdNotificationsActive className="icon" />
+              <span className="notificationDot" />
+            </>
+          ) : (
+            <BsBell className="icon" />
+          )}
         </div>
         <Overlay
           target={notificationRef.current}
