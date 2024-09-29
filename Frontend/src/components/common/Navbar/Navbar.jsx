@@ -75,7 +75,7 @@ const Navbar = () => {
         </Link>
       </div>
       {notifications?.length > 0 ? (
-        notifications.map((notification) => (
+        notifications.slice(0, 5).map((notification) => (
           <div key={notification.id} className="notificationItem">
             <Link
               to={notification.type === 'LowStock' ? '/inventory' : '/orders'}

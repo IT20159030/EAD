@@ -1,12 +1,20 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--tertiary-color);
-  height: 70px;
-  padding: 0 20px;
-  color: var(--text-secondary-color);
-  position: relative;
+.notificationsPage {
+  padding: 20px;
+}
+
+.notificationItem {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.notificationLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.notificationDate {
+  font-size: 0.8em;
+  color: gray;
 }
 
 .notificationHeader {
@@ -41,18 +49,6 @@
   animation: pulse 1s infinite;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 .notificationOverlay,
 .avatarMenuOverlay {
   background-color: var(--tertiary-color);
@@ -68,12 +64,6 @@
   top: 70px;
   right: 60px;
   padding: 10px;
-}
-
-.avatarMenuOverlay {
-  width: 150px;
-  top: 70px;
-  right: 20px;
 }
 
 .navbarActions {
@@ -97,18 +87,6 @@
   text-decoration: none;
 }
 
-.avatarMenuItem {
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.avatarMenuItem:hover {
-  background-color: var(--secondary-color);
-}
-
 .notificationLink {
   color: var(--text-secondary-color);
   text-decoration: none;
@@ -118,7 +96,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1px;
+}
+
+.notificationContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .readIcon {
@@ -129,29 +112,6 @@
   font-size: 22px;
 }
 
-.avatarLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary-color);
-  text-decoration: none;
-}
-
 .itemTitle {
   margin-left: 10px;
-}
-
-.details {
-  display: block;
-  align-items: center;
-  justify-content: space-between;
-  margin-left: 20px;
-}
-
-.name {
-  font-weight: bold;
-}
-
-.role {
-  font-size: 12px;
 }
