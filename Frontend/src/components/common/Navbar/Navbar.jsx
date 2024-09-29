@@ -29,7 +29,7 @@ const Navbar = () => {
     const connectSignalR = async () => {
       try {
         const connection = new HubConnectionBuilder()
-          .withUrl("http://localhost:5159/api/v1/notificationHub")
+          .withUrl(import.meta.env.VITE_BACKEND_URL + "/notificationHub")
           .configureLogging(LogLevel.Information)
           .build();
 
