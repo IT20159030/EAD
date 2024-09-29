@@ -109,6 +109,20 @@ builder.Services.AddSingleton(sp =>
     return database.GetCollection<Notification>("Notification");
 });
 
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Product>("Products");
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Notification>("Notification");
+});
+
 // MARK: - Register StockMonitoringService
 builder.Services.AddSingleton<StockMonitoringService>();
 

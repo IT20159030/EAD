@@ -15,17 +15,20 @@ namespace Backend.Services.notification
     {
         private readonly IMongoCollection<Inventory> _inventoryCollection;
         private readonly IMongoCollection<Notification> _notifications;
+        private readonly IMongoCollection<Product> _products;
         private readonly ILogger<StockMonitoringService> _logger;
-
         private readonly IHubContext<NotificationHub> _hubContext;
 
+
         public StockMonitoringService(IMongoCollection<Inventory> inventoryCollection,
-                                      IMongoCollection<Notification> notifications,
-                                      ILogger<StockMonitoringService> logger,
-                                      IHubContext<NotificationHub> hubContext)
+                                   IMongoCollection<Notification> notifications,
+                                   IMongoCollection<Product> products, // Add this parameter
+                                   ILogger<StockMonitoringService> logger,
+                                   IHubContext<NotificationHub> hubContext)
         {
             _inventoryCollection = inventoryCollection;
             _notifications = notifications;
+            _products = products;
             _logger = logger;
             _hubContext = hubContext;
         }
@@ -38,11 +41,18 @@ namespace Backend.Services.notification
 
             foreach (var item in lowStockItems)
             {
+                // Fetch the product details
+                var product = await _products
+                    .Find(p => p.Id == item.ProductId)
+                    .FirstOrDefaultAsync();
+
+                string productName = product?.Name ?? "Unknown Product";
+
                 var notification = new Notification
                 {
                     RecipientId = item.VendorId,
                     Role = "Vendor",
-                    Message = $"Product {item.ProductId} is low on stock. Current quantity: {item.Quantity}.",
+                    Message = $"{productName} is low on stock. Current quantity: {item.Quantity}.",
                     CreatedAt = DateTime.UtcNow,
                     Type = "LowStock",
                     IsRead = false
@@ -58,9 +68,8 @@ namespace Backend.Services.notification
                 // Send notification via SignalR
                 await _hubContext.Clients.User(item.VendorId).SendAsync("ReceiveNotification", notification.Message);
 
-                _logger.LogInformation($"Low stock notification sent for Product {item.ProductId}");
+                _logger.LogInformation($"Low stock notification sent for Product {productName}");
             }
         }
-
     }
 }

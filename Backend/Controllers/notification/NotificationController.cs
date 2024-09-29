@@ -152,7 +152,7 @@ namespace Backend.Controllers.notification
             {
                 RecipientId = dto.RecipientId,
                 Role = "Vendor",
-                Message = $"Product {dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
+                Message = $"{dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
                 Type = "LowStock",
                 IsRead = false,
                 CreatedAt = DateTime.UtcNow
@@ -170,6 +170,34 @@ namespace Backend.Controllers.notification
                 Type = notification.Type,
                 IsRead = notification.IsRead
             });
+        }
+
+        // Mark notification as read by notification id
+        [HttpPut("{id}/read", Name = "MarkNotificationAsRead")]
+        public async Task<IActionResult> MarkAsRead(string id)
+        {
+            var notification = await _notifications.Find(n => n.Id == id).FirstOrDefaultAsync();
+            if (notification == null)
+            {
+                return NotFound();
+            }
+
+            notification.IsRead = true;
+
+            await _notifications.ReplaceOneAsync(n => n.Id == id, notification);
+
+#pragma warning disable CS8601 // Possible null reference assignment.
+            return Ok(new NotificationDto
+            {
+                Id = notification.Id!,
+                RecipientId = notification.RecipientId,
+                Role = notification.Role,
+                Message = notification.Message,
+                CreatedAt = notification.CreatedAt,
+                Type = notification.Type,
+                IsRead = notification.IsRead
+            });
+#pragma warning restore CS8601 // Possible null reference assignment.
         }
 
 
