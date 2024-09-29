@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import Footer from "../components/common/Footer/Footer";
 
 const AuthLayout = () => {
   return (
@@ -6,6 +7,7 @@ const AuthLayout = () => {
       <main>
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 };
