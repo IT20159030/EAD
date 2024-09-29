@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import { MdDelete, MdEdit, MdDownload } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
-import LoadingTableBody from "../../components/common/TableLoader/TableLoader"; // Use your TableLoader for the body
+import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
 import AddEditCategoryModal from "../../components/product/AddEditCategoryModal";
 import { downloadPDF } from "../../utils/downloadPDF";

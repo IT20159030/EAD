@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import ProductCategory from "./pages/product/ProductCategory";
 import Products from "./pages/product/Products";
+import NotificationsPage from "./pages/notification";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
@@ -21,12 +22,12 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 300000,
       onError: (error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       },
     },
     mutations: {
       onError: (error) => {
-        console.error('Error performing mutation:', error);
+        console.error("Error performing mutation:", error);
       },
     },
   },

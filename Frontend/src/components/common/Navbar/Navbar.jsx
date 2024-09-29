@@ -1,19 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   BsBell,
   BsPersonCircle,
   BsGear,
   BsBoxArrowRight,
-} from 'react-icons/bs';
-import { MdNotificationsActive } from 'react-icons/md';
-import Overlay from 'react-bootstrap/Overlay';
-import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+} from "react-icons/bs";
+import { MdNotificationsActive } from "react-icons/md";
+import Overlay from "react-bootstrap/Overlay";
+import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import {
   useGetAllNotifications,
   useMarkAsRead,
-} from '../../../hooks/notificationHooks';
-import './Navbar.css';
+} from "../../../hooks/notificationHooks";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -29,20 +29,20 @@ const Navbar = () => {
     const connectSignalR = async () => {
       try {
         const connection = new HubConnectionBuilder()
-          .withUrl('http://localhost:5159/api/v1/notificationHub')
+          .withUrl("http://localhost:5159/api/v1/notificationHub")
           .configureLogging(LogLevel.Information)
           .build();
 
         await connection.start();
-        console.log('SignalR Connected');
+        console.log("SignalR Connected");
 
-        connection.on('ReceiveNotification', () => {
+        connection.on("ReceiveNotification", () => {
           refetchNotifications();
         });
 
         setConnection(connection);
       } catch (err) {
-        console.error('Error connecting to SignalR:', err);
+        console.error("Error connecting to SignalR:", err);
       }
     };
 
@@ -63,8 +63,8 @@ const Navbar = () => {
     setShowAvatarMenu(false);
   };
 
-  const name = 'Jane Smith';
-  const role = 'Admin';
+  const name = "Jane Smith";
+  const role = "Admin";
 
   const NotificationOverlay = () => (
     <div className="notificationOverlay">
@@ -78,7 +78,7 @@ const Navbar = () => {
         notifications.slice(0, 5).map((notification) => (
           <div key={notification.id} className="notificationItem">
             <Link
-              to={notification.type === 'LowStock' ? '/inventory' : '/orders'}
+              to={notification.type === "LowStock" ? "/inventory" : "/orders"}
               onClick={() => {
                 setShowNotifications(false);
                 markNotificationAsRead(notification.id);
@@ -107,13 +107,13 @@ const Navbar = () => {
   const AvatarMenuOverlay = () => (
     <div className="avatarMenuOverlay">
       {[
-        { title: 'Profile', icon: <BsPersonCircle />, link: '/profile' },
-        { title: 'Settings', icon: <BsGear />, link: '/settings' },
+        { title: "Profile", icon: <BsPersonCircle />, link: "/profile" },
+        { title: "Settings", icon: <BsGear />, link: "/settings" },
         {
-          title: 'Logout',
+          title: "Logout",
           icon: <BsBoxArrowRight />,
           action: () => {
-            console.log('Logging out...');
+            console.log("Logging out...");
           },
         },
       ].map((item, index) => (

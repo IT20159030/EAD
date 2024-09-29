@@ -34,19 +34,7 @@ export default [
       indent: ["error", 2],
       "linebreak-style": ["error", "unix"],
 
-      "max-len": ["error", { code: 80 }],
-
-      "import/order": [
-        "error",
-        {
-          groups: [
-            ["builtin", "external"],
-            "internal",
-            ["parent", "sibling", "index"],
-          ],
-          "newlines-between": "always",
-        },
-      ],
+      "max-len": ["error", { code: 120 }],
 
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": [
