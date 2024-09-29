@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/product";
 

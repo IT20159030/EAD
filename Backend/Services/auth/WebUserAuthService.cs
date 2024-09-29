@@ -71,8 +71,9 @@ public class WebUserAuthService : IWebUserAuthService
       IsSuccess = true,
       AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
       Message = "Login successful",
+      Name = user.Name,
       Email = user.Email,
-      UserId = user.Id.ToString()
+      Role = roles.FirstOrDefault() ?? string.Empty
     };
 
   }
