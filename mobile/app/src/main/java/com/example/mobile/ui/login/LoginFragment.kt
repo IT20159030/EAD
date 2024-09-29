@@ -1,6 +1,7 @@
 package com.example.mobile.ui.login
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.mobile.ProductViewActivity
 import com.example.mobile.R
 import com.example.mobile.services.api.dto.AuthRequest
 import com.example.mobile.utils.ApiResponse
@@ -65,6 +67,11 @@ class LoginFragment : Fragment() {
                     }
                 }
             )
+        }
+
+        view.findViewById<Button>(R.id.test_product_view_button).setOnClickListener {
+            val productViewActivityIntent = Intent(context, ProductViewActivity::class.java)
+            startActivity(productViewActivityIntent)
         }
     }
 
