@@ -135,6 +135,21 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    [HttpPut("cancel/{id}")]
+    [Authorize(Roles = "admin,vendor,csr")]
+    public async Task<IActionResult> CancelOrder(string id)
+    {
+        var order = await _orders.Find(o => o.Id == id).FirstOrDefaultAsync();
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        order.Status = OrderStatus.Cancelled;
+        await _orders.ReplaceOneAsync(o => o.Id == id, order);
+        return Ok(ConvertToDto(order));
+    }
+
     [HttpGet("{id}", Name = "GetOrder")]
     public async Task<IActionResult> GetOrder(string id)
     {

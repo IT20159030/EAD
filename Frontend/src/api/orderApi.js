@@ -45,3 +45,8 @@ export const markOrderRejected = async (id) => {
   const response = await axios.put(`${baseUrl}/Order/reject/${id}`);
   return response.data;
 };
+
+export const markOrderCancelled = async (id) => {
+  const response = await axios.put(`${baseUrl}/Order/cancel/${id}`);
+  return response.data;
+};
