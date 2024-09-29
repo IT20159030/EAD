@@ -48,6 +48,7 @@ class ProfileFragment : Fragment() {
         tokenViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token == null) {
                 navController.navigate(R.id.action_global_loginFragment)
+
             } else {
                 fetchUserInfo()
             }

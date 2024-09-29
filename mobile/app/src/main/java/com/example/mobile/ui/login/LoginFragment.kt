@@ -75,8 +75,8 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-        view.findViewById<Button>(R.id.test_product_view_button).setOnClickListener {
+        //TODO: temp remove this
+        view?.findViewById<Button>(R.id.test_product_view_button)?.setOnClickListener {
             val productViewActivityIntent = Intent(context, ProductViewActivity::class.java)
             startActivity(productViewActivityIntent)
         }

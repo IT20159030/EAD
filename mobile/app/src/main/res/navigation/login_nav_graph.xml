@@ -33,5 +33,5 @@
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/login_fragment"
-        app:popUpToInclusive="true" />
+        app:popUpTo="@id/login_nav_graph" />
 </navigation>
