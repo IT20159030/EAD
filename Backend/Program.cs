@@ -68,7 +68,6 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing"))),
     };
 });
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -85,7 +84,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// MARK: - MongoDB Service
+//MongoDB singleton service
 builder.Services.AddSingleton<MongoDBService>();
 
 // MARK: - Register MongoDB Collections
@@ -132,6 +131,7 @@ builder.Services.AddSignalR();
 // Register hosted service for monitoring stock levels
 builder.Services.AddHostedService<StockMonitoringWorker>();
 
+//Services
 builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
 builder.Services.AddScoped<UserManagementService>();
@@ -156,9 +156,6 @@ app.UseCors("AllowSpecificOrigin");
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
