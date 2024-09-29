@@ -128,6 +128,9 @@ builder.Services.AddSingleton<StockMonitoringService>();
 // MARK: - Register UserMonitoringService
 builder.Services.AddSingleton<UserMonitoringService>();
 
+// MARK: - Register OrderMonitoringService
+builder.Services.AddSingleton<OrderMonitoringService>();
+
 // MARK: - SignalR Service
 builder.Services.AddSignalR();
 
