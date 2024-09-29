@@ -68,7 +68,10 @@ public class GetUsersResponse
 public class UserDto
 {
   public required string Id { get; set; }
-  public required string UserName { get; set; }
+  public required string Name { get; set; }
   public required string Email { get; set; }
+
+  public required string Status { get; set; }
+  public required DateTime CreatedAt { get; set; }
   // Add other properties as needed
 }

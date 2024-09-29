@@ -1,9 +1,6 @@
 /**
-* UserController.cs
-* This file contains the controller for the User model.
-* It contains the CRUD operations for the User model.
+* WebAuthenticationController.cs provides the API endpoints for user authentication for the web application.
 */
-
 using System.Net;
 using Backend.Dtos;
 using Backend.Services;

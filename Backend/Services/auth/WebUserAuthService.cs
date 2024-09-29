@@ -20,60 +20,6 @@ public class WebUserAuthService : IWebUserAuthService
     _configuration = configuration;
   }
 
-
-
-
-  public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request)
-  {
-    var user = await _userManager.FindByEmailAsync(request.Email);
-    if (user != null)
-    {
-      return new CreateUserResponse
-      {
-        IsSuccess = false,
-        Message = "User already exists"
-      };
-    }
-
-    var newUser = new User
-    {
-      Name = request.Name,
-      Email = request.Email,
-      UserName = request.Email,
-      UpdatedAt = DateTime.Now,
-      CreatedAt = DateTime.Now,
-      Status = AccountStatus.Active,
-      ConcurrencyStamp = Guid.NewGuid().ToString()
-    };
-
-    var result = await _userManager.CreateAsync(newUser, request.Password);
-
-    if (!result.Succeeded)
-    {
-      return new CreateUserResponse
-      {
-        IsSuccess = false,
-        Message = $"User creation failed: {result.Errors.FirstOrDefault()?.Description}"
-      };
-    }
-
-    var addUserToRoleResult = await _userManager.AddToRoleAsync(newUser, request.Role);
-    if (!addUserToRoleResult.Succeeded)
-    {
-      return new CreateUserResponse
-      {
-        IsSuccess = false,
-        Message = $"User creation failed: {addUserToRoleResult.Errors.FirstOrDefault()?.Description}"
-      };
-    }
-
-    return new CreateUserResponse
-    {
-      IsSuccess = result.Succeeded,
-      Message = "User created successfully"
-    };
-  }
-
   public async Task<LoginResponse> LoginAsync(string email, string password)
   {
 
