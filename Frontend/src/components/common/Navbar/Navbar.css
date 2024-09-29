@@ -1,0 +1,98 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--tertiary-color);
+  height: 70px;
+  padding: 0 20px;
+  color: var(--text-secondary-color);
+  position: relative;
+}
+
+.notificationOverlay,
+.avatarMenuOverlay {
+  background-color: var(--tertiary-color);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 1000;
+}
+
+.notificationOverlay {
+  width: 350px;
+  top: 70px;
+  right: 60px;
+  padding: 10px;
+}
+
+.avatarMenuOverlay {
+  width: 150px;
+  top: 70px;
+  right: 20px;
+}
+
+.navbarActions {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 24px;
+  margin-left: 20px;
+  cursor: pointer;
+  color: var(--text-secondary-color);
+}
+
+.icon:hover {
+  color: var(--primary-secondary-color);
+}
+
+.notificationItem {
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.avatarMenuItem {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.avatarMenuItem:hover {
+  background-color: var(--secondary-color);
+}
+
+.notificationLink {
+  color: var(--text-secondary-color);
+  text-decoration: none;
+}
+
+.avatarLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary-color);
+  text-decoration: none;
+}
+
+.itemTitle {
+  margin-left: 10px;
+}
+
+.details {
+  display: block;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.role {
+  font-size: 12px;
+}

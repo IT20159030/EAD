@@ -1,0 +1,15 @@
+.toastContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+  color: var(--text-color);
+}
+
+.toastSuccess {
+  background-color: var(--success-color);
+}
+
+.toastError {
+  background-color: var(--error-color);
+}
