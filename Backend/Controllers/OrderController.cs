@@ -16,7 +16,7 @@
 *   11. GET /api/v1/Order/GetByVendorId/{vendorId}: Get all orders by vendor id.
 */
 
-// TODO: @Navodit: When calling order cancellation, the order status should be updated to CancelRequested.
+// TODO: @Navod&Dinushka: When calling order cancellation, the order status should be updated to CancelRequested.
 // TODO: Call both APIs from frontend to update the order status and create a cancellation request.
 using Backend.Dtos;
 using Backend.Models;
@@ -120,9 +120,9 @@ public class OrderController : ControllerBase
         return orders.Select(ConvertToDto);
     }
 
-    [HttpPost("cancel/{orderId}")]
+    [HttpPost("CancelRequest/{orderId}")]
     [Authorize(Roles = "customer")]
-    public async Task<IActionResult> CancelOrder(string orderId)
+    public async Task<IActionResult> CancelRequestOrder(string orderId)
     {
         var order = await _orders.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
         if (order == null)
@@ -132,6 +132,21 @@ public class OrderController : ControllerBase
 
         order.Status = OrderStatus.CancelRequested;
         await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
+        return Ok(ConvertToDto(order));
+    }
+
+    [HttpPut("cancel/{id}")]
+    [Authorize(Roles = "admin,vendor,csr")]
+    public async Task<IActionResult> CancelOrder(string id)
+    {
+        var order = await _orders.Find(o => o.Id == id).FirstOrDefaultAsync();
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        order.Status = OrderStatus.Cancelled;
+        await _orders.ReplaceOneAsync(o => o.Id == id, order);
         return Ok(ConvertToDto(order));
     }
 

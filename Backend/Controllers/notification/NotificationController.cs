@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Backend.Controllers
+namespace Backend.Controllers.notification
 {
     [ApiController]
     [Route("api/v1/notification")]
@@ -26,25 +26,37 @@ namespace Backend.Controllers
         public NotificationController(ILogger<NotificationController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
-            _notifications = mongoDBService.Database.GetCollection<Notification>("notifications");
+            _notifications = mongoDBService.Database.GetCollection<Notification>("Notification");
         }
 
         [HttpGet(Name = "GetAllNotifications")]
         public async Task<IEnumerable<NotificationDto>> Get()
         {
-            var notifications = await _notifications.Find(n => n.RecipientId == User.FindFirstValue(ClaimTypes.NameIdentifier)).ToListAsync();
-#pragma warning disable CS8601 // Possible null reference assignment.
+            var notifications = await _notifications
+                .Find(n => true)
+                .Sort(Builders<Notification>.Sort.Descending(n => n.CreatedAt))
+                .ToListAsync();
+
+            if (notifications.Count == 0)
+            {
+                _logger.LogInformation("No notifications found.");
+            }
+            else
+            {
+                _logger.LogInformation($"{notifications.Count} notifications found.");
+            }
+
             return notifications.Select(n => new NotificationDto
             {
                 Id = n.Id!,
                 RecipientId = n.RecipientId,
                 Role = n.Role,
                 Message = n.Message,
+                MessageID = n.MessageID,
                 CreatedAt = n.CreatedAt,
                 Type = n.Type,
                 IsRead = n.IsRead
             });
-#pragma warning restore CS8601 // Possible null reference assignment.
         }
 
         [HttpGet("{id}", Name = "GetNotificationById")]
@@ -63,6 +75,7 @@ namespace Backend.Controllers
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -78,8 +91,10 @@ namespace Backend.Controllers
                 RecipientId = dto.RecipientId,
                 Role = dto.Role,
                 Message = dto.Message,
+                MessageID = dto.MessageID,
                 Type = dto.Type,
-                IsRead = dto.IsRead
+                IsRead = dto.IsRead,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _notifications.InsertOneAsync(notification);
@@ -90,6 +105,7 @@ namespace Backend.Controllers
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -116,6 +132,7 @@ namespace Backend.Controllers
                 RecipientId = notification.RecipientId,
                 Role = notification.Role,
                 Message = notification.Message,
+                MessageID = notification.MessageID,
                 CreatedAt = notification.CreatedAt,
                 Type = notification.Type,
                 IsRead = notification.IsRead
@@ -136,6 +153,65 @@ namespace Backend.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("lowStock", Name = "CreateLowStockNotification")]
+        public async Task<IActionResult> CreateLowStockNotification([FromBody] CreateLowStockNotificationDto dto)
+        {
+            var notification = new Notification
+            {
+                RecipientId = dto.RecipientId,
+                Role = "Vendor",
+                Message = $"{dto.ProductId} is low on stock. Current quantity: {dto.CurrentQuantity}.",
+                MessageID = dto.ProductId,
+                Type = "LowStock",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _notifications.InsertOneAsync(notification);
+
+            return CreatedAtAction(nameof(Get), new { id = notification.Id }, new NotificationDto
+            {
+                Id = notification.Id!,
+                RecipientId = notification.RecipientId,
+                Role = notification.Role,
+                Message = notification.Message,
+                MessageID = notification.MessageID,
+                CreatedAt = notification.CreatedAt,
+                Type = notification.Type,
+                IsRead = notification.IsRead
+            });
+        }
+
+        // Mark notification as read by notification id
+        [HttpPut("{id}/read", Name = "MarkNotificationAsRead")]
+        public async Task<IActionResult> MarkAsRead(string id)
+        {
+            var notification = await _notifications.Find(n => n.Id == id).FirstOrDefaultAsync();
+            if (notification == null)
+            {
+                return NotFound();
+            }
+
+            notification.IsRead = true;
+
+            await _notifications.ReplaceOneAsync(n => n.Id == id, notification);
+
+#pragma warning disable CS8601 // Possible null reference assignment.
+            return Ok(new NotificationDto
+            {
+                Id = notification.Id!,
+                RecipientId = notification.RecipientId,
+                Role = notification.Role,
+                Message = notification.Message,
+                MessageID = notification.MessageID,
+                CreatedAt = notification.CreatedAt,
+                Type = notification.Type,
+                IsRead = notification.IsRead
+            });
+#pragma warning restore CS8601 // Possible null reference assignment.
+        }
+
 
         private NotificationDto ConvertToDto(Notification notification)
         {

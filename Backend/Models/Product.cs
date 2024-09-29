@@ -12,6 +12,9 @@ public class Product
     [BsonElement("name")]
     public required string Name { get; set; }
 
+    [BsonElement("image")]
+    public required string Image { get; set; } = "default.jpg";
+
     [BsonElement("category")]
     [BsonRepresentation(BsonType.ObjectId)]
     public required string Category { get; set; }
@@ -27,6 +30,7 @@ public class Product
     public bool IsActive { get; set; } = false;
 
     [BsonElement("vendorId")]
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonRepresentation(BsonType.String)]
+    
     public required string VendorId { get; set; }
 }

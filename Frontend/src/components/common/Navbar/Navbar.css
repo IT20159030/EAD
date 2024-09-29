@@ -9,6 +9,50 @@
   position: relative;
 }
 
+.notificationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.seeAllLink {
+  color: var(--text-secondary-color);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.seeAllLink:hover {
+  text-decoration: underline;
+}
+
+.notificationIcon {
+  position: relative;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .notificationOverlay,
 .avatarMenuOverlay {
   background-color: var(--tertiary-color);
@@ -68,6 +112,21 @@
 .notificationLink {
   color: var(--text-secondary-color);
   text-decoration: none;
+}
+
+.notificationContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 1px;
+}
+
+.readIcon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: var(--text-secondary-color);
+  padding-bottom: 20px;
+  font-size: 22px;
 }
 
 .avatarLink {

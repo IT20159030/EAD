@@ -10,7 +10,7 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMongoCollection<Product> _products;
@@ -26,6 +26,7 @@ namespace Backend.Controllers
         {
             Id = product.Id!,
             Name = product.Name,
+            Image = product.Image,
             Category = product.Category,
             Description = product.Description,
             Price = product.Price,
@@ -37,6 +38,7 @@ namespace Backend.Controllers
         {
             Id = ObjectId.GenerateNewId().ToString(),
             Name = dto.Name,
+            Image = dto.Image,
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
@@ -49,6 +51,7 @@ namespace Backend.Controllers
         {
             Id = dto.Id,
             Name = dto.Name,
+            Image = dto.Image,
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
@@ -57,7 +60,7 @@ namespace Backend.Controllers
         };
 
         [HttpPost(Name = "CreateProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        // [Authorize(Roles = "Admin, Vendor")]
         public async Task<IActionResult> Post([FromBody] CreateProductRequestDto dto)
         {
             var product = ConvertToModel(dto);
