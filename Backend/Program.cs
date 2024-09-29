@@ -1,6 +1,7 @@
 using System.Text;
 using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
+using Backend.Hubs;
 using Backend.Models;
 using Backend.Services;
 using Backend.Services.notification;
@@ -130,15 +131,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Configure the HTTP request pipeline.
+app.UseRouting();
+
+// Register NotificationHub
+app.MapHub<NotificationHub>("/api/v1/notificationHub");
+
+// Enable CORS
 app.UseCors("AllowSpecificOrigin");
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Register NotificationHub
-app.MapHub<Backend.Hubs.NotificationHub>("/notificationHub");
 
 app.Run();

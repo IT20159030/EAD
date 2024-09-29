@@ -4,17 +4,17 @@
 * and is responsible for handling all real-time notifications.
 */
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
 
 namespace Backend.Hubs
 {
     public class NotificationHub : Hub
     {
-        public async Task SendLowStockNotification(string recipientId, string productId, int quantity)
+        // Method to send notifications to the client
+        public async Task SendNotification(string userId, string message)
         {
-            var message = $"Product {productId} is low on stock. Current quantity: {quantity}.";
-            await Clients.User(recipientId).SendAsync("ReceiveNotification", message);
+            await Clients.User(userId).SendAsync("ReceiveNotification", message);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Backend.Services.notification
             while (!stoppingToken.IsCancellationRequested)
             {
                 await _monitoringService.MonitorStockLevelsAsync();
-                await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken); // Run every 2 minutes
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Run every 1 minutes
             }
         }
     }

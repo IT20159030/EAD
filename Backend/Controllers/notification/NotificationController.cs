@@ -26,7 +26,7 @@ namespace Backend.Controllers
         public NotificationController(ILogger<NotificationController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
-            _notifications = mongoDBService.Database.GetCollection<Notification>("notifications");
+            _notifications = mongoDBService.Database.GetCollection<Notification>("Notification");
         }
 
         [HttpGet(Name = "GetAllNotifications")]
