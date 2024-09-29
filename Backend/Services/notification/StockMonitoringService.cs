@@ -52,7 +52,7 @@ namespace Backend.Services.notification
                 {
                     RecipientId = item.VendorId,
                     Role = "Vendor",
-                    Message = $"{productName} is low on stock.",
+                    Message = $"{productName} is low on stock",
                     CreatedAt = DateTime.UtcNow,
                     Type = "LowStock",
                     IsRead = false

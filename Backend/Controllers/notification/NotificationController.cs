@@ -32,7 +32,10 @@ namespace Backend.Controllers.notification
         [HttpGet(Name = "GetAllNotifications")]
         public async Task<IEnumerable<NotificationDto>> Get()
         {
-            var notifications = await _notifications.Find(n => true).ToListAsync();
+            var notifications = await _notifications
+                .Find(n => true)
+                .Sort(Builders<Notification>.Sort.Descending(n => n.CreatedAt))
+                .ToListAsync();
 
             if (notifications.Count == 0)
             {
@@ -42,6 +45,7 @@ namespace Backend.Controllers.notification
             {
                 _logger.LogInformation($"{notifications.Count} notifications found.");
             }
+
             return notifications.Select(n => new NotificationDto
             {
                 Id = n.Id!,
