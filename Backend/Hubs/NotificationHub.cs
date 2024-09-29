@@ -11,8 +11,14 @@ namespace Backend.Hubs
 {
     public class NotificationHub : Hub
     {
-        // Method to send notifications to the client
-        public async Task SendNotification(string userId, string message)
+        // Method to send notifications to all clients
+        public async Task SendNotification(string message)
+        {
+            await Clients.All.SendAsync("ReceiveNotification", message);
+        }
+
+        // Alternatively, if you want to send to specific users as well
+        public async Task SendNotificationToUser(string userId, string message)
         {
             await Clients.User(userId).SendAsync("ReceiveNotification", message);
         }

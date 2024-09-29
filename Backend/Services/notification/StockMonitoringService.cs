@@ -4,7 +4,9 @@
 * It uses the Inventory and Notification models to interact with the database.
 */
 
+using Backend.Hubs;
 using Backend.Models;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 
 namespace Backend.Services.notification
@@ -15,13 +17,17 @@ namespace Backend.Services.notification
         private readonly IMongoCollection<Notification> _notifications;
         private readonly ILogger<StockMonitoringService> _logger;
 
+        private readonly IHubContext<NotificationHub> _hubContext;
+
         public StockMonitoringService(IMongoCollection<Inventory> inventoryCollection,
                                       IMongoCollection<Notification> notifications,
-                                      ILogger<StockMonitoringService> logger)
+                                      ILogger<StockMonitoringService> logger,
+                                      IHubContext<NotificationHub> hubContext)
         {
             _inventoryCollection = inventoryCollection;
             _notifications = notifications;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         public async Task MonitorStockLevelsAsync()
@@ -49,8 +55,12 @@ namespace Backend.Services.notification
                 var update = Builders<Inventory>.Update.Set(i => i.LowStockAlert, true);
                 await _inventoryCollection.UpdateOneAsync(i => i.Id == item.Id, update);
 
+                // Send notification via SignalR
+                await _hubContext.Clients.User(item.VendorId).SendAsync("ReceiveNotification", notification.Message);
+
                 _logger.LogInformation($"Low stock notification sent for Product {item.ProductId}");
             }
         }
+
     }
 }

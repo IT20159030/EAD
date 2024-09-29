@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Backend.Controllers
+namespace Backend.Controllers.notification
 {
     [ApiController]
     [Route("api/v1/notification")]
@@ -32,8 +32,16 @@ namespace Backend.Controllers
         [HttpGet(Name = "GetAllNotifications")]
         public async Task<IEnumerable<NotificationDto>> Get()
         {
-            var notifications = await _notifications.Find(n => n.RecipientId == User.FindFirstValue(ClaimTypes.NameIdentifier)).ToListAsync();
-#pragma warning disable CS8601 // Possible null reference assignment.
+            var notifications = await _notifications.Find(n => true).ToListAsync();
+
+            if (notifications.Count == 0)
+            {
+                _logger.LogInformation("No notifications found.");
+            }
+            else
+            {
+                _logger.LogInformation($"{notifications.Count} notifications found.");
+            }
             return notifications.Select(n => new NotificationDto
             {
                 Id = n.Id!,
@@ -44,7 +52,6 @@ namespace Backend.Controllers
                 Type = n.Type,
                 IsRead = n.IsRead
             });
-#pragma warning restore CS8601 // Possible null reference assignment.
         }
 
         [HttpGet("{id}", Name = "GetNotificationById")]
