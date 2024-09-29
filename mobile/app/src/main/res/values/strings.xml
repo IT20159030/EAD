@@ -15,11 +15,20 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Product view -->
     <string name="product_view_image_desc">Image of the product that is being viewed.</string>
     <string name="category">Category</string>
     <string name="price">Price</string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+
+    <!-- Cart strings -->
+    <string name="proceed_pay"><![CDATA[Proceed & Pay]]></string>
+    <string name="cart">Cart</string>
+    <string name="cart_product_image">Cart Product Image</string>
+    <string name="cart_item_quantity">Quantity: %1$d</string>
+    <string name="cart_item_price">Price: %1$s</string>
 
 </resources>

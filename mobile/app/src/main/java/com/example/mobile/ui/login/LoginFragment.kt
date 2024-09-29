@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.mobile.CartActivity
 import com.example.mobile.ProductViewActivity
 import com.example.mobile.R
 import com.example.mobile.services.api.dto.AuthRequest
@@ -72,6 +73,11 @@ class LoginFragment : Fragment() {
         view.findViewById<Button>(R.id.test_product_view_button).setOnClickListener {
             val productViewActivityIntent = Intent(context, ProductViewActivity::class.java)
             startActivity(productViewActivityIntent)
+        }
+
+        view.findViewById<Button>(R.id.launch_cart_button).setOnClickListener {
+            val cartActivityIntent = Intent(context, CartActivity::class.java)
+            startActivity(cartActivityIntent)
         }
     }
 

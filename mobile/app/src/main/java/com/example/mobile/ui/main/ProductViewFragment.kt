@@ -65,7 +65,37 @@ class ProductViewFragment : Fragment() {
 
         // set views
         productViewNameView?.text = "Programmatically Set Product Name"
-        productViewDescriptionText?.text = "Programmatically Set Product Description"
+        productViewDescriptionText?.text = """
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            ipsum
+            
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+        """.trimIndent()
         productCategoryView?.text = "Set Category"
         productPriceView?.text = "$3000"
 
