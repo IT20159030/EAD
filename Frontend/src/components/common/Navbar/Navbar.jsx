@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -12,6 +13,7 @@ import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import {
   useGetAllNotifications,
   useMarkAsRead,
+  useGetNotificationByRecipientId,
 } from "../../../hooks/notificationHooks";
 import { useAuth } from "../../../provider/authProvider";
 import "./Navbar.css";
@@ -22,11 +24,15 @@ const Navbar = () => {
   const notificationRef = useRef(null);
   const avatarRef = useRef(null);
   const [connection, setConnection] = useState(null);
-  const { data: notifications, refetch: refetchNotifications } =
-    useGetAllNotifications();
-  const { mutate: markNotificationAsRead } = useMarkAsRead();
-
   const { user } = useAuth();
+  const userRole = user?.role;
+
+  const { data: notifications, refetch: refetchNotifications } =
+    userRole === "vendor"
+      ? useGetNotificationByRecipientId(user?.id)
+      : useGetAllNotifications();
+
+  const { mutate: markNotificationAsRead } = useMarkAsRead();
 
   useEffect(() => {
     const connectSignalR = async () => {
@@ -78,29 +84,38 @@ const Navbar = () => {
         </Link>
       </div>
       {notifications?.length > 0 ? (
-        notifications.slice(0, 5).map((notification) => (
-          <div key={notification.id} className="notificationItem">
-            <Link
-              to={notification.type === "LowStock" ? "/inventory" : "/orders"}
-              onClick={() => {
-                setShowNotifications(false);
-                markNotificationAsRead(notification.id);
-              }}
-              className="notificationLink"
-            >
-              <div className="notificationContent">
-                <p className="message">{notification.message}</p>
-                <div className="readIcon">
-                  {!notification.isRead && (
-                    <MdNotificationsActive
-                      onClick={() => markNotificationAsRead(notification.id)}
-                    />
-                  )}
+        notifications
+          .filter(
+            (notification) =>
+              !(
+                (user.role === "admin" || user.role === "csr") &&
+                notification.type === "LowStock"
+              )
+          )
+          .slice(0, 5)
+          .map((notification) => (
+            <div key={notification.id} className="notificationItem">
+              <Link
+                to={notification.type === "LowStock" ? "/inventory" : "/orders"}
+                onClick={() => {
+                  setShowNotifications(false);
+                  markNotificationAsRead(notification.id);
+                }}
+                className="notificationLink"
+              >
+                <div className="notificationContent">
+                  <p className="message">{notification.message}</p>
+                  <div className="readIcon">
+                    {!notification.isRead && (
+                      <MdNotificationsActive
+                        onClick={() => markNotificationAsRead(notification.id)}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))
+              </Link>
+            </div>
+          ))
       ) : (
         <p>No new notifications</p>
       )}

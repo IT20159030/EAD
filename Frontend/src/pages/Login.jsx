@@ -43,6 +43,7 @@ const Login = () => {
         name: res.name,
         email: res.email,
         role: res.role,
+        id: res.userId,
       });
       navigate("/", { replace: true });
     } catch (error) {

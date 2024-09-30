@@ -212,6 +212,36 @@ namespace Backend.Controllers.notification
 #pragma warning restore CS8601 // Possible null reference assignment.
         }
 
+        // get notifications by recipient id
+        [HttpGet("recipient/{recipientId}", Name = "GetNotificationsByRecipientId")]
+        public async Task<IEnumerable<NotificationDto>> GetByRecipientId(string recipientId)
+        {
+            var notifications = await _notifications
+                .Find(n => n.RecipientId == recipientId)
+                .Sort(Builders<Notification>.Sort.Descending(n => n.CreatedAt))
+                .ToListAsync();
+
+            if (notifications.Count == 0)
+            {
+                _logger.LogInformation("No notifications found.");
+            }
+            else
+            {
+                _logger.LogInformation($"{notifications.Count} notifications found.");
+            }
+
+            return notifications.Select(n => new NotificationDto
+            {
+                Id = n.Id!,
+                RecipientId = n.RecipientId,
+                Role = n.Role,
+                Message = n.Message,
+                MessageID = n.MessageID,
+                CreatedAt = n.CreatedAt,
+                Type = n.Type,
+                IsRead = n.IsRead
+            });
+        }
 
         private NotificationDto ConvertToDto(Notification notification)
         {

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllNotifications,
+  getNotificationByRecipientId,
   createNotification,
   deleteNotification,
   updateNotification,
@@ -21,6 +22,13 @@ export const useGetAllNotifications = () => {
   return useQuery({
     queryKey: ["notifications"],
     queryFn: getAllNotifications,
+  });
+};
+
+export const useGetNotificationByRecipientId = (recipientId) => {
+  return useQuery({
+    queryKey: ["notifications", recipientId],
+    queryFn: () => getNotificationByRecipientId(recipientId),
   });
 };
 

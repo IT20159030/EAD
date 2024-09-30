@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
-import { Button, Form, Table } from "react-bootstrap";
+import { Button, Form, Table, Pagination } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import CommonTitle from "../../components/common/Title/Title";
@@ -8,25 +9,34 @@ import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
 import { MdDelete, MdDownload } from "react-icons/md";
 import {
   useGetAllNotifications,
+  useGetNotificationByRecipientId,
   useDeleteNotification,
+  useMarkAsRead,
 } from "../../hooks/notificationHooks";
 import { downloadPDF } from "../../utils/downloadPDF";
 import { confirmDeletion } from "../../utils/helper";
 import styles from "../styles/Pages.module.css";
+import { useAuth } from "../../provider/authProvider";
 
 const Notifications = () => {
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const notificationsPerPage = 10;
+  const { user } = useAuth();
   const navigate = useNavigate();
   const {
     data: notifications,
     isLoading: isLoadingNotifications,
     refetch,
-  } = useGetAllNotifications();
+  } = user.role === "vendor"
+    ? useGetNotificationByRecipientId(user.id)
+    : useGetAllNotifications();
+
   const { mutate: deleteNotification } = useDeleteNotification();
+  const { mutate: markAsRead } = useMarkAsRead();
 
   useEffect(() => {
     refetch();
@@ -46,7 +56,6 @@ const Notifications = () => {
       if (result.isConfirmed) {
         deleteNotification(notificationId, {
           onSuccess: () => {
-            handleToast("Notification deleted successfully!", "success");
             refetch();
           },
           onError: () => {
@@ -72,6 +81,47 @@ const Notifications = () => {
       "Notifications_Report.pdf"
     );
   };
+
+  const handleMessageClick = (notification) => {
+    if (!notification.isRead) {
+      markAsRead(notification.id, {
+        onSuccess: () => {
+          refetch();
+        },
+        onError: () => {
+          handleToast("Failed to mark notification as read", "bg-danger");
+        },
+      });
+    }
+
+    navigate(
+      notification.type === "LowStock"
+        ? `/inventory/${notification.messageID}`
+        : `/orders/${notification.messageID}`
+    );
+  };
+
+  const filteredNotifications = notifications
+    ?.filter(
+      (notification) =>
+        !(
+          (user.role === "admin" || user.role === "csr") &&
+          notification.type === "LowStock"
+        )
+    )
+    .filter((notification) =>
+      notification.message.toLowerCase().includes(search.toLowerCase())
+    );
+
+  const totalNotifications = filteredNotifications?.length || 0;
+  const totalPages = Math.ceil(totalNotifications / notificationsPerPage);
+  const indexOfLastNotification = currentPage * notificationsPerPage;
+  const indexOfFirstNotification =
+    indexOfLastNotification - notificationsPerPage;
+  const currentNotifications = filteredNotifications?.slice(
+    indexOfFirstNotification,
+    indexOfLastNotification
+  );
 
   return (
     <div className={styles.container}>
@@ -112,52 +162,59 @@ const Notifications = () => {
           <LoadingTableBody loading={isLoadingNotifications} colSpan="6" />
         ) : (
           <tbody>
-            {notifications &&
-              notifications
-                .filter((notification) =>
-                  notification.message
-                    .toLowerCase()
-                    .includes(search.toLowerCase())
-                )
-                .map((notification, index) => (
-                  <tr key={notification.id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <span
-                        className={styles.notificationLink}
-                        style={{ cursor: "pointer", color: "#007bff" }}
-                        onClick={() =>
-                          navigate(
-                            notification.type === "LowStock"
-                              ? `/inventory/${notification.messageID}`
-                              : `/orders/${notification.messageID}`
-                          )
-                        }
-                      >
-                        {notification.message}
-                      </span>
-                    </td>
-
-                    <td>{new Date(notification.createdAt).toLocaleString()}</td>
-                    <td>
-                      {notification.type.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                    </td>
-                    <td>{notification.isRead ? "Read" : "Unread"}</td>
-                    <td className={styles.actions}>
-                      <Button
-                        className={styles.deleteButton}
-                        onClick={() =>
-                          handleDeleteNotification(notification.id)
-                        }
-                      >
-                        <MdDelete />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+            {currentNotifications &&
+              currentNotifications.map((notification, index) => (
+                <tr key={notification.id}>
+                  <td>{index + 1 + indexOfFirstNotification}</td>
+                  <td>
+                    <span
+                      className={styles.notificationLink}
+                      style={{ cursor: "pointer", color: "#007bff" }}
+                      onClick={() => handleMessageClick(notification)}
+                    >
+                      {notification.message}
+                    </span>
+                  </td>
+                  <td>{new Date(notification.createdAt).toLocaleString()}</td>
+                  <td>
+                    {notification.type.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                  </td>
+                  <td>{notification.isRead ? "Read" : "Unread"}</td>
+                  <td className={styles.actions}>
+                    <Button
+                      className={styles.deleteButton}
+                      onClick={() => handleDeleteNotification(notification.id)}
+                    >
+                      <MdDelete />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         )}
       </Table>
+
+      <Pagination className="justify-content-center">
+        <Pagination.Prev
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        />
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Pagination.Item
+            key={i + 1}
+            active={i + 1 === currentPage}
+            onClick={() => setCurrentPage(i + 1)}
+          >
+            {i + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        />
+      </Pagination>
 
       {showToast && (
         <AutoClosingToast
