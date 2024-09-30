@@ -7,5 +7,5 @@ namespace Backend.Services;
 public interface IMobileUserAuthService
 {
     Task<MRegisterResponse> RegisterUserAsync(MRegisterRequest request);
-    Task<LoginResponse> LoginAsync(string email, string password);
+    Task<MLoginResponse> LoginAsync(string email, string password);
 }

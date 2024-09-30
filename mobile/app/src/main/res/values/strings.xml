@@ -22,4 +22,12 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
 
+    <string name="cart">Cart</string>
+    <string name="orders">Orders</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="addresses">Addresses</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="logout">Logout</string>
+
+
 </resources>

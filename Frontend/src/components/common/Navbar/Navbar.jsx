@@ -13,6 +13,7 @@ import {
   useGetAllNotifications,
   useMarkAsRead,
 } from "../../../hooks/notificationHooks";
+import { useAuth } from "../../../provider/authProvider";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -24,6 +25,8 @@ const Navbar = () => {
   const { data: notifications, refetch: refetchNotifications } =
     useGetAllNotifications();
   const { mutate: markNotificationAsRead } = useMarkAsRead();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const connectSignalR = async () => {
@@ -63,8 +66,8 @@ const Navbar = () => {
     setShowAvatarMenu(false);
   };
 
-  const name = "Jane Smith";
-  const role = "Admin";
+  const name = user.name;
+  const role = user.role;
 
   const NotificationOverlay = () => (
     <div className="notificationOverlay">
@@ -112,9 +115,7 @@ const Navbar = () => {
         {
           title: "Logout",
           icon: <BsBoxArrowRight />,
-          action: () => {
-            console.log("Logging out...");
-          },
+          link: "/logout",
         },
       ].map((item, index) => (
         <div
