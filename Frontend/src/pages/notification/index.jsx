@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import CommonTitle from "../../components/common/Title/Title";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
@@ -10,6 +11,7 @@ import {
   useDeleteNotification,
 } from "../../hooks/notificationHooks";
 import { downloadPDF } from "../../utils/downloadPDF";
+import { confirmDeletion } from "../../utils/helper";
 import styles from "../styles/Pages.module.css";
 
 const Notifications = () => {
@@ -40,17 +42,20 @@ const Notifications = () => {
   };
 
   const handleDeleteNotification = (notificationId) => {
-    if (window.confirm("Are you sure you want to delete this notification?")) {
-      deleteNotification(notificationId, {
-        onSuccess: () => {
-          handleToast("Notification deleted successfully!", "success");
-          refetch();
-        },
-        onError: () => {
-          handleToast("Failed to delete notification", "bg-danger");
-        },
-      });
-    }
+    confirmDeletion().then((result) => {
+      if (result.isConfirmed) {
+        deleteNotification(notificationId, {
+          onSuccess: () => {
+            handleToast("Notification deleted successfully!", "success");
+            refetch();
+          },
+          onError: () => {
+            handleToast("Failed to delete notification", "bg-danger");
+          },
+        });
+        Swal.fire("Deleted!", "Your notification has been deleted.", "success");
+      }
+    });
   };
 
   const handleDownloadReport = () => {
