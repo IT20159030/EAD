@@ -14,7 +14,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-    
+
     <string name="orders">Orders</string>
     <string name="wishlist">Wishlist</string>
     <string name="addresses">Addresses</string>
@@ -38,5 +38,7 @@
     <string name="cart_product_image">Cart Product Image</string>
     <string name="cart_item_quantity">Quantity: %1$d</string>
     <string name="cart_item_price">Price: %1$s</string>
+    <string name="title_cart">Cart</string>
+    <string name="product_details">Product Details</string>
 
 </resources>

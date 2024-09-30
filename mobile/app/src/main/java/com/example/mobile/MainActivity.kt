@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         // TODO: implement proper navigation
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_profile))
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home, R.id.navigation_cart, R.id.navigation_profile))
         val toolbar =  findViewById<Toolbar>(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                     navView.visibility = View.GONE
                     toolbar.visibility = View.GONE
                 }
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_profile -> {
+                R.id.navigation_home, R.id.navigation_cart, R.id.navigation_profile -> {
                     navView.visibility = View.VISIBLE
                     toolbar.visibility = View.VISIBLE
                 }

@@ -13,8 +13,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.mobile.CartActivity
-import com.example.mobile.ProductViewActivity
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentLoginBinding
 import com.example.mobile.dto.LoginRequest
@@ -75,16 +73,6 @@ class LoginFragment : Fragment() {
                     showError(response.errorMessage)
                 }
             }
-        }
-        //TODO: temp remove this
-        view?.findViewById<Button>(R.id.test_product_view_button)?.setOnClickListener {
-            val productViewActivityIntent = Intent(context, ProductViewActivity::class.java)
-            startActivity(productViewActivityIntent)
-        }
-
-        view.findViewById<Button>(R.id.launch_cart_button).setOnClickListener {
-            val cartActivityIntent = Intent(context, CartActivity::class.java)
-            startActivity(cartActivityIntent)
         }
     }
 
