@@ -11,6 +11,9 @@ namespace Backend.Dtos
         public string Name { get; set; } = string.Empty;
 
         [Required]
+        public string Image { get; set; } = "default.jpg";
+
+        [Required]
         public string Category { get; set; } = string.Empty;
 
         [Required]
@@ -32,6 +35,9 @@ namespace Backend.Dtos
         public string Name { get; set; } = string.Empty;
 
         [Required]
+        public string Image { get; set; } = "default.jpg";
+
+        [Required]
         [StringLength(24, ErrorMessage = "Category Id length can't be more than 24.")]
         public string Category { get; set; } = string.Empty;
 
@@ -43,7 +49,7 @@ namespace Backend.Dtos
         public decimal Price { get; set; }
 
         [Required]
-        [StringLength(24, ErrorMessage = "Vendor Id length can't be more than 24.")]
+        [StringLength(36, ErrorMessage = "Vendor Id length can't be more than 36.")]
         public string VendorId { get; set; } = string.Empty;
     }
 
@@ -56,6 +62,9 @@ namespace Backend.Dtos
         [StringLength(250, ErrorMessage = "Name length can't be more than 250.")]
         public string Name { get; set; } = string.Empty;
 
+        [Required]
+        public string Image { get; set; } = "default.jpg";
+        
         [Required]
         [StringLength(24, ErrorMessage = "Category Id length can't be more than 24.")]
         public string Category { get; set; } = string.Empty;
@@ -70,7 +79,7 @@ namespace Backend.Dtos
         public bool IsActive { get; set; }
 
         [Required]
-        [StringLength(24, ErrorMessage = "Vendor Id length can't be more than 24.")]
+        [StringLength(36, ErrorMessage = "Vendor Id length can't be more than 36.")]
         public string VendorId { get; set; } = string.Empty;
     }
 

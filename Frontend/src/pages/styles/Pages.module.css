@@ -18,6 +18,8 @@
 
 .actions {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -49,4 +51,9 @@ th,
 td {
   vertical-align: middle;
   border-color: transparent;
+}
+
+.actions .deleteButton {
+  background-color: red;
+  border-color: var(--danger-color);
 }

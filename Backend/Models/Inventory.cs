@@ -21,4 +21,8 @@ public class Inventory
 
     [BsonElement("lowStockAlert")]
     public bool LowStockAlert { get; set; } = false;
+
+    [BsonElement("vendorId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public required string VendorId { get; set; }
 }

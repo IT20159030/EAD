@@ -28,6 +28,14 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
+
+      quotes: ["error", "double"],
+      semi: ["error", "always"],
+      indent: ["error", 2],
+      "linebreak-style": ["error", "unix"],
+
+      "max-len": ["error", { code: 120 }],
+
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": [
         "warn",

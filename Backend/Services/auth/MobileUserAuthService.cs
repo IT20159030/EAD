@@ -68,13 +68,13 @@ public class MobileUserAuthService : IMobileUserAuthService
     };
   }
 
-  public async Task<LoginResponse> LoginAsync(string email, string password)
+  public async Task<MLoginResponse> LoginAsync(string email, string password)
   {
 
     var user = await _userManager.FindByEmailAsync(email);
     if (user == null || user.Email == null || !await _userManager.CheckPasswordAsync(user, password))
     {
-      return new LoginResponse
+      return new MLoginResponse
       {
         IsSuccess = false,
         Message = "Invalid email or password"
@@ -83,7 +83,7 @@ public class MobileUserAuthService : IMobileUserAuthService
 
     if (user.Status == AccountStatus.Unapproved || user.Status == AccountStatus.Deactivated || user.Status == AccountStatus.Rejected)
     {
-      return new LoginResponse
+      return new MLoginResponse
       {
         IsSuccess = false,
         Message = user.Status == AccountStatus.Unapproved ? "Account not approved" : user.Status == AccountStatus.Deactivated ? "Account deactivated" : "Account rejected"
@@ -115,7 +115,7 @@ public class MobileUserAuthService : IMobileUserAuthService
       signingCredentials: creds
     );
 
-    return new LoginResponse
+    return new MLoginResponse
     {
       IsSuccess = true,
       AccessToken = new JwtSecurityTokenHandler().WriteToken(token),

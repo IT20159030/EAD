@@ -23,6 +23,9 @@ public class Notification
     [BsonElement("Message")]
     public string? Message { get; set; }
 
+    [BsonElement("MessageID")]
+    public string? MessageID { get; set; } // Product ID, Order ID, Account ID
+
     [BsonElement("CreatedAt")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

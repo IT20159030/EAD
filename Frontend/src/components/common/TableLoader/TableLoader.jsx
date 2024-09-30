@@ -1,12 +1,12 @@
 import Spinner from "react-bootstrap/Spinner";
 
-const TableLoader = ({ loading }) => {
+const TableLoader = ({ loading, colSpan = "3" }) => {
   return (
     <tbody>
       {loading ? (
         <tr>
           <td
-            colSpan="3"
+            colSpan={colSpan}
             rowSpan="5"
             className="text-center h5 py-5 text-muted"
           >

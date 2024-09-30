@@ -10,7 +10,7 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMongoCollection<Product> _products;
@@ -26,6 +26,7 @@ namespace Backend.Controllers
         {
             Id = product.Id!,
             Name = product.Name,
+            Image = product.Image,
             Category = product.Category,
             Description = product.Description,
             Price = product.Price,
@@ -37,6 +38,7 @@ namespace Backend.Controllers
         {
             Id = ObjectId.GenerateNewId().ToString(),
             Name = dto.Name,
+            Image = dto.Image,
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
@@ -49,6 +51,7 @@ namespace Backend.Controllers
         {
             Id = dto.Id,
             Name = dto.Name,
+            Image = dto.Image,
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
@@ -57,7 +60,7 @@ namespace Backend.Controllers
         };
 
         [HttpPost(Name = "CreateProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Post([FromBody] CreateProductRequestDto dto)
         {
             var product = ConvertToModel(dto);
@@ -66,7 +69,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet(Name = "GetAllProducts")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> Get()
         {
             var products = await _products.Find(new BsonDocument()).ToListAsync();
@@ -74,6 +77,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("active", Name = "GetActiveProducts")]
+        // [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();
@@ -90,7 +94,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("vendor/{vendorId}", Name = "GetProductsByVendor")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> GetByVendor(string vendorId)
         {
             var products = await _products.Find(p => p.VendorId == vendorId).ToListAsync();
@@ -105,7 +109,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("vendor/{vendorId}/inactive", Name = "GetInactiveProductsByVendor")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> GetInactiveByVendor(string vendorId)
         {
             var products = await _products.Find(p => p.VendorId == vendorId && !p.IsActive).ToListAsync();
@@ -127,7 +131,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Put(string id, [FromBody] UpdateProductRequestDto dto)
         {
             var existingProduct = await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
@@ -140,7 +144,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Delete(string id)
         {
             await _products.DeleteOneAsync(p => p.Id == id);
@@ -148,7 +152,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}/activate", Name = "ActivateProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Activate(string id)
         {
             var update = Builders<Product>.Update.Set(p => p.IsActive, true);
@@ -157,7 +161,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}/deactivate", Name = "DeactivateProduct")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Deactivate(string id)
         {
             var update = Builders<Product>.Update.Set(p => p.IsActive, false);
