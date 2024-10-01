@@ -10,26 +10,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile.R
 import com.example.mobile.data.model.CartItem
 import com.squareup.picasso.Picasso
+import java.util.Locale
 
 class CartAdapter(
-    private val cartItems: List<CartItem>,
+    private var cartItems: MutableList<CartItem>,
     private val onRemoveClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     class CartViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val productImageView: ImageView = view.findViewById(R.id.cart_item_product_image)
-        val productNameTextView: TextView = view.findViewById(R.id.cart_item_product_name)
-        val productQuantityTextView: TextView = view.findViewById(R.id.cart_item_product_quantity)
-        val productPriceTextView: TextView = view.findViewById(R.id.cart_item_product_price)
-        val removeButton: Button = view.findViewById(R.id.cart_item_remove_button)
+        private val productImageView: ImageView = view.findViewById(R.id.cart_item_product_image)
+        private val productNameTextView: TextView = view.findViewById(R.id.cart_item_product_name)
+        private val productQuantityTextView: TextView = view.findViewById(R.id.cart_item_product_quantity)
+        private val productPriceTextView: TextView = view.findViewById(R.id.cart_item_product_price)
+        private val removeButton: Button = view.findViewById(R.id.cart_item_remove_button)
 
         fun bind(cartItem: CartItem, onRemoveClick: (CartItem) -> Unit) {
             // Set product details
-            Picasso.get().load("https://images2.alphacoders.com/655/655076.jpg")
+            Picasso.get().load(cartItem.imageUrl)
                 .into(productImageView)
             productNameTextView.text = cartItem.productName
-            productQuantityTextView.text = "Quantity: ${cartItem.quantity}"
-            productPriceTextView.text = "Price: $${cartItem.totalPrice}"
+            productQuantityTextView.text = String.format(Locale.getDefault(),
+                "Quantity: %2d", cartItem.quantity)
+            productPriceTextView.text = String.format(Locale.getDefault(),
+                "Price: $%.2f", cartItem.totalPrice)
+
 
             // Remove button click listener
             removeButton.setOnClickListener {
@@ -40,7 +44,7 @@ class CartAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.card_item, parent, false)
+            .inflate(R.layout.cart_item, parent, false)
         return CartViewHolder(view)
     }
 
@@ -49,4 +53,10 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = cartItems.size
+
+    fun updateList(newCartItems: List<CartItem>) {
+        cartItems.clear()
+        cartItems.addAll(newCartItems)
+        notifyDataSetChanged()
+    }
 }

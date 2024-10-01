@@ -7,8 +7,8 @@ import com.example.mobile.utils.CartDatabaseHelper
 class CartRepository(context: Context) {
     private val dbHelper = CartDatabaseHelper(context)
 
-    fun addProductToCart(productName: String, quantity: Int, totalPrice: Double): Long {
-        return dbHelper.addToCart(productName, quantity, totalPrice)
+    fun addProductToCart(productId: String, productName: String, quantity: Int, totalPrice: Double, imageUrl: String): Long {
+        return dbHelper.addToCart(productId, productName, quantity, totalPrice, imageUrl)
     }
 
     fun getCartItems(): List<CartItem> {
@@ -17,5 +17,9 @@ class CartRepository(context: Context) {
 
     fun removeCartItem(cartItem: CartItem) {
         dbHelper.deleteCartItem(cartItem.id)
+    }
+
+    fun clearCart() {
+        dbHelper.clearCart()
     }
 }
