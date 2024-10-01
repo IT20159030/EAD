@@ -10,16 +10,23 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    // [Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMongoCollection<Product> _products;
+        private readonly IMongoCollection<ProductCategory> _productsCategory;
+        private readonly IMongoCollection<User> _users;
+        private readonly IMongoCollection<Inventory> _inventory;
+
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(ILogger<ProductController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
             _products = mongoDBService.Database.GetCollection<Product>("Products");
+            _productsCategory = mongoDBService.Database.GetCollection<ProductCategory>("ProductCategories");
+            _users = mongoDBService.Database.GetCollection<User>("Users");
+            _inventory = mongoDBService.Database.GetCollection<Inventory>("Inventory");
         }
 
         private ProductDto ConvertToDto(Product product) => new ProductDto
@@ -73,11 +80,19 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> Get()
         {
             var products = await _products.Find(new BsonDocument()).ToListAsync();
+            foreach (var product in products)
+            {
+                var category = await _productsCategory.Find(c => c.Id == product.Category).FirstOrDefaultAsync();
+                if (category != null)
+                {
+                    product.Category = category.Name;
+                }
+            }
             return products.Select(ConvertToDto);
         }
 
         [HttpGet("active", Name = "GetActiveProducts")]
-        // [Authorize(Roles = "admin, vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();
