@@ -32,7 +32,7 @@ public class CancellationRequest
     [BsonElement("ProcessedBy")]
     public required string ProcessedBy { get; set; } // CSR or Admin ID
 
-    [BsonElement("ProcessedDatse")]
+    [BsonElement("ProcessedDate")]
     public DateTime? ProcessedDate { get; set; }
 
     [BsonElement("DecisionNote")]

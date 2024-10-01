@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.mobile.services.api.auth.AuthApiService
+import com.example.mobile.services.api.order.OrderApiService
+import com.example.mobile.services.api.product.ProductApiService
 import com.example.mobile.services.api.profile.ProfileApiService
 import com.example.mobile.utils.AuthInterceptor
 import com.example.mobile.utils.TokenManager
@@ -51,7 +53,7 @@ class SingletonModule {
     @Provides
     fun provideRetrofitBuilder(): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("http://192.168.1.4:5159/api/v1/")
+            .baseUrl("http://192.168.1.6:5159/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
 
     @Singleton
@@ -68,4 +70,21 @@ class SingletonModule {
             .client(okHttpClient)
             .build()
             .create(ProfileApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideProductAPIService(okHttpClient: OkHttpClient, retrofit: Retrofit.Builder): ProductApiService =
+        retrofit
+            .client(okHttpClient)
+            .build()
+            .create(ProductApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideOrderAPIService(okHttpClient: OkHttpClient, retrofit: Retrofit.Builder): OrderApiService =
+        retrofit
+            .client(okHttpClient)
+            .build()
+            .create(OrderApiService::class.java)
+
 }

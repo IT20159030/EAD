@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.PUT
 
+
 interface ProfileApiService {
     @GET("customer-auth/user")
     suspend fun getUserInfo(): Response<UserInfoResponse>

@@ -73,7 +73,8 @@ public class WebUserAuthService : IWebUserAuthService
       Message = "Login successful",
       Name = user.Name,
       Email = user.Email,
-      Role = roles.FirstOrDefault() ?? string.Empty
+      Role = roles.FirstOrDefault() ?? string.Empty,
+      UserId = user.Id.ToString()
     };
 
   }
