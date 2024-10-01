@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_background"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="start">
+
+<!--    <TextView-->
+<!--        android:id="@+id/notification_text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="You have 3 new notifications!"-->
+<!--        android:textAppearance="?attr/textAppearanceSubtitle1"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:padding="10dp" />-->
+
+    <!-- Dummy notifications -->
+    <TextView
+        android:id="@+id/dummy_notification_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order #1234 has been shipped"
+        android:textColor="@android:color/black"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/dummy_notification_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New message from customer support"
+        android:textColor="@android:color/black"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/dummy_notification_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price drop alert on Item #5678"
+        android:textColor="@android:color/black"
+        android:padding="5dp" />
+
+</LinearLayout>
