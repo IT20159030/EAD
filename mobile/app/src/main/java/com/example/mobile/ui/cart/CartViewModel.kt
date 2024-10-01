@@ -7,13 +7,14 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mobile.data.model.CartItem
 import com.example.mobile.dto.OrderItem
 import com.example.mobile.repository.CartRepository
+import java.util.Locale
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val cartRepository = CartRepository(application)
     private val _cartItems = MutableLiveData<List<CartItem>>()
 
-    fun addToCart(productId: String, productName: String, quantity: Int, totalPrice: Double, imageUrl: String) {
-        cartRepository.addProductToCart(productId, productName, quantity, totalPrice, imageUrl)
+    fun addToCart(productId: String, productName: String, quantity: Int, totalPrice: Double, imageUrl: String): Long {
+        return cartRepository.addProductToCart(productId, productName, quantity, totalPrice, imageUrl)
     }
 
     fun removeCartItem(cartItem: CartItem) {
@@ -36,7 +37,8 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
         return cartItems.mapIndexed { index, cartItem ->
             OrderItem(
-                orderItemId = index.toString(),
+                id = "", // auto generated
+                orderItemId = String.format(Locale.getDefault(), "%03d", index + 1),
                 productId = cartItem.productId,
                 productName = cartItem.productName,
                 quantity = cartItem.quantity,

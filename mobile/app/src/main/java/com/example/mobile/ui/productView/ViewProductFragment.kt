@@ -94,11 +94,14 @@ class ViewProductFragment : Fragment() {
 
             // Add product to cart in database
             if (productName != null && productId != null) {
-                cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
+                var rowId = cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
 
                 // show toast with success message
-                Toast.makeText(context,
-                    getString(R.string.product_added_to_cart), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    if (rowId > 0) getString(R.string.product_added_to_cart) else getString(R.string.product_add_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

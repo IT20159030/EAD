@@ -1,8 +1,11 @@
 package com.example.mobile.ui.order
 
+import androidx.lifecycle.MutableLiveData
 import com.example.mobile.dto.Order
 import com.example.mobile.repository.OrderRepository
+import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.BaseViewModel
+import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -10,7 +13,13 @@ import javax.inject.Inject
 class OrderViewModel@Inject constructor (
     private val orderRepository: OrderRepository
 ) : BaseViewModel() {
-    suspend fun createOrder(order: Order) {
+    private val _order = MutableLiveData<ApiResponse<Order>>()
+    val order = _order
+
+    fun createOrderRequest(order: Order, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _order,
+        coroutinesErrorHandler,
+    ) {
         orderRepository.createOrder(order)
     }
 }

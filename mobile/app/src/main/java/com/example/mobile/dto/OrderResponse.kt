@@ -3,7 +3,7 @@ package com.example.mobile.dto
 import com.google.gson.annotations.SerializedName
 
 data class Order (
-    @SerializedName("OrderId")
+    @SerializedName("id")
     var orderId: String,
     var status: Int,
     var orderDate: String,
@@ -13,7 +13,7 @@ data class Order (
 )
 
 data class OrderItem (
-    @SerializedName("OrderItem")
+    var id: String,
     var orderItemId: String,
     var productId: String,
     var productName: String,
