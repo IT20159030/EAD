@@ -10,4 +10,9 @@ class ProfileRepository @Inject constructor(
     fun getUserInfo() = apiRequestFlow {
         mainApiService.getUserInfo()
     }
+
+    fun deactivateAccount() = apiRequestFlow {
+        mainApiService.deactivateAccount()
+    }
+
 }

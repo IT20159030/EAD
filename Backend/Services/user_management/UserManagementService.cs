@@ -139,4 +139,51 @@ public class UserManagementService : IUserManagementService
       };
     }
   }
+
+  public async Task<UpdateUserStatusResponse> UpdateUserStatusAsync(string userId, UpdateUserStatusRequest request)
+  {
+
+    try
+    {
+      var user = await _userManager.FindByIdAsync(userId);
+      if (user == null)
+      {
+        return new UpdateUserStatusResponse
+        {
+          IsSuccess = false,
+          Message = "User not found"
+        };
+      }
+
+      user.Status = Enum.Parse<AccountStatus>(request.Status, true);
+      user.UpdatedAt = DateTime.Now;
+
+      var result = await _userManager.UpdateAsync(user);
+      if (!result.Succeeded)
+      {
+        return new UpdateUserStatusResponse
+        {
+          IsSuccess = false,
+          Message = $"User status update failed: {result.Errors.FirstOrDefault()?.Description}"
+        };
+      }
+
+      return new UpdateUserStatusResponse
+      {
+        IsSuccess = true,
+        Message = "User status updated successfully"
+      };
+    }
+    catch (Exception ex)
+    {
+      // Log the exception
+      Console.WriteLine($"Error in UpdateUserStatusAsync: {ex.Message}");
+      return new UpdateUserStatusResponse
+      {
+        IsSuccess = false,
+        Message = "An error occurred while updating user status."
+      };
+    }
+
+  }
 }

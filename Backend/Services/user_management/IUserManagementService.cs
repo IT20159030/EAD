@@ -8,6 +8,8 @@ public interface IUserManagementService
   Task<GetUserResponse> GetUserAsync(string userId);
   Task<UpdateUserResponse> UpdateUserAsync(string userId, UpdateUserRequest request);
   Task<DeleteUserResponse> DeleteUserAsync(string userId);
-
   Task<GetUsersResponse> GetUsersAsync(string role);
+
+  Task<UpdateUserStatusResponse> UpdateUserStatusAsync(string userId, UpdateUserStatusRequest request);
+
 }

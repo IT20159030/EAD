@@ -15,3 +15,8 @@ data class UserInfo(
     val email: String,
     val name: String
 )
+
+data class UserDeactivationResponse(
+    var isSuccess: Boolean,
+    var message: String,
+)
