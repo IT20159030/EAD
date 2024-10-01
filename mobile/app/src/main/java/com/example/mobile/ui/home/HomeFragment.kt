@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
             if (token == null) {
                 navController.navigate(R.id.action_global_loginFragment)
             } else {
-                fetchProductInfo()
+                filterProducts("")
             }
         }
 
@@ -114,10 +114,12 @@ class HomeFragment : Fragment() {
 
     // Filter products based on search query
     private fun filterProducts(query: String) {
-        val filteredList = productList.filter {
-            it.name.contains(query, ignoreCase = true)
+        showLoading(true)
+        if (query.isEmpty()) {
+            fetchAllProducts()
+        } else {
+            searchProducts(query)
         }
-        productAdapter.updateList(filteredList)
     }
 
     override fun onDestroyView() {
@@ -126,8 +128,18 @@ class HomeFragment : Fragment() {
         productList.clear()
     }
 
-    private fun fetchProductInfo() {
+    private fun fetchAllProducts() {
         productViewModel.getProducts(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                showError(message)
+            }
+        })
+    }
+
+    private fun searchProducts(query: String) {
+        productViewModel.searchProducts(query, object : CoroutinesErrorHandler {
             override fun onError(message: String) {
                 showLoading(false)
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

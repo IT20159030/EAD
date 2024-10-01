@@ -10,4 +10,9 @@ class ProductRepository @Inject constructor (
     fun getProducts() = apiRequestFlow {
         mainApiService.getProducts()
     }
+
+    fun searchProducts(query: String) = apiRequestFlow {
+        mainApiService.searchProducts(query)
+    }
+
 }

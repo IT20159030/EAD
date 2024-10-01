@@ -22,4 +22,11 @@ class ProductViewModel @Inject constructor (
     ) {
         productRepository.getProducts()
     }
+
+    fun searchProducts(query: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _products,
+        coroutinesErrorHandler,
+    ) {
+        productRepository.searchProducts(query)
+    }
 }

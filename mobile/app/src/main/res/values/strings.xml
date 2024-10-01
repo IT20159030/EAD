@@ -41,5 +41,6 @@
     <string name="title_cart">Cart</string>
     <string name="product_details">Product Details</string>
 
-    <string name="currency">$</string>">
+    <string name="currency">$</string>
+    <string name="product_added_to_cart">Product added to cart</string>">
 </resources>

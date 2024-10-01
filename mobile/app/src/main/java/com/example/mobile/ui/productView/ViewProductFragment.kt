@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobile.R
@@ -98,7 +99,8 @@ class ViewProductFragment : Fragment() {
                 cartViewModel.addToCart(productName, quantity, totalPrice, productImageUrl ?: PLACEHOLDER_IMAGE_URL)
 
                 // show toast with success message
-                //TODO: show toast with success message
+                Toast.makeText(context,
+                    getString(R.string.product_added_to_cart), Toast.LENGTH_SHORT).show()
             }
         }
 
