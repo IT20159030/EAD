@@ -13,11 +13,12 @@ import javax.inject.Inject
 class OrderViewModel@Inject constructor (
     private val orderRepository: OrderRepository
 ) : BaseViewModel() {
-    private val _order = MutableLiveData<ApiResponse<Order>>()
-    val order = _order
+
+    private val _orderResponse = MutableLiveData<ApiResponse<Order>>()
+    val orderResponse = _orderResponse
 
     fun createOrderRequest(order: Order, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
-        _order,
+        _orderResponse,
         coroutinesErrorHandler,
     ) {
         orderRepository.createOrder(order)

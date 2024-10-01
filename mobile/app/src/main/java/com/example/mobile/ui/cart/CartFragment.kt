@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile.data.model.CartItem
@@ -13,6 +14,8 @@ import com.example.mobile.data.model.CartItem
 import com.example.mobile.databinding.FragmentCartBinding
 import com.example.mobile.dto.Order
 import com.example.mobile.ui.order.OrderViewModel
+import com.example.mobile.utils.ApiResponse
+import com.example.mobile.viewModels.AuthViewModel
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,9 +29,12 @@ class CartFragment : Fragment() {
 
     private var cartItems = mutableListOf<CartItem>()
     private lateinit var cartAdapter: CartAdapter
+    private lateinit var cartErrorText: TextView
+    private var customerID: String = ""
 
     private val cartViewModel: CartViewModel by viewModels()
     private val orderViewModel: OrderViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,24 +59,22 @@ class CartFragment : Fragment() {
         cartRecyclerView.adapter = cartAdapter
 
         val cartProceedButton = binding.cartProceedPayButton
-        val cartErrorText = binding.cartErrorText
+        cartErrorText = binding.cartErrorText
 
         // Load cart data from ViewModel
         cartViewModel.getCartItems().observe(viewLifecycleOwner) { cartItems ->
             cartAdapter.updateList(cartItems)
-
         }
 
         // button listeners
         cartProceedButton.setOnClickListener {
-            showLoading(true)
-
             val order = createOrderObject()
             sendCreateOrderRequest(order)
-
-            cartViewModel.clearCart()
-            showLoading(false)
         }
+
+        orderResponseObserver()
+        customerIdObserver()
+        requestCustomerId()
     }
 
     private fun sendCreateOrderRequest(order: Order) {
@@ -82,9 +86,46 @@ class CartFragment : Fragment() {
         })
     }
 
+    private fun customerIdObserver() {
+        authViewModel.userInfoResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+                is ApiResponse.Success -> {
+                    customerID = response.data.data.userId
+                    showLoading(false)
+                }
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun orderResponseObserver() {
+        orderViewModel.orderResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+                is ApiResponse.Success -> {
+                    Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
+                    cartViewModel.clearCart()
+                    showLoading(false)
+                }
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    Toast.makeText(context, response.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showError(message: String) {
+        cartErrorText.text = message
     }
 
     private fun showLoading(status: Boolean) {
@@ -92,21 +133,41 @@ class CartFragment : Fragment() {
         loadingIndicator.visibility = if (status) View.VISIBLE else View.GONE
     }
 
+    private fun requestCustomerId() {
+        authViewModel.userInfo(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+            }
+        })
+    }
+
     private fun createOrderObject(): Order {
         val orderItems = cartViewModel.getCartItemsAsOrderItems()
         val totalPrice: Double = orderItems.sumOf { it.price }
-        val date = java.util.Date()
+        val date: String = getDateTime()
+
+//        if (customerID.isEmpty()) requestCustomerId()
 
         val order = Order(
-            orderId = "", // auto generated
+            orderId = getUnixTimestamp().toString(),
             status = 0,
-            orderDate = date.toString(),
+            orderDate = date,
             orderItems = orderItems,
             totalPrice = totalPrice,
-            customerId = "" //TODO: get customer id from user
+            customerId = customerID.ifEmpty { "3fd78a08-d8ec-404f-bfc4-7a5dd1d9bbd5" }
         )
 
         return order
+    }
+
+    private fun getDateTime(): String {
+        val date = java.util.Date()
+        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        return formatter.format(date)
+    }
+
+    private fun getUnixTimestamp(): Long {
+        return System.currentTimeMillis() / 1000
     }
 
 }

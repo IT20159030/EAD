@@ -1,9 +1,6 @@
 package com.example.mobile.dto
 
-import com.google.gson.annotations.SerializedName
-
 data class Order (
-    @SerializedName("id")
     var orderId: String,
     var status: Int,
     var orderDate: String,
