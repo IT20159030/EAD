@@ -45,10 +45,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        // TODO: might need to move this to a base fragment
         tokenViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token == null) {
                 navController.navigate(R.id.action_global_loginFragment)
-
             } else {
                 fetchUserInfo()
             }

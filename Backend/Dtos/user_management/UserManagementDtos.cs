@@ -75,3 +75,14 @@ public class UserDto
   public required DateTime CreatedAt { get; set; }
   // Add other properties as needed
 }
+
+public class UpdateUserStatusRequest
+{
+  public required string Status { get; set; }
+}
+
+public class UpdateUserStatusResponse
+{
+  public bool IsSuccess { get; set; }
+  public string Message { get; set; } = string.Empty;
+}

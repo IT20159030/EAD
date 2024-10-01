@@ -20,7 +20,8 @@
         tools:layout="@layout/fragment_dashboard"
         app:defaultNavHost="true"
 
-        />
+        >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -31,7 +32,8 @@
         >
         <action
             android:id="@+id/action_navigation_profile_to_editProfile"
-            app:destination="@id/editProfile" />
+            app:destination="@id/editProfile"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/editProfile"

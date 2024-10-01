@@ -110,4 +110,21 @@ public class UserManagementController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("update-user-status/{userId}", Name = "Update User Status")]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(UpdateUserStatusResponse))]
+    public async Task<IActionResult> UpdateUserStatus(string userId, [FromBody] UpdateUserStatusRequest updateRequest)
+    {
+        try
+        {
+            var result = await _userManagementService.UpdateUserStatusAsync(userId, updateRequest);
+
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating user status");
+            return BadRequest(ex.Message);
+        }
+    }
 }
