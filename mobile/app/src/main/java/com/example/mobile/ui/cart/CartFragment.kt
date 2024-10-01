@@ -6,17 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 
-import com.example.mobile.R
 import com.example.mobile.databinding.FragmentCartBinding
-import com.example.mobile.viewModels.CartViewModel
-import com.squareup.picasso.Picasso
 
 class CartFragment : Fragment() {
 
@@ -34,8 +26,6 @@ class CartFragment : Fragment() {
     ): View {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val textView: TextView = binding.cartTitleText
-        textView.text = getString(R.string.cart)
 
         return root
     }
@@ -58,14 +48,24 @@ class CartFragment : Fragment() {
         }
 
         // button listeners
-
         cartProceedButton.setOnClickListener {
             //TODO: proceed logic here
+            showLoading(true)
+            cartViewModel.clearCart()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showLoading(status: Boolean) {
+        val loadingIndicator = binding.cartLoadingIndicator
+        loadingIndicator.visibility = if (status) View.VISIBLE else View.GONE
+    }
+
+    private fun createOrderObject() {
+
     }
 }

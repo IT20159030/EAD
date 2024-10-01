@@ -10,11 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentViewProductBinding
-import com.example.mobile.ui.main.MainViewModel
-import com.example.mobile.viewModels.CartViewModel
+import com.example.mobile.ui.cart.CartViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,14 +36,13 @@ class ViewProductFragment : Fragment() {
 
     private val cartViewModel: CartViewModel by viewModels()
 
-    private final val PLACEHOLDER_IMAGE_URL = "https://images2.alphacoders.com/655/655076.jpg"
+    private val placeholderImage = "https://images2.alphacoders.com/655/655076.jpg"
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
+    ): View {
         _binding = FragmentViewProductBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -68,6 +65,7 @@ class ViewProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         productCartCountView.text = 1.toString()
+        val productId = arguments?.getString("productId")
         val productName = arguments?.getString("productName")
         val productPrice = arguments?.getString("productPrice")
         val productDescription = arguments?.getString("productDescription")
@@ -95,8 +93,8 @@ class ViewProductFragment : Fragment() {
             val totalPrice = price * quantity
 
             // Add product to cart in database
-            if (productName != null) {
-                cartViewModel.addToCart(productName, quantity, totalPrice, productImageUrl ?: PLACEHOLDER_IMAGE_URL)
+            if (productName != null && productId != null) {
+                cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
 
                 // show toast with success message
                 Toast.makeText(context,
@@ -106,41 +104,11 @@ class ViewProductFragment : Fragment() {
 
         // set views
         productViewNameView.text = productName ?: "Programmatically Set Product Name"
-        productViewDescriptionText.text = productDescription ?: """
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-        """.trimIndent()
+        productViewDescriptionText.text = productDescription ?: "Programmatically Set Description"
         productCategoryView.text = productCategory ?: "Programmatically Set Category"
         productPriceView.text = productPrice ?: "Programmatically Set Price"
         Picasso.get()
-            .load(productImageUrl ?: PLACEHOLDER_IMAGE_URL)
+            .load(productImageUrl ?: placeholderImage)
             .into(productImageView)
     }
 

@@ -3,10 +3,9 @@ package com.example.mobile.dto
 import com.google.gson.annotations.SerializedName
 
 data class Product (
-    @SerializedName("ProductId")
-    var id: String,
+    @SerializedName("id") var productId: String,
     var name: String,
-    var image: String,
+    @SerializedName("image") var imageUrl: String,
     var category: String,
     var description: String,
     var price: Double,

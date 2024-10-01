@@ -46,12 +46,13 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                 "%s%.2f", navController.context.getString(R.string.currency), product.price)
             productNameTextView.text = product.name
             productPriceTextView.text = priceString
-            Picasso.get().load(product.image).into(productImageView)
+            Picasso.get().load(product.imageUrl).into(productImageView)
             productCardView.setOnClickListener {
                 val bundle = Bundle().apply {
+                    putString("productId", product.productId)
                     putString("productName", product.name)
                     putString("productPrice", priceString)
-                    putString("productImageUrl", product.image)
+                    putString("productImageUrl", product.imageUrl)
                     putString("productDescription", "This is a sample product description.")
                     putString("productCategory", "Sample Category")
                 }
