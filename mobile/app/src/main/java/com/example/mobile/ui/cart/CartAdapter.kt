@@ -25,11 +25,12 @@ class CartAdapter(
 
         fun bind(cartItem: CartItem, onRemoveClick: (CartItem) -> Unit) {
             // Set product details
-            Picasso.get().load("https://images2.alphacoders.com/655/655076.jpg")
+            Picasso.get().load(cartItem.imageUrl)
                 .into(productImageView)
             productNameTextView.text = cartItem.productName
             productQuantityTextView.text = "Quantity: ${cartItem.quantity}"
             productPriceTextView.text = "Price: $${cartItem.totalPrice}"
+
 
             // Remove button click listener
             removeButton.setOnClickListener {

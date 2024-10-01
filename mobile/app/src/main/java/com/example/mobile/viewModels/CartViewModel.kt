@@ -5,14 +5,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mobile.data.model.CartItem
+import com.example.mobile.data.model.Order
 import com.example.mobile.repository.CartRepository
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = CartRepository(application)
     private val _cartItems = MutableLiveData<List<CartItem>>()
 
-    fun addToCart(productName: String, quantity: Int, totalPrice: Double) {
-        repository.addProductToCart(productName, quantity, totalPrice)
+    fun addToCart(productName: String, quantity: Int, totalPrice: Double, imageUrl: String) {
+        repository.addProductToCart(productName, quantity, totalPrice, imageUrl)
     }
 
     fun removeCartItem(cartItem: CartItem) {
@@ -24,4 +25,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         _cartItems.value = repository.getCartItems()
         return _cartItems
     }
+
+//    fun createOrder(order: Order): LiveData<Order> {
+//    }
 }

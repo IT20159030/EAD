@@ -17,6 +17,7 @@ class CartDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         const val COLUMN_PRODUCT_NAME = "product_name"
         const val COLUMN_QUANTITY = "quantity"
         const val COLUMN_TOTAL_PRICE = "total_price"
+        const val COLUMN_IMAGE_URL = "image_url"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -25,7 +26,8 @@ class CartDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_PRODUCT_NAME TEXT,
                 $COLUMN_QUANTITY INTEGER,
-                $COLUMN_TOTAL_PRICE REAL
+                $COLUMN_TOTAL_PRICE REAL,
+                $COLUMN_IMAGE_URL TEXT
             )
         """.trimIndent()
         db?.execSQL(createTableQuery)
@@ -36,12 +38,13 @@ class CartDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         onCreate(db)
     }
 
-    fun addToCart(productName: String, quantity: Int, totalPrice: Double): Long {
+    fun addToCart(productName: String, quantity: Int, totalPrice: Double, imageUrl: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_PRODUCT_NAME, productName)
             put(COLUMN_QUANTITY, quantity)
             put(COLUMN_TOTAL_PRICE, totalPrice)
+            put(COLUMN_IMAGE_URL, imageUrl)
         }
         return db.insert(TABLE_CART, null, values)
     }
@@ -55,7 +58,8 @@ class CartDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             val productName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_NAME))
             val quantity = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY))
             val totalPrice = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_PRICE))
-            cartItems.add(CartItem(id, productName, quantity, totalPrice))
+            val imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL))
+            cartItems.add(CartItem(id, productName, quantity, totalPrice, imageUrl))
         }
         cursor.close()
         return cartItems

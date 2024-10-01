@@ -15,7 +15,9 @@ import com.example.mobile.databinding.FragmentViewProductBinding
 import com.example.mobile.ui.main.MainViewModel
 import com.example.mobile.viewModels.CartViewModel
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ViewProductFragment : Fragment() {
     private var _binding: FragmentViewProductBinding? = null
     // This property is only valid between onCreateView and
@@ -34,6 +36,8 @@ class ViewProductFragment : Fragment() {
     private lateinit var productCartCountView: TextView
 
     private val cartViewModel: CartViewModel by viewModels()
+
+    private final val PLACEHOLDER_IMAGE_URL = "https://images2.alphacoders.com/655/655076.jpg"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,10 +67,11 @@ class ViewProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         productCartCountView.text = 1.toString()
-        var productName = arguments?.getString("productName")
-        var productPrice = arguments?.getString("productPrice")
-        var productDescription = arguments?.getString("productDescription")
-        var productCategory = arguments?.getString("productCategory")
+        val productName = arguments?.getString("productName")
+        val productPrice = arguments?.getString("productPrice")
+        val productDescription = arguments?.getString("productDescription")
+        val productCategory = arguments?.getString("productCategory")
+        val productImageUrl = arguments?.getString("productImageUrl")
 
         // button listeners
         productCartMinusButton.setOnClickListener {
@@ -90,7 +95,10 @@ class ViewProductFragment : Fragment() {
 
             // Add product to cart in database
             if (productName != null) {
-                cartViewModel.addToCart(productName, quantity, totalPrice)
+                cartViewModel.addToCart(productName, quantity, totalPrice, productImageUrl ?: PLACEHOLDER_IMAGE_URL)
+
+                // show toast with success message
+                //TODO: show toast with success message
             }
         }
 
@@ -130,7 +138,7 @@ class ViewProductFragment : Fragment() {
         productCategoryView.text = productCategory ?: "Programmatically Set Category"
         productPriceView.text = productPrice ?: "Programmatically Set Price"
         Picasso.get()
-            .load(arguments?.getString("productImageUrl") ?: "https://images2.alphacoders.com/655/655076.jpg")
+            .load(productImageUrl ?: PLACEHOLDER_IMAGE_URL)
             .into(productImageView)
     }
 
