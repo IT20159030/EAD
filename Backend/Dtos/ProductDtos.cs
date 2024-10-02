@@ -16,6 +16,8 @@ namespace Backend.Dtos
         [Required]
         public string Category { get; set; } = string.Empty;
 
+        public string CategoryName { get; set; } = string.Empty;
+
         [Required]
         public string Description { get; set; } = string.Empty;
 
@@ -24,8 +26,12 @@ namespace Backend.Dtos
 
         public bool IsActive { get; set; }
 
+        public int Stock { get; set; } = 0;
+
         [Required]
         public string VendorId { get; set; } = string.Empty;
+
+        public string VendorName { get; set; } = string.Empty;
     }
 
     public class CreateProductRequestDto
@@ -46,7 +52,11 @@ namespace Backend.Dtos
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = 0;
+
+        public bool IsActive { get; set; } = false;
+
+        public int Stock { get; set; } = 0;
 
         [Required]
         [StringLength(36, ErrorMessage = "Vendor Id length can't be more than 36.")]
@@ -77,6 +87,8 @@ namespace Backend.Dtos
         public decimal Price { get; set; }
 
         public bool IsActive { get; set; }
+
+        public int Stock { get; set; }
 
         [Required]
         [StringLength(36, ErrorMessage = "Vendor Id length can't be more than 36.")]

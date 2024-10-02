@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import { MdDelete, MdEdit, MdDownload } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
-import LoadingTableBody from "../../components/common/TableLoader/TableLoader"; // Use your TableLoader for the body
+import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
 import AddEditProductModal from "../../components/product/AddEditProductModal";
 import { downloadPDF } from "../../utils/downloadPDF";
@@ -146,14 +146,15 @@ const Products = () => {
             <th>ID</th>
             <th>Product Name</th>
             <th>Category</th>
-            <th>Price</th>
+            <th>Price (Rs.)</th>
+            <th>Stock</th>
             <th>Vendor</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         {isLoadingProducts ? (
-          <LoadingTableBody loading={isLoadingProducts} colSpan="7" />
+          <LoadingTableBody loading={isLoadingProducts} colSpan="8" />
         ) : (
           <tbody>
             {products &&
@@ -165,11 +166,24 @@ const Products = () => {
                   <tr key={product.id}>
                     <td>{index + 1}</td>
                     <td>{product.name}</td>
-                    <td>{product.category}</td>
-                    <td>{product.price}</td>
-                    <td>{product.vendorId}</td>
+                    <td>{product.categoryName}</td>
+                    <td>Rs. {product.price}</td>
                     <td>
-                      {/* toggle slider */}
+                      {product.stock <
+                      import.meta.env.VITE_LOW_STOCK_THRESHOLD ? (
+                        <span className="text-danger fw-bold">
+                          {" "}
+                          {product.stock}
+                        </span>
+                      ) : (
+                        <span className="text-success fw-bold">
+                          {" "}
+                          {product.stock}
+                        </span>
+                      )}
+                    </td>
+                    <td>{product.vendorName}</td>
+                    <td>
                       <Form.Check
                         type="switch"
                         id={`custom-switch-${product.id}`}

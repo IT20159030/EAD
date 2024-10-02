@@ -29,6 +29,10 @@ public class Product
     [BsonElement("isActive")]
     public bool IsActive { get; set; } = false;
 
+    [BsonElement("stock")]
+    [BsonRepresentation(BsonType.Int32)]
+    public int Stock { get; set; } = 0;
+
     [BsonElement("vendorId")]
     [BsonRepresentation(BsonType.String)]
     
