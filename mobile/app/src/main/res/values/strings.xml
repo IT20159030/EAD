@@ -44,4 +44,7 @@
     <string name="currency">$</string>
     <string name="product_added_to_cart">Product added to cart</string>
     <string name="product_add_failed">Failed to add product to cart</string>
+    <string name="sub_total_2f">Subtotal: %s%.2f</string>
+    <string name="_0_00">0.00</string>
+    <string name="by_s">By %s</string>
 </resources>

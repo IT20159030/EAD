@@ -7,8 +7,10 @@ data class Product (
     var name: String,
     @SerializedName("image") var imageUrl: String,
     var category: String,
+    var categoryName: String,
     var description: String,
     var price: Double,
     var isActive: Boolean,
-    var vendorId: String
+    var vendorId: String,
+    var vendorName: String
 )

@@ -18,11 +18,13 @@
 
 // TODO: @Navod&Dinushka: When calling order cancellation, the order status should be updated to CancelRequested.
 // TODO: Call both APIs from frontend to update the order status and create a cancellation request.
+using System.Security.Claims;
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -60,7 +62,7 @@ public class OrderController : ControllerBase
         }).ToList(),
         TotalPrice = order.TotalPrice,
         CustomerId = order.CustomerId,
-        CustomerName = order.CustomerName
+        CustomerName = order.CustomerName ?? string.Empty
     };
 
     private Order ConvertToModel(CreateOrderRequestDto dto) => new Order
@@ -80,7 +82,8 @@ public class OrderController : ControllerBase
             Status = item.Status
         }).ToList(),
         TotalPrice = dto.OrderItems.Sum(item => item.Price * item.Quantity),
-        CustomerId = dto.CustomerId
+        CustomerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty,
+        CustomerName = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
     };
 
     private Order ConvertToModel(UpdateOrderRequestDto dto) => new Order
@@ -100,7 +103,8 @@ public class OrderController : ControllerBase
             Status = item.Status
         }).ToList(),
         TotalPrice = dto.OrderItems.Sum(item => item.Price * item.Quantity),
-        CustomerId = dto.CustomerId
+        CustomerId = dto.CustomerId,
+        CustomerName = dto.CustomerName ?? string.Empty
     };
 
     [HttpPost]
@@ -108,7 +112,12 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequestDto request)
     {
         var order = ConvertToModel(request);
-        order.CustomerName = User.Identity?.Name;
+
+        if (order.CustomerId.IsNullOrEmpty())
+        {
+            return BadRequest("User not found");
+        }
+
         await _orders.InsertOneAsync(order);
         return CreatedAtRoute("GetOrder", new { id = order.Id }, ConvertToDto(order));
     }
@@ -201,14 +210,14 @@ public class OrderController : ControllerBase
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> MarkOrderAsReady(string orderId)
     {
-        var order = await _orders.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+        var order = await _orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
         if (order == null)
         {
             return NotFound();
         }
 
         order.Status = OrderStatus.Ready;
-        await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
+        await _orders.ReplaceOneAsync(o => o.Id == orderId, order);
         return Ok(ConvertToDto(order));
     }
 
@@ -216,14 +225,14 @@ public class OrderController : ControllerBase
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> MarkOrderAsDelivered(string orderId)
     {
-        var order = await _orders.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+        var order = await _orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
         if (order == null)
         {
             return NotFound();
         }
 
         order.Status = OrderStatus.Completed;
-        await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
+        await _orders.ReplaceOneAsync(o => o.Id == orderId, order);
         return Ok(ConvertToDto(order));
     }
 
@@ -231,14 +240,14 @@ public class OrderController : ControllerBase
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> RejectOrder(string orderId)
     {
-        var order = await _orders.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+        var order = await _orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
         if (order == null)
         {
             return NotFound();
         }
 
         order.Status = OrderStatus.Rejected;
-        await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
+        await _orders.ReplaceOneAsync(o => o.Id == orderId, order);
         return Ok(ConvertToDto(order));
     }
 

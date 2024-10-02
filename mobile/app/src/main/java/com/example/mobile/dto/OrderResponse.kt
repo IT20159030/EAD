@@ -5,8 +5,7 @@ data class Order (
     var status: Int,
     var orderDate: String,
     var orderItems: List<OrderItem>,
-    var totalPrice: Double,
-    var customerId: String
+    var totalPrice: Double
 )
 
 data class OrderItem (
