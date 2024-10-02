@@ -7,6 +7,7 @@ import CommonTitle from '../components/common/Title/Title';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import ViewOrderModal from '../components/order/ViewOrderModal';
+import resolveOrderStatus from '../utils/resolveOrderStatus';
 
 /**
  * The pain page for Order management
@@ -29,12 +30,6 @@ const Order = () => {
 
   const { data: orders, isLoading: isLoadingOrders } =
     orderHooks.useGetAllOrders();
-  const { mutate: updateOrder, isLoading: isUpdatingOrder } =
-    orderHooks.useUpdateOrder();
-  const { mutate: markOrderReady, isLoading: isMarkingReady } =
-    orderHooks.useMarkOrderReady();
-  const { mutate: markOrderDelivered, isLoading: isMarkingDelivered } =
-    orderHooks.useMarkOrderDelivered();
 
   const handleToast = (message, type = 'success') => {
     setToastMessage(message);
@@ -48,27 +43,6 @@ const Order = () => {
   const handleModalOpen = (order) => {
     setOrderDetails(order);
     setShowModal(true);
-  };
-
-  const getStatusFromOrder = (code) => {
-    switch (code) {
-      case 0:
-        return 'Pending';
-      case 1:
-        return 'Ready';
-      case 2:
-        return 'Approved';
-      case 3:
-        return 'Rejected';
-      case 4:
-        return 'Completed';
-      case 5:
-        return 'CancelRequested';
-      case 6:
-        return 'Cancelled';
-      default:
-        return 'Unknown';
-    }
   };
 
   return (
@@ -95,7 +69,7 @@ const Order = () => {
               <tr key={order.id}>
                 <td>{index + 1}</td>
                 <td>{new Date(order.orderDate).toDateString()}</td>
-                <td>{getStatusFromOrder(order.status)}</td>
+                <td>{resolveOrderStatus(order.status)}</td>
                 <td>{order.customerName}</td>
                 <td>{order.orderItems?.length}</td>
                 <td>{order.totalPrice}</td>
@@ -119,6 +93,7 @@ const Order = () => {
           show={showModal}
           handleClose={() => setShowModal(false)}
           orderDetails={orderDetails}
+          handleToast={handleToast}
         />
       )}
 
