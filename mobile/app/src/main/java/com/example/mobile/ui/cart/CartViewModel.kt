@@ -1,17 +1,20 @@
 package com.example.mobile.ui.cart
 
 import android.app.Application
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mobile.data.model.CartItem
 import com.example.mobile.dto.OrderItem
 import com.example.mobile.repository.CartRepository
+import com.example.mobile.viewModels.TokenViewModel
 import java.util.Locale
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val cartRepository = CartRepository(application)
     private val _cartItems = MutableLiveData<List<CartItem>>()
+
 
     fun addToCart(productId: String, productName: String, quantity: Int, totalPrice: Double, imageUrl: String): Long {
         return cartRepository.addProductToCart(productId, productName, quantity, totalPrice, imageUrl)
