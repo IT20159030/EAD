@@ -26,13 +26,14 @@ public class MobileUserAuthService : IMobileUserAuthService
       return new MRegisterResponse
       {
         IsSuccess = false,
-        Message = "User already exists"
+        Message = "Email already in use"
       };
     }
 
     var newUser = new User
     {
-      Name = request.Name,
+      Name = $"{request.FirstName} {request.LastName}",
+      NIC = request.NIC,
       Email = request.Email,
       UserName = request.Email,
       UpdatedAt = DateTime.Now,
