@@ -15,10 +15,12 @@
             android:id="@+id/product_view_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/product_view_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/product_view_image" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/product_view_image"
@@ -74,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:padding="10dp"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -85,7 +87,7 @@
                         android:layout_marginEnd="20dp"
                         android:padding="10dp"
                         android:textAlignment="textEnd"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -102,6 +104,7 @@
                         android:layout_height="40dp"
                         android:background="@drawable/round_button"
                         android:text="@string/minus"
+                        android:layout_marginHorizontal="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/product_view_cart_counter"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -113,6 +116,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
+                        android:layout_marginHorizontal="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/product_view_cart_plus"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -122,7 +126,7 @@
                         android:id="@+id/product_view_cart_plus"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="40dp"
                         android:background="@drawable/round_button"
                         android:text="@string/plus"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -139,6 +143,14 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/product_view_vendor_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/by_s"
+                    android:textStyle="bold"
+                    android:padding="10dp" />
 
                 <TextView
                     android:id="@+id/product_view_description_text"
