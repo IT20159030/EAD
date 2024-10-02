@@ -2,8 +2,10 @@ package com.example.mobile.services.api.auth
 
 import com.example.mobile.dto.LoginRequest
 import com.example.mobile.dto.LoginResponse
+import com.example.mobile.dto.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthApiService {
@@ -16,4 +18,8 @@ interface AuthApiService {
     suspend fun register(
         @Body auth: LoginRequest,
     ): Response<LoginResponse>
+
+    @GET("customer-auth/user")
+    suspend fun userInfo(): Response<UserResponse>
+
 }

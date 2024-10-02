@@ -7,19 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile.R
+import com.example.mobile.dto.Product
 import com.example.mobile.databinding.FragmentHomeBinding
-import com.squareup.picasso.Picasso
+import com.example.mobile.ui.productView.ProductAdapter
+import com.example.mobile.ui.productView.ProductViewModel
+import com.example.mobile.utils.ApiResponse
+import com.example.mobile.viewModels.CoroutinesErrorHandler
+import com.example.mobile.viewModels.TokenViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -34,14 +40,14 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val productViewModel: ProductViewModel by viewModels()
+    private val tokenViewModel: TokenViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -73,29 +79,47 @@ class HomeFragment : Fragment() {
         })
 
         // Load sample products
-        loadDummyProducts()
+        loadProductList()
     }
 
-    // Load some dummy products
-    private fun loadDummyProducts() {
-        productList.addAll(
-            listOf(
-                Product("Product 1", "$10.00", "https://images2.alphacoders.com/655/655076.jpg"),
-                Product("Product 2", "$15.00", "https://static1.cbrimages.com/wordpress/wp-content/uploads/2023/08/gear-5-luffy-smiling-at-kaido-during-their-fight-in-one-piece.jpg"),
-                Product("Product 3", "$20.00", "https://images2.alphacoders.com/655/655076.jpg"),
-                Product("Product 4", "$25.00", "https://images2.alphacoders.com/655/655076.jpg"),
-                Product("Product 5", "$30.00", "https://images2.alphacoders.com/655/655076.jpg")
-            )
-        )
-        productAdapter.notifyDataSetChanged()
+    private fun loadProductList() {
+
+        tokenViewModel.token.observe(viewLifecycleOwner) { token ->
+            if (token == null) {
+                navController.navigate(R.id.action_global_loginFragment)
+            } else {
+                filterProducts("")
+            }
+        }
+
+        productViewModel.products.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+
+                is ApiResponse.Success -> {
+                    showLoading(false)
+                    productList.clear()
+                    productList.addAll(response.data)
+                    productAdapter.updateList(productList)
+                }
+
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    Toast.makeText(context, response.errorMessage, Toast.LENGTH_SHORT).show()
+                    showError(response.errorMessage)
+                }
+            }
+        }
     }
 
     // Filter products based on search query
     private fun filterProducts(query: String) {
-        val filteredList = productList.filter {
-            it.name.contains(query, ignoreCase = true)
+        showLoading(true)
+        if (query.isEmpty()) {
+            fetchAllProducts()
+        } else {
+            searchProducts(query)
         }
-        productAdapter.updateList(filteredList)
     }
 
     override fun onDestroyView() {
@@ -103,53 +127,38 @@ class HomeFragment : Fragment() {
         _binding = null
         productList.clear()
     }
-}
 
-data class Product(val name: String, val price: String, val imageUrl: String)
-
-class ProductAdapter(private var products: List<Product>, private var navController: NavController) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.product_item, parent, false)
-        return ProductViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = products[position]
-        holder.bind(product, navController)
-    }
-
-    override fun getItemCount(): Int {
-        return products.size
-    }
-
-    fun updateList(newProducts: List<Product>) {
-        products = newProducts
-        notifyDataSetChanged()
-    }
-
-    class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val productImageView: ImageView = itemView.findViewById(R.id.product_item_image)
-        private val productNameTextView: TextView = itemView.findViewById(R.id.product_item_name)
-        private val productPriceTextView: TextView = itemView.findViewById(R.id.product_item_price)
-        private val productCardView: View = itemView.findViewById(R.id.product_item_card)
-
-        fun bind(product: Product, navController: NavController) {
-            productNameTextView.text = product.name
-            productPriceTextView.text = product.price
-            Picasso.get().load(product.imageUrl).into(productImageView)
-            productCardView.setOnClickListener {
-                val bundle = Bundle().apply {
-                    putString("productName", product.name)
-                    putString("productPrice", product.price)
-                    putString("productImageUrl", product.imageUrl)
-                    putString("productDescription", "This is a sample product description.")
-                    putString("productCategory", "Sample Category")
-                }
-                // navigate to product view
-                navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)
+    private fun fetchAllProducts() {
+        productViewModel.getProducts(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                showError(message)
             }
+        })
+    }
+
+    private fun searchProducts(query: String) {
+        productViewModel.searchProducts(query, object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                showError(message)
+            }
+        })
+    }
+
+    private fun showLoading(loading: Boolean) {
+        if (loading) {
+            binding.homeLoadingIndicator.visibility = View.VISIBLE
+        } else {
+            binding.homeLoadingIndicator.visibility = View.GONE
         }
     }
+
+    private fun showError(message: String) {
+        binding.homeErrorText.visibility = View.VISIBLE
+        binding.homeErrorText.text = message
+    }
+
 }

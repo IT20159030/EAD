@@ -12,4 +12,13 @@ class AuthRepository @Inject constructor(
     fun login(auth: LoginRequest) = apiRequestFlow {
         authApiService.login(auth)
     }
+
+    fun register(auth: LoginRequest) = apiRequestFlow {
+        authApiService.register(auth)
+    }
+
+    fun userInfo() = apiRequestFlow {
+        authApiService.userInfo()
+    }
+
 }

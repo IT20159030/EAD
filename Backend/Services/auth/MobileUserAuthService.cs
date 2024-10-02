@@ -149,4 +149,27 @@ public class MobileUserAuthService : IMobileUserAuthService
       }
     };
   }
+
+  // deactivation of user account
+  public async Task<MUserResponse> DeactivateUserAsync(string userId)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new MUserResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    user.Status = AccountStatus.Deactivated;
+    var result = await _userManager.UpdateAsync(user);
+
+    return new MUserResponse
+    {
+      IsSuccess = result.Succeeded,
+      Message = result.Succeeded ? "User account deactivated" : "Failed to deactivate user account"
+    };
+  }
 }

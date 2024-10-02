@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
 [ApiController]
-[Authorize]
+[Authorize(Roles = "customer")]
 [Route("api/v1/customer-auth")]
 [Produces("application/json")]
 public class CustomerAuthenticationController : ControllerBase
@@ -93,7 +93,54 @@ public class CustomerAuthenticationController : ControllerBase
     }
   }
 
+  // deactivate user
+  [HttpPut("deactivate", Name = "Mobile Deactivate User")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MDeactivateResponse))]
+  public async Task<IActionResult> DeactivateUser()
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+
+      var result = await _userAuthService.DeactivateUserAsync(userId);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error deactivating user");
+      return BadRequest(ex.Message);
+    }
+  }
+
+  // [HttpPost("change-password", Name = "Mobile Change Password")]
+  // [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MChangePasswordResponse))]
+  // public async Task<IActionResult> ChangePassword([FromBody] MChangePasswordRequest changePasswordRequest)
+  // {
+  //   try
+  //   {
+  //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+  //     if (string.IsNullOrEmpty(userId))
+  //     {
+  //       return BadRequest("User not found");
+  //     }
+
+  //     var result = await _userAuthService.ChangePasswordAsync(userId, changePasswordRequest);
+
+  //     return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+  //   }
+  //   catch (Exception ex)
+  //   {
+  //     _logger.LogError(ex, "Error changing password");
+  //     return BadRequest(ex.Message);
+  //   }
+  // }
 
 }
 

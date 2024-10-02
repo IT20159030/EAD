@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentViewProductBinding
-import com.example.mobile.ui.main.MainViewModel
-import com.example.mobile.viewModels.CartViewModel
+import com.example.mobile.ui.cart.CartViewModel
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ViewProductFragment : Fragment() {
     private var _binding: FragmentViewProductBinding? = null
     // This property is only valid between onCreateView and
@@ -35,12 +36,13 @@ class ViewProductFragment : Fragment() {
 
     private val cartViewModel: CartViewModel by viewModels()
 
+    private val placeholderImage = "https://images2.alphacoders.com/655/655076.jpg"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
+    ): View {
         _binding = FragmentViewProductBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -63,10 +65,12 @@ class ViewProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         productCartCountView.text = 1.toString()
-        var productName = arguments?.getString("productName")
-        var productPrice = arguments?.getString("productPrice")
-        var productDescription = arguments?.getString("productDescription")
-        var productCategory = arguments?.getString("productCategory")
+        val productId = arguments?.getString("productId")
+        val productName = arguments?.getString("productName")
+        val productPrice = arguments?.getString("productPrice")
+        val productDescription = arguments?.getString("productDescription")
+        val productCategory = arguments?.getString("productCategory")
+        val productImageUrl = arguments?.getString("productImageUrl")
 
         // button listeners
         productCartMinusButton.setOnClickListener {
@@ -89,48 +93,25 @@ class ViewProductFragment : Fragment() {
             val totalPrice = price * quantity
 
             // Add product to cart in database
-            if (productName != null) {
-                cartViewModel.addToCart(productName, quantity, totalPrice)
+            if (productName != null && productId != null) {
+                var rowId = cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
+
+                // show toast with success message
+                Toast.makeText(
+                    context,
+                    if (rowId > 0) getString(R.string.product_added_to_cart) else getString(R.string.product_add_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
         // set views
         productViewNameView.text = productName ?: "Programmatically Set Product Name"
-        productViewDescriptionText.text = productDescription ?: """
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            ipsum
-            
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-            lorem
-        """.trimIndent()
+        productViewDescriptionText.text = productDescription ?: "Programmatically Set Description"
         productCategoryView.text = productCategory ?: "Programmatically Set Category"
         productPriceView.text = productPrice ?: "Programmatically Set Price"
         Picasso.get()
-            .load(arguments?.getString("productImageUrl") ?: "https://images2.alphacoders.com/655/655076.jpg")
+            .load(productImageUrl ?: placeholderImage)
             .into(productImageView)
     }
 
