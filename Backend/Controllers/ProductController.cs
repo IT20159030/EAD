@@ -113,7 +113,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("active", Name = "GetActiveProducts")]
-        [Authorize(Roles = "admin, vendor")]
+        [Authorize(Roles = "admin, vendor, customer, csr")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();

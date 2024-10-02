@@ -54,7 +54,7 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                     putString("productPrice", priceString)
                     putString("productImageUrl", product.imageUrl)
                     putString("productDescription", product.description)
-                    putString("productCategory", product.category)
+                    putString("productCategory", product.categoryName)
                 }
                 // navigate to product view
                 navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)
