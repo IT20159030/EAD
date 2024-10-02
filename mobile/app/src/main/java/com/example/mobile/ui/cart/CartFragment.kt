@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mobile.R
 import com.example.mobile.data.model.CartItem
 
 import com.example.mobile.databinding.FragmentCartBinding
@@ -35,6 +36,7 @@ class CartFragment : Fragment() {
     private var cartItems = mutableListOf<CartItem>()
     private lateinit var cartAdapter: CartAdapter
     private lateinit var cartErrorText: TextView
+    private lateinit var cartSubTotal: TextView
 
     private val cartViewModel: CartViewModel by viewModels()
     private val orderViewModel: OrderViewModel by viewModels()
@@ -64,11 +66,13 @@ class CartFragment : Fragment() {
 
         val cartProceedButton = binding.cartProceedPayButton
         cartErrorText = binding.cartErrorText
+        cartSubTotal = binding.cartSubTotal
 
         // Load cart data from ViewModel
         // TODO: query to get cartItems should have customer ID
         cartViewModel.getCartItems().observe(viewLifecycleOwner) { cartItems ->
             cartAdapter.updateList(cartItems)
+            setCartSubTotal(cartItems)
         }
 
         // button listeners
@@ -78,6 +82,17 @@ class CartFragment : Fragment() {
         }
 
         orderResponseObserver()
+    }
+
+    private fun setCartSubTotal(cartItems: List<CartItem>) {
+        val totalPrice: Double = if (cartItems.isEmpty()) { 0.0 }
+        else {
+            // Calculate the total price of the cart items
+            cartItems.sumOf { it.totalPrice }
+        }
+        val currency = getString(R.string.currency)
+
+        cartSubTotal.text = String.format(Locale.getDefault(), getString(R.string.sub_total_2f), currency, totalPrice)
     }
 
     private fun sendCreateOrderRequest(order: Order) {
