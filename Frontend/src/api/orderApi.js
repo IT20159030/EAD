@@ -2,9 +2,9 @@
  * @fileoverview orderApi.js is a file that contains functions to interact with the order API.
  */
 
-import axios from 'axios';
+import axios from '../utils/axiosInstanceWithAuth';
 
-const baseUrl = import.meta.env.VITE_BACKEND_URL + '/api/v1';
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const getAllOrders = async () => {
   const response = await axios.get(`${baseUrl}/Order`);

@@ -26,7 +26,7 @@ public class OrderDto
     public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
     public decimal TotalPrice { get; set; }
     public string CustomerId { get; set; } = string.Empty;
-    public string? CustomerName { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
 }
 
 public class CreateOrderRequestDto
@@ -45,8 +45,9 @@ public class CreateOrderRequestDto
     [Required]
     public decimal TotalPrice { get; set; }
 
-    [Required]
     public string CustomerId { get; set; } = string.Empty;
+
+    public string? CustomerName { get; set; }
 }
 
 public class UpdateOrderRequestDto
@@ -70,4 +71,6 @@ public class UpdateOrderRequestDto
 
     [Required]
     public string CustomerId { get; set; } = string.Empty;
+
+    public string? CustomerName { get; set; }
 }

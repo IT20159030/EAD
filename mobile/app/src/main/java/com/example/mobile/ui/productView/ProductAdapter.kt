@@ -1,6 +1,7 @@
 package com.example.mobile.ui.productView
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,8 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                     putString("productPrice", priceString)
                     putString("productImageUrl", product.imageUrl)
                     putString("productDescription", product.description)
-                    putString("productCategory", product.category)
+                    putString("productCategory", product.categoryName)
+                    putString("productVendor", product.vendorName)
                 }
                 // navigate to product view
                 navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)

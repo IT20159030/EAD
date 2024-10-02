@@ -15,6 +15,7 @@ import com.example.mobile.databinding.FragmentViewProductBinding
 import com.example.mobile.ui.cart.CartViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class ViewProductFragment : Fragment() {
@@ -28,6 +29,7 @@ class ViewProductFragment : Fragment() {
     private lateinit var productViewDescriptionText: TextView
     private lateinit var productCategoryView: TextView
     private lateinit var productPriceView: TextView
+    private lateinit var productVendorView: TextView
 
     private lateinit var productAddToCartButton: Button
     private lateinit var productCartMinusButton: TextView
@@ -52,6 +54,7 @@ class ViewProductFragment : Fragment() {
         productViewDescriptionText = binding.productViewDescriptionText
         productCategoryView = binding.productViewCategory
         productPriceView = binding.productViewPrice
+        productVendorView = binding.productViewVendorText
 
         productAddToCartButton = binding.productViewAddToCartButton
         productCartMinusButton = binding.productViewCartMinus
@@ -71,6 +74,7 @@ class ViewProductFragment : Fragment() {
         val productDescription = arguments?.getString("productDescription")
         val productCategory = arguments?.getString("productCategory")
         val productImageUrl = arguments?.getString("productImageUrl")
+        val productVendor = arguments?.getString("productVendor")
 
         // button listeners
         productCartMinusButton.setOnClickListener {
@@ -94,7 +98,7 @@ class ViewProductFragment : Fragment() {
 
             // Add product to cart in database
             if (productName != null && productId != null) {
-                var rowId = cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
+                val rowId = cartViewModel.addToCart(productId, productName, quantity, totalPrice, productImageUrl ?: placeholderImage)
 
                 // show toast with success message
                 Toast.makeText(
@@ -105,11 +109,16 @@ class ViewProductFragment : Fragment() {
             }
         }
 
+        val vendorName: String = if (productVendor == null || productVendor == "" )
+        { "Unknown Vendor" } else { productVendor }
+
         // set views
-        productViewNameView.text = productName ?: "Programmatically Set Product Name"
-        productViewDescriptionText.text = productDescription ?: "Programmatically Set Description"
-        productCategoryView.text = productCategory ?: "Programmatically Set Category"
-        productPriceView.text = productPrice ?: "Programmatically Set Price"
+        productViewNameView.text = productName ?: "Unknown Product"
+        productViewDescriptionText.text = productDescription ?: "No Description"
+        productCategoryView.text = productCategory ?: "Unknown"
+        productPriceView.text = productPrice ?: "Price Not Set"
+        productVendorView.text = String.format(Locale.getDefault(),
+            getString(R.string.by_s), vendorName)
         Picasso.get()
             .load(productImageUrl ?: placeholderImage)
             .into(productImageView)

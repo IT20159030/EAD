@@ -81,9 +81,6 @@ class ProfileFragment : Fragment() {
             //  2. add the new fragment to the navigation graph in main_nav_graph.xml
             //  3. navigate to the new fragment using the navigation component
 
-            cartButton.setOnClickListener {
-                // TODO: Navigate to cart
-            }
 
             ordersButton.setOnClickListener {
                 // TODO: Navigate to orders

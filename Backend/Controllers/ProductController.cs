@@ -1,3 +1,4 @@
+using System.Text;
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Utils;
@@ -112,11 +113,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet("active", Name = "GetActiveProducts")]
-        [Authorize(Roles = "admin, vendor")]
+        [Authorize(Roles = "admin, vendor, customer, csr")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("{id}", Name = "GetProduct")]
@@ -162,7 +163,7 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> Search([FromQuery] string query)
         {
             var products = await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpPut("{id}", Name = "UpdateProduct")]

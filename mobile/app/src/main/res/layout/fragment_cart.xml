@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:indeterminate="true"/>
 
     <TextView
@@ -33,6 +33,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cart_error_text" />
+
+    <TextView
+        android:id="@+id/cart_sub_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sub_total_2f"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cart_proceed_pay_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cart_proceed_pay_button" />
+
 
     <Button
         android:id="@+id/cart_proceed_pay_button"
