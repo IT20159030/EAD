@@ -78,6 +78,10 @@ class CartFragment : Fragment() {
     }
 
     private fun sendCreateOrderRequest(order: Order) {
+        if (order.orderItems.isEmpty()) {
+            Toast.makeText(context, "Cart is empty", Toast.LENGTH_SHORT).show()
+            return
+        }
         orderViewModel.createOrderRequest(order, object : CoroutinesErrorHandler {
             override fun onError(message: String) {
                 showLoading(false)
