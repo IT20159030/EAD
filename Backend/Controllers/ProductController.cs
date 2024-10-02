@@ -10,16 +10,21 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    // [Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMongoCollection<Product> _products;
+        private readonly IMongoCollection<ProductCategory> _productsCategory;
+        private readonly IMongoCollection<User> _users;
+
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(ILogger<ProductController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
             _products = mongoDBService.Database.GetCollection<Product>("Products");
+            _productsCategory = mongoDBService.Database.GetCollection<ProductCategory>("ProductCategories");
+            _users = mongoDBService.Database.GetCollection<User>("Users");
         }
 
         private ProductDto ConvertToDto(Product product) => new ProductDto
@@ -28,10 +33,13 @@ namespace Backend.Controllers
             Name = product.Name,
             Image = product.Image,
             Category = product.Category,
+            CategoryName = string.Empty,
             Description = product.Description,
             Price = product.Price,
+            Stock = product.Stock,
             IsActive = product.IsActive,
-            VendorId = product.VendorId
+            VendorId = product.VendorId,
+            VendorName = string.Empty
         };
 
         private Product ConvertToModel(CreateProductRequestDto dto) => new Product
@@ -42,6 +50,7 @@ namespace Backend.Controllers
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
+            Stock = dto.Stock,
             IsActive = true,
             VendorId = dto.VendorId
         };
@@ -55,9 +64,35 @@ namespace Backend.Controllers
             Category = dto.Category,
             Description = dto.Description,
             Price = dto.Price,
+            Stock = dto.Stock,
             IsActive = dto.IsActive,
             VendorId = dto.VendorId
         };
+
+        private async Task<ProductDto> ConvertToDtoAsync(Product product)
+        {
+            var category = await _productsCategory.Find(c => c.Id == product.Category).FirstOrDefaultAsync();
+            var categoryName = category != null ? category.Name : string.Empty;
+
+            var vendor = await _users.Find(u => u.Id.ToString() == product.VendorId).FirstOrDefaultAsync();
+            var vendorName = vendor != null ? vendor.Name : string.Empty;
+
+            return new ProductDto
+            {
+                Id = product.Id!,
+                Name = product.Name,
+                Image = product.Image,
+                Category = product.Category,
+                CategoryName = categoryName,
+                Description = product.Description,
+                Price = product.Price,
+                Stock = product.Stock,
+                IsActive = product.IsActive,
+                VendorId = product.VendorId,
+                VendorName = vendorName
+            };
+        }
+
 
         [HttpPost(Name = "CreateProduct")]
         [Authorize(Roles = "admin, vendor")]
@@ -73,11 +108,11 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> Get()
         {
             var products = await _products.Find(new BsonDocument()).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("active", Name = "GetActiveProducts")]
-        // [Authorize(Roles = "admin, vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();

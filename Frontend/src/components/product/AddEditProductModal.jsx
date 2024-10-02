@@ -19,10 +19,9 @@ const AddEditProductModal = ({
   const [productCategory, setProductCategory] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
+  const [productStock, setProductStock] = useState("");
   const [productStatus, setProductStatus] = useState(false);
-  const [productVendorId, setProductVendorId] = useState(
-    "14d6470c-5bf5-466d-9178-6efa2fa9d364"
-  );
+  const [productVendorId, setProductVendorId] = useState("");
 
   useEffect(() => {
     if (productToEdit) {
@@ -30,6 +29,7 @@ const AddEditProductModal = ({
       setProductCategory(productToEdit.category);
       setProductDescription(productToEdit.description);
       setProductPrice(productToEdit.price);
+      setProductStock(productToEdit.stock);
       setProductStatus(productToEdit.isActive);
       setProductVendorId(productToEdit.vendorId);
       setProductImage(productToEdit.image);
@@ -43,6 +43,7 @@ const AddEditProductModal = ({
     setProductCategory("");
     setProductDescription("");
     setProductPrice("");
+    setProductStock("");
     setProductStatus(false);
     setProductVendorId("");
     setProductImage(null);
@@ -55,6 +56,7 @@ const AddEditProductModal = ({
       category: productCategory,
       description: productDescription,
       price: productPrice,
+      stock: productStock,
       isActive: productStatus,
       vendorId: productVendorId,
     };
@@ -142,6 +144,16 @@ const AddEditProductModal = ({
                 }
               }}
               step="0.01"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="productStock" className="mt-3">
+            <Form.Label>Stock</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter stock"
+              value={productStock}
+              onChange={(e) => setProductStock(e.target.value)}
             />
           </Form.Group>
 

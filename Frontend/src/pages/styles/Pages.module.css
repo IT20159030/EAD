@@ -51,6 +51,7 @@ th,
 td {
   vertical-align: middle;
   border-color: transparent;
+  text-align: center;
 }
 
 .actions .deleteButton {

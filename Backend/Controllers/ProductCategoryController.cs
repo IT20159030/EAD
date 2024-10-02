@@ -8,25 +8,25 @@ using MongoDB.Bson;
 
 namespace Backend.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductCategoryController : ControllerBase
     {
-        private readonly IMongoCollection<ProductCatergory> _productCategories;
+        private readonly IMongoCollection<ProductCategory> _productCategories;
         private readonly ILogger<ProductCategoryController> _logger;
 
         public ProductCategoryController(ILogger<ProductCategoryController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
-            _productCategories = mongoDBService.Database.GetCollection<ProductCatergory>("ProductCategories");
+            _productCategories = mongoDBService.Database.GetCollection<ProductCategory>("ProductCategories");
         }
 
         [HttpPost(Name = "CreateProductCategory")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Post([FromBody] CreateProductCategoryRequestDto dto)
         {
-            var productCategory = new ProductCatergory
+            var productCategory = new ProductCategory
             {
                 Name = dto.Name
             };
@@ -43,7 +43,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet(Name = "GetAllProductCategories")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IEnumerable<ProductCategoryDto>> Get()
         {
             var categories = await _productCategories.Find(new BsonDocument()).ToListAsync();
@@ -55,7 +55,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}", Name = "GetProductCategory")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get(string id)
         {
             var category = await _productCategories.Find(p => p.Id == id).FirstOrDefaultAsync();
@@ -71,7 +71,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateProductCategory")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Put(string id, [FromBody] UpdateProductCategoryRequestDto dto)
         {
             var existingCategory = await _productCategories.Find(p => p.Id == id).FirstOrDefaultAsync();
@@ -85,7 +85,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteProductCategory")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _productCategories.DeleteOneAsync(p => p.Id == id);

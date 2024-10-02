@@ -10,6 +10,8 @@ namespace Backend.Dtos
         [Required]
         public string ProductId { get; set; } = string.Empty;
 
+        public string ProductName { get; set; } = string.Empty;
+
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be a positive number.")]
         public int Quantity { get; set; }

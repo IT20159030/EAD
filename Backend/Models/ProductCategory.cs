@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Backend.Models;
 
-public class ProductCatergory
+public class ProductCategory
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
