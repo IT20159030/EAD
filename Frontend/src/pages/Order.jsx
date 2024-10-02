@@ -6,6 +6,7 @@ import styles from './styles/Pages.module.css';
 import CommonTitle from '../components/common/Title/Title';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import ViewOrderModal from '../components/order/ViewOrderModal';
 
 /**
  * The pain page for Order management
@@ -45,7 +46,7 @@ const Order = () => {
   };
 
   const handleModalOpen = (order) => {
-    setProductToEdit(order);
+    setOrderDetails(order);
     setShowModal(true);
   };
 
@@ -112,6 +113,14 @@ const Order = () => {
           </tbody>
         )}
       </Table>
+
+      {showModal && (
+        <ViewOrderModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          orderDetails={orderDetails}
+        />
+      )}
 
       {showToast && (
         <AutoClosingToast
