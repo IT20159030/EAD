@@ -147,6 +147,7 @@ public class MobileUserAuthService : IMobileUserAuthService
         UserId = user.Id.ToString(),
         Name = user.Name,
         Email = user.Email ?? string.Empty,
+        NIC = user.NIC ?? string.Empty
       }
     };
   }
@@ -171,6 +172,32 @@ public class MobileUserAuthService : IMobileUserAuthService
     {
       IsSuccess = result.Succeeded,
       Message = result.Succeeded ? "User account deactivated" : "Failed to deactivate user account"
+    };
+  }
+
+  public async Task<MUpdateUserResponse> UpdateUserAsync(string userId, MUpdateUserRequest request)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new MUpdateUserResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    user.Name = $"{request.FirstName} {request.LastName}";
+    user.NIC = request.NIC;
+
+    user.UpdatedAt = DateTime.Now;
+
+    var result = await _userManager.UpdateAsync(user);
+
+    return new MUpdateUserResponse
+    {
+      IsSuccess = result.Succeeded,
+      Message = result.Succeeded ? "User updated successfully" : "Failed to update user"
     };
   }
 }

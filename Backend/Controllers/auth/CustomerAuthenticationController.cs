@@ -94,7 +94,6 @@ public class CustomerAuthenticationController : ControllerBase
     }
   }
 
-  // deactivate user
   [HttpPut("deactivate", Name = "Mobile Deactivate User")]
   [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MDeactivateResponse))]
   public async Task<IActionResult> DeactivateUser()
@@ -115,6 +114,30 @@ public class CustomerAuthenticationController : ControllerBase
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error deactivating user");
+      return BadRequest(ex.Message);
+    }
+  }
+
+  [HttpPut("update", Name = "Mobile Update User")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MUpdateUserResponse))]
+  public async Task<IActionResult> UpdateUser([FromBody] MUpdateUserRequest updateUserRequest)
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+
+      var result = await _userAuthService.UpdateUserAsync(userId, updateUserRequest);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error updating user");
       return BadRequest(ex.Message);
     }
   }
