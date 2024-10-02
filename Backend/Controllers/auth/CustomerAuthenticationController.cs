@@ -39,7 +39,7 @@ public class CustomerAuthenticationController : ControllerBase
     {
       var result = await _userAuthService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
-      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     catch (Exception ex)
     {
@@ -60,7 +60,8 @@ public class CustomerAuthenticationController : ControllerBase
     {
       var result = await _userAuthService.RegisterUserAsync(registerRequest);
 
-      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+      _logger.LogInformation("User registered successfully");
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     catch (Exception ex)
     {
@@ -84,7 +85,7 @@ public class CustomerAuthenticationController : ControllerBase
 
       var result = await _userAuthService.UserDetailsAsync(userId);
 
-      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     catch (Exception ex)
     {
@@ -109,7 +110,7 @@ public class CustomerAuthenticationController : ControllerBase
 
       var result = await _userAuthService.DeactivateUserAsync(userId);
 
-      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     catch (Exception ex)
     {

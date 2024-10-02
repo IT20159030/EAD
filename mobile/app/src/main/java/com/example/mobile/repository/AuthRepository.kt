@@ -3,6 +3,7 @@ package com.example.mobile.repository
 
 import com.example.mobile.services.api.auth.AuthApiService
 import com.example.mobile.dto.LoginRequest
+import com.example.mobile.dto.RegisterRequest
 import com.example.mobile.utils.apiRequestFlow
 import javax.inject.Inject
 
@@ -13,7 +14,7 @@ class AuthRepository @Inject constructor(
         authApiService.login(auth)
     }
 
-    fun register(auth: LoginRequest) = apiRequestFlow {
+    fun register(auth: RegisterRequest) = apiRequestFlow {
         authApiService.register(auth)
     }
 

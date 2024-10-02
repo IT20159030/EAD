@@ -1,4 +1,4 @@
-package com.example.mobile.ui.login
+package com.example.mobile.ui.auth.login
 
 
 import android.content.Intent
@@ -91,20 +91,20 @@ class LoginFragment : Fragment() {
         var isValid = true
 
         if (email.isEmpty()) {
-            binding.emailInputLayout.error = "Error_email_required"
+            binding.emailInputLayout.error = "Email required"
             isValid = false
 
         } else {
             binding.emailInputLayout.error = null
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailInputLayout.error = "Error_invalid_email"
+            binding.emailInputLayout.error = "Invalid email format"
             isValid = false
             binding.emailEditText.requestFocus()
         }
 
         if (password.isEmpty()) {
-            binding.passwordInputLayout.error = "Error_password_required"
+            binding.passwordInputLayout.error = "Password required"
             isValid = false
         } else {
             binding.passwordInputLayout.error = null

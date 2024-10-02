@@ -5,6 +5,8 @@ public class User : MongoIdentityUser<Guid>
 {
   public string Name { get; set; } = string.Empty;
 
+  public string NIC { get; set; } = string.Empty;
+
   public AccountStatus Status { get; set; } = AccountStatus.Unapproved;
 
   [BsonElement("createdAt")]
