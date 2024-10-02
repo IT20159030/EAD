@@ -18,6 +18,7 @@ import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.AuthViewModel
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class CartFragment : Fragment() {
@@ -157,7 +158,7 @@ class CartFragment : Fragment() {
             status = 0,
             orderDate = date,
             orderItems = orderItems,
-            totalPrice = totalPrice,
+            totalPrice = String.format(Locale.getDefault(), "%.2f", totalPrice).toDouble(),
             customerId = customerID.ifEmpty { "3fd78a08-d8ec-404f-bfc4-7a5dd1d9bbd5" }
         )
 
@@ -166,7 +167,7 @@ class CartFragment : Fragment() {
 
     private fun getDateTime(): String {
         val date = java.util.Date()
-        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return formatter.format(date)
     }
 
