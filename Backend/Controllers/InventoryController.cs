@@ -28,7 +28,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost(Name = "AddInventoryByProductId")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Post([FromBody] AddInventoryByProductIdDto dto)
         {
             var product = await _products.Find(p => p.Id == dto.ProductId).FirstOrDefaultAsync();
@@ -61,7 +61,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet(Name = "GetAllInventories")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IEnumerable<InventoryDto>> Get()
         {
             var inventories = await _inventory.Find(new BsonDocument()).ToListAsync();
@@ -77,7 +77,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}", Name = "GetInventoryById")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Get(string id)
         {
             var inventory = await _inventory.Find(i => i.Id == id).FirstOrDefaultAsync();
@@ -112,7 +112,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateInventoryById")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Put(string id, [FromBody] UpdateInventoryByProductIdDto dto)
         {
             var existingInventory = await _inventory.Find(i => i.Id == id).FirstOrDefaultAsync();
@@ -129,7 +129,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}/lowStockAlert", Name = "SetLowStockAlert")]
-        [Authorize(Roles = "Admin, Vendor")]
+        [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> SetLowStockAlert(string id, [FromBody] SetLowStockAlertDto dto)
         {
             var update = Builders<Inventory>.Update.Set(i => i.LowStockAlert, dto.LowStockAlert);
@@ -141,7 +141,7 @@ namespace Backend.Controllers
 
         // New Endpoint to Trigger Stock Monitoring
         [HttpGet("trigger-stock-check", Name = "TriggerStockCheck")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> TriggerStockCheck()
         {
             await _stockMonitoringService.MonitorStockLevelsAsync();
