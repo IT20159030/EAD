@@ -1,3 +1,4 @@
+using System.Text;
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Utils;
@@ -14,12 +15,14 @@ namespace Backend.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IMongoCollection<Product> _products;
+        private readonly IMongoCollection<ProductCatergory> _categories;
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(ILogger<ProductController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
             _products = mongoDBService.Database.GetCollection<Product>("Products");
+            _categories = mongoDBService.Database.GetCollection<ProductCatergory>("ProductCategories");
         }
 
         private ProductDto ConvertToDto(Product product) => new ProductDto
@@ -33,6 +36,22 @@ namespace Backend.Controllers
             IsActive = product.IsActive,
             VendorId = product.VendorId
         };
+
+        private ProductDto ConvertToPopulatedDto(Product product)
+        {
+            var category = getCategoryName(product.Category);
+            return new ProductDto
+            {
+                Id = product.Id!,
+                Name = product.Name,
+                Image = product.Image,
+                Category = category,
+                Description = product.Description,
+                Price = product.Price,
+                IsActive = product.IsActive,
+                VendorId = product.VendorId
+            };
+        }
 
         private Product ConvertToModel(CreateProductRequestDto dto) => new Product
         {
@@ -81,7 +100,7 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
             var products = await _products.Find(p => p.IsActive).ToListAsync();
-            return products.Select(ConvertToDto);
+            return products.Select(ConvertToPopulatedDto);
         }
 
         [HttpGet("{id}", Name = "GetProduct")]
@@ -127,7 +146,7 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> Search([FromQuery] string query)
         {
             var products = await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
-            return products.Select(ConvertToDto);
+            return products.Select(ConvertToPopulatedDto);
         }
 
         [HttpPut("{id}", Name = "UpdateProduct")]
@@ -167,6 +186,12 @@ namespace Backend.Controllers
             var update = Builders<Product>.Update.Set(p => p.IsActive, false);
             await _products.UpdateOneAsync(p => p.Id == id, update);
             return NoContent();
+        }
+
+        private string getCategoryName(string categoryId)
+        {
+            var category = _categories.Find(c => c.Id == categoryId).FirstOrDefault();
+            return category?.Name ?? "Unknown";
         }
     }
 }
