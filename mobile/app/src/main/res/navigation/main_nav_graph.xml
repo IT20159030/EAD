@@ -29,7 +29,7 @@
         <action
             android:id="@+id/action_navigation_profile_to_editProfile"
             app:destination="@id/editProfile"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false"/>
         <action
             android:id="@+id/action_navigation_profile_to_orderList"
             app:destination="@id/orderList"
@@ -44,8 +44,17 @@
         android:label="Edit Account Details"
         tools:layout="@layout/fragment_edit_profile">
         <action
-            android:id="@+id/action_editProfile_to_navigation_profile3"
+            android:id="@+id/action_editProfile_to_navigation_profile"
             app:popUpTo="@id/navigation_profile" />
+        <argument
+            android:name="firstName"
+            app:argType="string" />
+        <argument
+            android:name="lastName"
+            app:argType="string" />
+        <argument
+            android:name="nic"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/navigation_cart"

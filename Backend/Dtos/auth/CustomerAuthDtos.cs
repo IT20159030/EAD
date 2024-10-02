@@ -54,7 +54,6 @@ public class MUserResponse
 {
   public bool IsSuccess { get; set; }
   public string Message { get; set; } = string.Empty;
-
   public UserInfoDto Data { get; set; } = new UserInfoDto();
 
 }
@@ -64,10 +63,28 @@ public class UserInfoDto
   public string UserId { get; set; } = string.Empty;
   public string Name { get; set; } = string.Empty;
   public string Email { get; set; } = string.Empty;
+  public string NIC { get; set; } = string.Empty;
 }
 
 
 public class MDeactivateResponse
+{
+  public bool IsSuccess { get; set; }
+  public string Message { get; set; } = string.Empty;
+}
+public class MUpdateUserRequest
+{
+  [Required]
+  public string FirstName { get; set; } = string.Empty;
+
+  [Required]
+  public string LastName { get; set; } = string.Empty;
+
+  [Required]
+  public string NIC { get; set; } = string.Empty;
+}
+
+public class MUpdateUserResponse
 {
   public bool IsSuccess { get; set; }
   public string Message { get; set; } = string.Empty;

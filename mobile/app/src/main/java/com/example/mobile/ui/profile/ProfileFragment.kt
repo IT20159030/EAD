@@ -1,9 +1,11 @@
 package com.example.mobile.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,6 +29,9 @@ class ProfileFragment : Fragment() {
     private val tokenViewModel: TokenViewModel by activityViewModels()
 
     private lateinit var navController: NavController
+
+    // current user
+    private lateinit var currentUserInfo: UserInfo
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,13 +61,19 @@ class ProfileFragment : Fragment() {
 
         viewModel.userInfoResponse.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ApiResponse.Loading -> showLoading(true)
+                is ApiResponse.Loading -> {
+                    showLoading(true)
+                    binding.editProfileButton.isEnabled = false
+                }
                 is ApiResponse.Success -> {
                     showLoading(false)
+                    currentUserInfo = response.data.data
+                    binding.editProfileButton.isEnabled = true
                     updateUserInfo(response.data.data)
                 }
                 is ApiResponse.Failure -> {
                     showLoading(false)
+                    binding.editProfileButton.isEnabled = false
                     showError(response.errorMessage)
                 }
             }
@@ -95,10 +106,27 @@ class ProfileFragment : Fragment() {
             }
 
             editProfileButton.setOnClickListener {
-               navController.navigate(R.id.action_navigation_profile_to_editProfile)
+                val fullName = currentUserInfo.name
+                val nameParts = fullName.split(" ", limit = 2)
+                val firstName = nameParts.getOrNull(0) ?: fullName  // Use full name as firstName if split fails
+                val lastName = nameParts.getOrNull(1) ?: " "        // Use space as lastName if no last name
+                val nic = currentUserInfo.nic.ifEmpty { " " }       // Use space if NIC is empty
+
+                val bundle = Bundle().apply {
+                    putString("firstName", firstName)
+                    putString("lastName", lastName)
+                    putString("nic", nic)
+                }
+                try {
+                    navController.navigate(R.id.action_navigation_profile_to_editProfile, bundle)
+                } catch (e: Exception) {
+                    Log.e("ProfileFragment", "Navigation failed", e)
+                    Toast.makeText(context, "Failed to open edit profile", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
 
     private fun fetchUserInfo() {
         viewModel.getUserInfo(object : CoroutinesErrorHandler {
@@ -113,13 +141,13 @@ class ProfileFragment : Fragment() {
         with(binding) {
             profileName.text = userData.name
             profileEmail.text = userData.email
+
         }
     }
 
     private fun showLoading(isLoading: Boolean) {
         binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.actionsCard.isEnabled = !isLoading
-        binding.editProfileButton.isEnabled = !isLoading
         binding.logoutButton.isEnabled = !isLoading
     }
 

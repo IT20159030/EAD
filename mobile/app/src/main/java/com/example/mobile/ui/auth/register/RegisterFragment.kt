@@ -1,14 +1,12 @@
 package com.example.mobile.ui.auth.register
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -18,7 +16,6 @@ import com.example.mobile.dto.RegisterRequest
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.AuthViewModel
 import com.example.mobile.viewModels.CoroutinesErrorHandler
-import com.example.mobile.viewModels.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,6 +46,7 @@ class RegisterFragment : Fragment() {
         }
 
         setupObservers()
+        setupTextChangeListeners()
     }
 
     private fun setupObservers() {
@@ -71,19 +69,30 @@ class RegisterFragment : Fragment() {
         var isValid = true
 
         // Validate First Name
-        if (binding.firstNameEditText.text.toString().trim().isEmpty()) {
-            binding.firstNameLayout.error = "First name is required"
-            isValid = false
-        } else {
-            binding.firstNameLayout.error = null
+        when {
+            binding.firstNameEditText.text.toString().trim().isEmpty() -> {
+                binding.firstNameLayout.error = "First name is required"
+                isValid = false
+            }
+            binding.firstNameEditText.text.toString().contains(" ") -> {
+                binding.firstNameLayout.error = "First name should not contain spaces"
+                isValid = false
+            }
+            else -> binding.firstNameLayout.error = null
         }
 
         // Validate Last Name
-        if (binding.lastNameEditText.text.toString().trim().isEmpty()) {
-            binding.lastNameLayout.error = "Last name is required"
-            isValid = false
-        } else {
-            binding.lastNameLayout.error = null
+        when{
+
+            binding.lastNameEditText.text.toString().trim().isEmpty() ->{
+                binding.lastNameLayout.error = "Last name is required"
+                isValid = false
+            }
+            binding.lastNameEditText.text.toString().contains(" ") -> {
+                binding.lastNameLayout.error = "Last name should not contain spaces"
+
+            }
+            else -> binding.lastNameLayout.error = null
         }
 
         // Validate email
@@ -199,5 +208,32 @@ class RegisterFragment : Fragment() {
             }
             .show()
     }
+
+    private fun setupTextChangeListeners() {
+        binding.firstNameEditText.addTextChangedListener {
+            binding.firstNameLayout.error = null
+        }
+
+        binding.lastNameEditText.addTextChangedListener {
+            binding.lastNameLayout.error = null
+        }
+
+        binding.emailEditText.addTextChangedListener {
+            binding.emailLayout.error = null
+        }
+
+        binding.nicEditText.addTextChangedListener {
+            binding.nicEditLayout.error = null
+        }
+
+        binding.passwordEditText.addTextChangedListener {
+            binding.passwordLayout.error = null
+        }
+
+        binding.confirmPasswordEditText.addTextChangedListener {
+            binding.confirmPasswordLayout.error = null
+        }
+    }
+
 
 }
