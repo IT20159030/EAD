@@ -4,11 +4,9 @@
 * It uses the Order and Notification models to interact with the database.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Backend.Hubs;
 using Backend.Models;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 
 namespace Backend.Services.notification
@@ -17,51 +15,101 @@ namespace Backend.Services.notification
     {
         private readonly IMongoCollection<Order> _orders;
         private readonly IMongoCollection<Notification> _notifications;
-        private readonly IMongoClient _mongoClient;
-        private readonly IConfiguration _configuration;
+        private readonly IMongoCollection<Product> _products;
+        private readonly ILogger<OrderMonitoringService> _logger;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public OrderMonitoringService(IMongoClient mongoClient, IConfiguration configuration)
+        public OrderMonitoringService(IMongoCollection<Order> orders,
+                                      IMongoCollection<Notification> notifications,
+                                      IMongoCollection<Product> products,
+                                      ILogger<OrderMonitoringService> logger,
+                                      IHubContext<NotificationHub> hubContext)
         {
-            _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-
-            var database = _mongoClient.GetDatabase(
-                new MongoUrl(_configuration.GetConnectionString("MongoDB")).DatabaseName
-            );
-
-            _orders = database.GetCollection<Order>("orders");
-            _notifications = database.GetCollection<Notification>("Notification");
+            _orders = orders;
+            _notifications = notifications;
+            _products = products;
+            _logger = logger;
+            _hubContext = hubContext;
         }
 
-        public async Task MonitorOrderStatusAsync()
+        public async Task MonitorOrderStatusesAsync()
         {
-            // Find orders with different statuses
-            var orders = await _orders.Find(o => o.Status == OrderStatus.Pending || o.Status == OrderStatus.Ready || o.Status == OrderStatus.Approved || o.Status == OrderStatus.Rejected || o.Status == OrderStatus.Completed || o.Status == OrderStatus.CancelRequested || o.Status == OrderStatus.Cancelled).ToListAsync();
+            // Fetch all orders that have recently changed status
+            var recentOrders = await _orders
+                .Find(order => order.Status == OrderStatus.Ready ||
+                               order.Status == OrderStatus.Approved ||
+                               order.Status == OrderStatus.CancelRequested)
+                .ToListAsync();
 
-            foreach (var order in orders)
+            foreach (var order in recentOrders)
             {
-                var existingNotification = await _notifications.Find(n =>
-                        n.RecipientId == order.CustomerId &&
-                        n.Message == $"Order {order.OrderId} is {order.Status}" &&
-                        n.Type == "OrderStatus" &&
-                        !n.IsRead)
-                    .FirstOrDefaultAsync();
-
-                // If no such notification exists, create and save a new one
-                if (existingNotification == null)
+                // Loop through each OrderItem to get the vendor IDs
+                foreach (var item in order.OrderItems)
                 {
-                    var notification = new Notification
-                    {
-                        RecipientId = order.CustomerId,
-                        Role = "customer",
-                        Message = $"Order {order.OrderId} is {order.Status}",
-                        MessageID = order.OrderId,
-                        CreatedAt = DateTime.UtcNow,
-                        Type = "OrderStatus",
-                        IsRead = false
-                    };
+                    // Fetch the product to get the vendor ID
+                    var product = await _products
+                        .Find(p => p.Id == item.ProductId)
+                        .FirstOrDefaultAsync();
 
-                    await _notifications.InsertOneAsync(notification);
+                    if (product != null)
+                    {
+                        var vendorId = product.VendorId;
+                        var orderDetails = order.Id.ToString();
+                        var message = string.Empty;
+
+                        // Create a message based on the order status
+                        switch (order.Status)
+                        {
+                            case OrderStatus.Ready:
+                                message = $"Order {orderDetails} is ready";
+                                break;
+                            case OrderStatus.Approved:
+                                message = $"Order {orderDetails} has been approved";
+                                break;
+                            case OrderStatus.CancelRequested:
+                                message = $"Order {orderDetails} has a cancellation request";
+                                break;
+                        }
+
+                        // Check if a notification for this order status already exists
+                        var existingNotification = await _notifications
+                            .Find(n => n.MessageID == order.Id &&
+                                       n.RecipientId == vendorId &&
+                                       n.Type == order.Status.ToString() &&
+                                       !n.IsRead)
+                            .FirstOrDefaultAsync();
+
+                        // If no unread notification exists, create and send a new notification
+                        if (existingNotification == null)
+                        {
+                            var notification = new Notification
+                            {
+                                RecipientId = vendorId,
+                                Role = "vendor",
+                                Message = message,
+                                MessageID = order.Id,
+                                CreatedAt = DateTime.UtcNow,
+                                Type = order.Status.ToString(),
+                                IsRead = false
+                            };
+
+                            // Insert the notification into the database
+                            await _notifications.InsertOneAsync(notification);
+
+                            // Send notification via SignalR
+                            await _hubContext.Clients.User(vendorId).SendAsync("ReceiveNotification", notification.Message);
+
+                            _logger.LogInformation($"Order status notification sent for Order {orderDetails}");
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"Notification already exists for Order {orderDetails} and Vendor {vendorId}. Skipping...");
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"Product not found for OrderItem with ProductId: {item.ProductId}");
+                    }
                 }
             }
         }
