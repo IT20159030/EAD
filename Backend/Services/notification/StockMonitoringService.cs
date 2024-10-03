@@ -13,20 +13,16 @@ namespace Backend.Services.notification
 {
     public class StockMonitoringService
     {
-        private readonly IMongoCollection<Inventory> _inventoryCollection;
         private readonly IMongoCollection<Notification> _notifications;
         private readonly IMongoCollection<Product> _products;
         private readonly ILogger<StockMonitoringService> _logger;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-
-        public StockMonitoringService(IMongoCollection<Inventory> inventoryCollection,
-                                   IMongoCollection<Notification> notifications,
-                                   IMongoCollection<Product> products,
-                                   ILogger<StockMonitoringService> logger,
-                                   IHubContext<NotificationHub> hubContext)
+        public StockMonitoringService(IMongoCollection<Notification> notifications,
+                                      IMongoCollection<Product> products,
+                                      ILogger<StockMonitoringService> logger,
+                                      IHubContext<NotificationHub> hubContext)
         {
-            _inventoryCollection = inventoryCollection;
             _notifications = notifications;
             _products = products;
             _logger = logger;
@@ -35,41 +31,49 @@ namespace Backend.Services.notification
 
         public async Task MonitorStockLevelsAsync()
         {
-            var lowStockItems = await _inventoryCollection
-                .Find(i => i.Quantity <= i.AlertThreshold && !i.LowStockAlert)
+            // Fetch products where stock is less than or equal to 10
+            var lowStockProducts = await _products
+                .Find(p => p.Stock <= 10)
                 .ToListAsync();
 
-            foreach (var item in lowStockItems)
+            foreach (var product in lowStockProducts)
             {
-                // Fetch the product details
-                var product = await _products
-                    .Find(p => p.Id == item.ProductId)
+                var productName = product.Name ?? "Unknown Product";
+
+                // Check if a low stock notification already exists for this product and vendor
+                var existingNotification = await _notifications
+                    .Find(n => n.MessageID == product.Id &&
+                               n.RecipientId == product.VendorId &&
+                               n.Type == "LowStock" &&
+                               !n.IsRead)
                     .FirstOrDefaultAsync();
 
-                string productName = product?.Name ?? "Unknown Product";
-
-                var notification = new Notification
+                // If no unread notification exists, create and send a new notification
+                if (existingNotification == null)
                 {
-                    RecipientId = item.VendorId,
-                    Role = "vendor",
-                    Message = $"{productName} is low on stock",
-                    MessageID = item.ProductId,
-                    CreatedAt = DateTime.UtcNow,
-                    Type = "LowStock",
-                    IsRead = false
-                };
+                    var notification = new Notification
+                    {
+                        RecipientId = product.VendorId,
+                        Role = "vendor",
+                        Message = $"{productName} is low on stock",
+                        MessageID = product.Id,
+                        CreatedAt = DateTime.UtcNow,
+                        Type = "LowStock",
+                        IsRead = false
+                    };
 
-                // Insert the notification into the database
-                await _notifications.InsertOneAsync(notification);
+                    // Insert the notification into the database
+                    await _notifications.InsertOneAsync(notification);
 
-                // Update the inventory to mark that the alert was sent
-                var update = Builders<Inventory>.Update.Set(i => i.LowStockAlert, true);
-                await _inventoryCollection.UpdateOneAsync(i => i.Id == item.Id, update);
+                    // Send notification via SignalR
+                    await _hubContext.Clients.User(product.VendorId).SendAsync("ReceiveNotification", notification.Message);
 
-                // Send notification via SignalR
-                await _hubContext.Clients.User(item.VendorId).SendAsync("ReceiveNotification", notification.Message);
-
-                _logger.LogInformation($"Low stock notification sent for Product {productName}");
+                    _logger.LogInformation($"Low stock notification sent for Product {productName}");
+                }
+                else
+                {
+                    _logger.LogInformation($"Notification already exists for Product {productName} and Vendor {product.VendorId}. Skipping...");
+                }
             }
         }
     }

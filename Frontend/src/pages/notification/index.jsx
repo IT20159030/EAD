@@ -94,11 +94,7 @@ const Notifications = () => {
       });
     }
 
-    navigate(
-      notification.type === "LowStock"
-        ? `/inventory/${notification.messageID}`
-        : `/orders/${notification.messageID}`
-    );
+    navigate(notification.type === "LowStock" ? `/products` : `/orders`);
   };
 
   const filteredNotifications = notifications
