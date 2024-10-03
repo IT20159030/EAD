@@ -142,6 +142,7 @@ builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddScoped<StaffManagementService>();
+builder.Services.AddScoped<CustomerManagementService>();
 
 var app = builder.Build();
 

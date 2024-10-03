@@ -42,6 +42,18 @@ public class WebUserAuthService : IWebUserAuthService
       };
     }
 
+    var roles = await _userManager.GetRolesAsync(user);
+    var allowedRoles = new[] { "admin", "vendor", "csr" };
+
+    if (!roles.Any(role => allowedRoles.Contains(role)))
+    {
+      return new LoginResponse
+      {
+        IsSuccess = false,
+        Message = "You do not have the required role to access this system"
+      };
+    }
+
     var claims = new List<Claim>
   {
     new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
@@ -49,7 +61,6 @@ public class WebUserAuthService : IWebUserAuthService
     new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
     new(ClaimTypes.NameIdentifier, user.Id.ToString())
   };
-    var roles = await _userManager.GetRolesAsync(user);
     var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role));
     claims.AddRange(roleClaims);
 

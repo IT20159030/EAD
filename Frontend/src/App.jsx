@@ -16,7 +16,9 @@ import AuthLayout from "./layouts/AuthLayout";
 import RoleCheck from "./layouts/RoleCheck";
 import AuthProvider from "./provider/authProvider";
 import Logout from "./pages/auth/logout";
-import StaffManagement from "./pages/user/StaffManagement.jsx";
+import StaffManagement from "./pages/user/StaffManagement";
+import CustomerManagement from "./pages/user/CustomerManagement";
+import ApprovalRequests from "./pages/user/ApprovalRequests";
 
 import "./App.css";
 import Order from "./pages/Order.jsx";
@@ -53,11 +55,21 @@ function App() {
 
               <Route path="categories" element={<ProductCategory />} />
               <Route path="orders" element={<Order />} />
-              <Route path="customers" element={<About />} />
 
               <Route path="inventory" element={<About />} />
               <Route path="reports" element={<About />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route element={<RoleCheck roles={["admin", "csr"]} />}>
+                <Route path="customers" element={<CustomerManagement />} />
+                <Route
+                  path="customers/approval-requests"
+                  element={<ApprovalRequests />}
+                />
+                <Route
+                  path="customers/approval-requests/:userid"
+                  element={<ApprovalRequests />}
+                />
+              </Route>
               <Route element={<RoleCheck roles={["admin"]} />}>
                 <Route path="vendors" element={<About />} />
                 <Route path="staff" element={<StaffManagement />} />

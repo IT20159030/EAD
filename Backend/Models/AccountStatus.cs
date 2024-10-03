@@ -5,6 +5,6 @@ namespace Backend.Models
         Unapproved,
         Active,
         Rejected,
-        Deactivated
+        Deactivated,
     }
 }
