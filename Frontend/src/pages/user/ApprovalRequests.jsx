@@ -193,8 +193,9 @@ const ApprovalRequestModal = ({
           <strong>Email:</strong> {customerDetails.email}
         </p>
         <p>
-          <strong>Date Created:</strong>{" "}
-          {new Date(customerDetails.createdAt).toLocaleDateString()}
+          <strong>Create At:</strong>{" "}
+          {new Date(customerDetails.createdAt).toLocaleDateString()} at{" "}
+          {new Date(customerDetails.createdAt).toLocaleTimeString()}
         </p>
         {/* Add any additional customer details here */}
       </Modal.Body>

@@ -19,6 +19,7 @@ import Logout from "./pages/auth/logout";
 import StaffManagement from "./pages/user/StaffManagement";
 import CustomerManagement from "./pages/user/CustomerManagement";
 import ApprovalRequests from "./pages/user/ApprovalRequests";
+import VendorManagement from "./pages/user/VendorManagement";
 
 import "./App.css";
 import Order from "./pages/Order.jsx";
@@ -71,7 +72,7 @@ function App() {
                 />
               </Route>
               <Route element={<RoleCheck roles={["admin"]} />}>
-                <Route path="vendors" element={<About />} />
+                <Route path="vendors" element={<VendorManagement />} />
                 <Route path="staff" element={<StaffManagement />} />
               </Route>
 
