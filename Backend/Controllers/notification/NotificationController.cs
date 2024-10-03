@@ -49,12 +49,12 @@ namespace Backend.Controllers.notification
             return notifications.Select(n => new NotificationDto
             {
                 Id = n.Id!,
-                RecipientId = n.RecipientId,
-                Role = n.Role,
-                Message = n.Message,
-                MessageID = n.MessageID,
+                RecipientId = n.RecipientId ?? string.Empty,
+                Role = n.Role ?? string.Empty,
+                Message = n.Message ?? string.Empty,
+                MessageID = n.MessageID ?? string.Empty,
                 CreatedAt = n.CreatedAt,
-                Type = n.Type,
+                Type = n.Type ?? string.Empty,
                 IsRead = n.IsRead
             });
         }
@@ -233,12 +233,12 @@ namespace Backend.Controllers.notification
             return notifications.Select(n => new NotificationDto
             {
                 Id = n.Id!,
-                RecipientId = n.RecipientId,
-                Role = n.Role,
-                Message = n.Message,
-                MessageID = n.MessageID,
+                RecipientId = n.RecipientId ?? string.Empty,
+                Role = n.Role ?? string.Empty,
+                Message = n.Message ?? string.Empty,
+                MessageID = n.MessageID ?? string.Empty,
                 CreatedAt = n.CreatedAt,
-                Type = n.Type,
+                Type = n.Type ?? string.Empty,
                 IsRead = n.IsRead
             });
         }

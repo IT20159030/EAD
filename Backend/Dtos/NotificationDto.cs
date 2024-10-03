@@ -28,17 +28,21 @@ namespace Backend.Dtos
     {
         public string Id { get; set; } = string.Empty;
 
-        public string RecipientId { get; set; } = string.Empty;
+        [Required]
+        public required string RecipientId { get; set; } = string.Empty;
 
-        public string Role { get; set; } = string.Empty;
+        [Required]
+        public required string Role { get; set; } = string.Empty;
 
-        public string Message { get; set; } = string.Empty;
+        [Required]
+        public required string Message { get; set; } = string.Empty;
 
         public string MessageID { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
 
-        public string Type { get; set; } = string.Empty;
+        [Required]
+        public required string Type { get; set; } = string.Empty;
 
         public bool IsRead { get; set; }
     }

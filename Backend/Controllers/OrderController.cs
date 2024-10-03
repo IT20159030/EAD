@@ -114,7 +114,7 @@ public class OrderController : ControllerBase
         Id = ObjectId.GenerateNewId().ToString(),
         OrderId = dto.OrderId,
         ProcessedBy = "Unprocessed",
-        CustomerId = "",
+        CustomerId = dto.CustomerId ?? string.Empty,
         RequestDate = DateTime.Now,
         Status = "Pending",
         Reason = dto.Reason
@@ -164,8 +164,10 @@ public class OrderController : ControllerBase
             return BadRequest("User not found");
         }
 
+        request.CustomerId = customerId;
+        request.OrderId = orderId;
+
         var cancellationRequest = ConvertToModel(request);
-        cancellationRequest.CustomerId = customerId;
 
         await _cancellationRequests.InsertOneAsync(cancellationRequest);
 
