@@ -17,6 +17,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AddEditStaffModal from "../../components/userManagement/AddEditStaffModal.jsx";
 import { useAuth } from "../../provider/authProvider";
+import { Alert } from "react-bootstrap";
 const StaffManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [staffToEdit, setStaffToEdit] = useState(null);
@@ -26,8 +27,11 @@ const StaffManagement = () => {
     user: { id: currentUserId },
   } = useAuth();
 
-  const { data: staffAccounts, isLoading: isLoadingStaffAccounts } =
-    useGetAllStaffAccounts();
+  const {
+    data: staffAccounts,
+    isLoading: isLoadingStaffAccounts,
+    isError: isLoadingError,
+  } = useGetAllStaffAccounts();
 
   const { mutate: createStaffAccount, isLoading: isCreating } =
     useCreateStaffAccount();
@@ -82,6 +86,15 @@ const StaffManagement = () => {
     setStaffToEdit(null);
     setShowModal(true);
   };
+
+  if (isLoadingError) {
+    return (
+      <div>
+        <CommonTitle title="Approval Requests" />
+        <Alert variant="danger">Failed to load approval requests</Alert>
+      </div>
+    );
+  }
 
   return (
     <div>

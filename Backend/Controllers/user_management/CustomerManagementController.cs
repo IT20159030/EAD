@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Authorize(Roles = "admin")]
+[Authorize(Roles = "admin,csr")]
 [Route("api/v1/customer-management")]
 [Produces("application/json")]
 public class CustomerManagementController : ControllerBase
