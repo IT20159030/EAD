@@ -2,6 +2,7 @@ package com.example.mobile.ui.order
 
 import androidx.lifecycle.MutableLiveData
 import com.example.mobile.dto.Order
+import com.example.mobile.dto.OrderCancelRequest
 import com.example.mobile.dto.OrderResponse
 import com.example.mobile.repository.OrderRepository
 import com.example.mobile.utils.ApiResponse
@@ -41,10 +42,11 @@ class OrderViewModel@Inject constructor (
         orderRepository.getOrders()
     }
 
-    fun cancelOrderRequest(id: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+    fun cancelOrderRequest(id: String, orderCancelRequest: OrderCancelRequest,
+                           coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _orderCancelResponse,
         coroutinesErrorHandler,
     ) {
-        orderRepository.cancelOrder(id)
+        orderRepository.cancelOrder(id, orderCancelRequest)
     }
 }

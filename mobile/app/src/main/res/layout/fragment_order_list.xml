@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.order.OrderList">
+    tools:context=".ui.order.OrderListFragment">
 
     <!-- Horizontal loader -->
     <com.google.android.material.progressindicator.LinearProgressIndicator

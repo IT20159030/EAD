@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderList"
-        android:name="com.example.mobile.ui.order.OrderList"
+        android:name="com.example.mobile.ui.order.OrderListFragment"
         android:label="@string/my_orders"
         tools:layout="@layout/fragment_order_list" />
 </navigation>

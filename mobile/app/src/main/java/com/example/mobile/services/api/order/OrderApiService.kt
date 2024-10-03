@@ -1,6 +1,7 @@
 package com.example.mobile.services.api.order
 
 import com.example.mobile.dto.Order
+import com.example.mobile.dto.OrderCancelRequest
 import com.example.mobile.dto.OrderResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,6 +20,7 @@ interface OrderApiService {
     @GET("Order")
     suspend fun getOrders(): Response<List<OrderResponse>>
 
-    @POST("Order/cancel/{id}")
-    suspend fun cancelOrder(@Path("id") id: String): Response<OrderResponse>
+    @POST("Order/CancelRequest/{id}")
+    suspend fun cancelOrder(@Path("id") id: String,
+                            @Body orderCancelRequest: OrderCancelRequest): Response<OrderResponse>
 }

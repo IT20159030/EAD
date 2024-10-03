@@ -59,4 +59,9 @@
     <string name="date_s">Date: %s</string>
     <string name="show_items">Show Items ▼</string>
     <string name="hide_items">Hide Items ▲</string>
+    <string name="why_are_you_canceling_the_order">Why are you canceling the order?</string>
+    <string name="wrong_order">Wrong order</string>
+    <string name="no_longer_need_item">No longer need item</string>
+    <string name="other">Other</string>
+    <string name="please_specify">Please specify</string>
 </resources>
