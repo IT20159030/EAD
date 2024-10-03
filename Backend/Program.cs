@@ -119,6 +119,13 @@ builder.Services.AddSingleton(sp =>
 {
     var client = sp.GetRequiredService<IMongoClient>();
     var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Order>("Orders");
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
     return database.GetCollection<Notification>("Notification");
 });
 

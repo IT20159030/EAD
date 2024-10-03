@@ -104,6 +104,8 @@ const Notifications = () => {
       case "AccountActivated":
         navigate("/staff");
         break;
+      case "OrderStatus":
+        navigate("/orders");
       default:
         navigate("/products");
         break;
