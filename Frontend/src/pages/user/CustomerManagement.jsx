@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import { Badge, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Alert, Badge, ButtonGroup, ToggleButton } from "react-bootstrap";
 import styles from "../styles/Pages.module.css";
 import Form from "react-bootstrap/Form";
 import CommonTitle from "../../components/common/Title/Title";
@@ -28,8 +28,11 @@ const CustomerManagement = () => {
     user: { id: currentUserId },
   } = useAuth();
 
-  const { data: customerAccounts, isLoading: isLoadingCustomerAccounts } =
-    useGetAllCustomerAccounts();
+  const {
+    data: customerAccounts,
+    isLoading: isLoadingCustomerAccounts,
+    isError: isLoadingError,
+  } = useGetAllCustomerAccounts();
 
   const { mutate: createCustomerAccount, isLoading: isCreating } =
     useCreateCustomerAccount();
@@ -84,6 +87,15 @@ const CustomerManagement = () => {
     setCustomerToEdit(null);
     setShowModal(true);
   };
+
+  if (isLoadingError) {
+    return (
+      <div>
+        <CommonTitle title="Customers" />
+        <Alert variant="danger">Failed to load customers</Alert>
+      </div>
+    );
+  }
 
   return (
     <div>

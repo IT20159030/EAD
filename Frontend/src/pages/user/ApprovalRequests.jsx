@@ -21,8 +21,11 @@ const CustomerManagement = () => {
   const {
     user: { id: currentUserId },
   } = useAuth();
-  const { data: customerAccounts, isLoading: isLoadingCustomerAccounts } =
-    useGetAllCustomerAccounts();
+  const {
+    data: customerAccounts,
+    isLoading: isLoadingCustomerAccounts,
+    isError: isLoadingError,
+  } = useGetAllCustomerAccounts();
   const { mutate: updateCustomerStatus, isPending: isChangingStatus } =
     useUpdateCustomerStatus();
 
@@ -71,6 +74,15 @@ const CustomerManagement = () => {
           customer.name.toLowerCase().includes(search.toLowerCase()) ||
           customer.email.toLowerCase().includes(search.toLowerCase())
       ) || [];
+
+  if (isLoadingError) {
+    return (
+      <div>
+        <CommonTitle title="Approval Requests" />
+        <Alert variant="danger">Failed to load approval requests</Alert>
+      </div>
+    );
+  }
 
   return (
     <div>
