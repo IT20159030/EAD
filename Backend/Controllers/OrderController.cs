@@ -36,12 +36,14 @@ namespace Backend.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IMongoCollection<Order> _orders;
+    private readonly IMongoCollection<CancellationRequest> _cancellationRequests;
     private readonly ILogger<OrderController> _logger;
 
     public OrderController(ILogger<OrderController> logger, MongoDBService mongoDBService)
     {
         _logger = logger;
         _orders = mongoDBService.Database.GetCollection<Order>("Orders");
+        _cancellationRequests = mongoDBService.Database.GetCollection<CancellationRequest>("CancellationRequests");
     }
 
     private OrderDto ConvertToDto(Order order) => new OrderDto
@@ -107,6 +109,17 @@ public class OrderController : ControllerBase
         CustomerName = dto.CustomerName ?? string.Empty
     };
 
+    private CancellationRequest ConvertToModel(CreateCancellationRequestDto dto) => new CancellationRequest
+    {
+        Id = ObjectId.GenerateNewId().ToString(),
+        OrderId = dto.OrderId,
+        ProcessedBy = "Unprocessed",
+        CustomerId = "",
+        RequestDate = DateTime.Now,
+        Status = "Pending",
+        Reason = dto.Reason
+    };
+
     [HttpPost]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequestDto request)
@@ -125,19 +138,36 @@ public class OrderController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<OrderDto>> GetAllOrders()
     {
-        var orders = await _orders.Find(new BsonDocument()).ToListAsync();
+        var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (customerId.IsNullOrEmpty())
+        {
+            return Enumerable.Empty<OrderDto>();
+        }
+
+        var orders = await _orders.Find(o => o.CustomerId == customerId).ToListAsync();
         return orders.Select(ConvertToDto);
     }
 
     [HttpPost("CancelRequest/{orderId}")]
     [Authorize(Roles = "customer")]
-    public async Task<IActionResult> CancelRequestOrder(string orderId)
+    public async Task<IActionResult> CancelRequestOrder(string orderId, [FromBody] CreateCancellationRequestDto request)
     {
-        var order = await _orders.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+        var order = await _orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
+        var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
         if (order == null)
         {
             return NotFound();
         }
+        else if (customerId == null || customerId.IsNullOrEmpty())
+        {
+            return BadRequest("User not found");
+        }
+
+        var cancellationRequest = ConvertToModel(request);
+        cancellationRequest.CustomerId = customerId;
+
+        await _cancellationRequests.InsertOneAsync(cancellationRequest);
 
         order.Status = OrderStatus.CancelRequested;
         await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
