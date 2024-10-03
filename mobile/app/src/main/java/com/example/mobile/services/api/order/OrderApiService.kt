@@ -17,7 +17,7 @@ interface OrderApiService {
     @POST("Order")
     suspend fun createOrder(@Body order: Order): Response<Order>
 
-    @GET("Order")
+    @GET("Order/GetByCustomerId")
     suspend fun getOrders(): Response<List<OrderResponse>>
 
     @POST("Order/CancelRequest/{id}")

@@ -102,13 +102,15 @@
                 android:textStyle="bold"
                 tools:text="Total: $45.00"/>
 
-            <!-- Cancel Button -->
+            <!-- Cancel Button outlined-->
             <Button
                 android:id="@+id/order_item_card_cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel_order"
-                android:backgroundTint="@android:color/holo_red_dark"
+                android:textSize="14sp"
+                android:textColor="@android:color/holo_red_dark"
+                android:background="@android:color/transparent"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"/>
         </LinearLayout>

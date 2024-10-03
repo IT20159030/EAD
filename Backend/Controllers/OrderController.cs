@@ -138,13 +138,7 @@ public class OrderController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<OrderDto>> GetAllOrders()
     {
-        var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (customerId.IsNullOrEmpty())
-        {
-            return Enumerable.Empty<OrderDto>();
-        }
-
-        var orders = await _orders.Find(o => o.CustomerId == customerId).ToListAsync();
+        var orders = await _orders.Find(_ => true).ToListAsync();
         return orders.Select(ConvertToDto);
     }
 
@@ -207,10 +201,16 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
-    [HttpGet("GetByCustomerId/{customerId}")]
+    [HttpGet("GetByCustomerId")]
     [Authorize(Roles = "customer")]
-    public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId(string customerId)
+    public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId()
     {
+        var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (customerId.IsNullOrEmpty())
+        {
+            return Enumerable.Empty<OrderDto>();
+        }
+
         var orders = await _orders.Find(o => o.CustomerId == customerId).ToListAsync();
         return orders.Select(ConvertToDto);
     }
