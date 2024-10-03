@@ -28,59 +28,59 @@ public class VendorDto
     public int VendorRatingCount { get; set; }
 }
 
-public class CreateVendorRequestDto
-{
-    [Required]
-    public string VendorId { get; set; } = string.Empty;
+// public class CreateVendorRequestDto
+// {
+//     [Required]
+//     public string VendorId { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorName { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorName { get; set; } = string.Empty;
 
-    [Required, EmailAddress]
-    public string VendorEmail { get; set; } = string.Empty;
+//     [Required, EmailAddress]
+//     public string VendorEmail { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorPhone { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorPhone { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorAddress { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorAddress { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorCity { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorCity { get; set; } = string.Empty;
 
-    [Required]
-    public float VendorRating { get; set; }
+//     [Required]
+//     public float VendorRating { get; set; }
 
-    [Required]
-    public int VendorRatingCount { get; set; }
-}
+//     [Required]
+//     public int VendorRatingCount { get; set; }
+// }
 
-public class UpdateVendorRequestDto
-{
-    [Required]
-    public string Id { get; set; } = string.Empty;
+// public class UpdateVendorRequestDto
+// {
+//     [Required]
+//     public string Id { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorId { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorId { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorName { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorName { get; set; } = string.Empty;
 
-    [Required, EmailAddress]
-    public string VendorEmail { get; set; } = string.Empty;
+//     [Required, EmailAddress]
+//     public string VendorEmail { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorPhone { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorPhone { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorAddress { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorAddress { get; set; } = string.Empty;
 
-    [Required]
-    public string VendorCity { get; set; } = string.Empty;
+//     [Required]
+//     public string VendorCity { get; set; } = string.Empty;
 
-    [Required]
-    public float VendorRating { get; set; }
+//     [Required]
+//     public float VendorRating { get; set; }
 
-    [Required]
-    public int VendorRatingCount { get; set; }
-}
+//     [Required]
+//     public int VendorRatingCount { get; set; }
+// }

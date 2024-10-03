@@ -150,6 +150,7 @@ builder.Services.AddScoped<MobileUserAuthService>();
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddScoped<StaffManagementService>();
 builder.Services.AddScoped<CustomerManagementService>();
+builder.Services.AddScoped<VendorManagementService>();
 
 var app = builder.Build();
 

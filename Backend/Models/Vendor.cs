@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -6,11 +7,7 @@ namespace Backend.Models;
 public class Vendor
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
-    [BsonElement("vendorId")]
-    public required string VendorId { get; set; }
+    public Guid Id { get; set; }
 
     [BsonElement("VendorName")]
     public required string VendorName { get; set; }
@@ -28,8 +25,8 @@ public class Vendor
     public required string VendorCity { get; set; }
 
     [BsonElement("VendorRating")]
-    public required float VendorRating { get; set; }
+    public float VendorRating { get; set; } = 0;
 
     [BsonElement("VendorRatingCount")]
-    public required int VendorRatingCount { get; set; }
+    public int VendorRatingCount { get; set; } = 0;
 }

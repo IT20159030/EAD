@@ -90,8 +90,8 @@ const StaffManagement = () => {
   if (isLoadingError) {
     return (
       <div>
-        <CommonTitle title="Approval Requests" />
-        <Alert variant="danger">Failed to load approval requests</Alert>
+        <CommonTitle title="Staff" />
+        <Alert variant="danger">Failed to load staff accounts</Alert>
       </div>
     );
   }
