@@ -87,6 +87,7 @@ const Navbar = () => {
         notifications
           .filter(
             (notification) =>
+              !notification.isRead &&
               !(
                 (user.role === "admin" || user.role === "csr") &&
                 notification.type === "LowStock"
@@ -95,25 +96,56 @@ const Navbar = () => {
           .slice(0, 5)
           .map((notification) => (
             <div key={notification.id} className="notificationItem">
-              <Link
-                to={notification.type === "LowStock" ? "/inventory" : "/orders"}
-                onClick={() => {
-                  setShowNotifications(false);
-                  markNotificationAsRead(notification.id);
-                }}
-                className="notificationLink"
-              >
-                <div className="notificationContent">
-                  <p className="message">{notification.message}</p>
-                  <div className="readIcon">
-                    {!notification.isRead && (
-                      <MdNotificationsActive
-                        onClick={() => markNotificationAsRead(notification.id)}
-                      />
-                    )}
+              {notification.type === "AccountActivated" ? (
+                <div
+                  onClick={() => {
+                    setShowNotifications(false);
+                    markNotificationAsRead(notification.id);
+                  }}
+                  className="notificationLink"
+                >
+                  <div className="notificationContent">
+                    <p className="message">{notification.message}</p>
+                    <div className="readIcon">
+                      {!notification.isRead && (
+                        <MdNotificationsActive
+                          onClick={() =>
+                            markNotificationAsRead(notification.id)
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
-              </Link>
+              ) : (
+                <Link
+                  to={
+                    notification.type === "LowStock"
+                      ? "/products"
+                      : notification.type === "AccountApproval"
+                      ? "/staff"
+                      : "/orders"
+                  }
+                  onClick={() => {
+                    setShowNotifications(false);
+                    markNotificationAsRead(notification.id);
+                  }}
+                  className="notificationLink"
+                >
+                  <div className="notificationContent">
+                    <p className="message">{notification.message}</p>
+                    <div className="readIcon">
+                      {!notification.isRead && (
+                        <MdNotificationsActive
+                          onClick={() =>
+                            markNotificationAsRead(notification.id)
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              )}
             </div>
           ))
       ) : (
