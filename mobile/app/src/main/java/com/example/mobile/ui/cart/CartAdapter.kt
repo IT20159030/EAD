@@ -12,6 +12,11 @@ import com.example.mobile.data.model.CartItem
 import com.squareup.picasso.Picasso
 import java.util.Locale
 
+/*
+* An adapter class for cart items.
+* Displays cart items in a RecyclerView.
+* */
+
 class CartAdapter(
     private var cartItems: MutableList<CartItem>,
     private val onRemoveClick: (CartItem) -> Unit

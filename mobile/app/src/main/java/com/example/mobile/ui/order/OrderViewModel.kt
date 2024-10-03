@@ -10,6 +10,11 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/*
+* A ViewModel class for handling order-related operations.
+* Handles the creation, retrieval, and cancellation of orders.
+* */
+
 @HiltViewModel
 class OrderViewModel@Inject constructor (
     private val orderRepository: OrderRepository

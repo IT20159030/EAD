@@ -15,6 +15,13 @@ import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
 
+/*
+*
+* A fragment that displays a list of orders.
+* Allows to cancel orders.
+*
+* */
+
 @AndroidEntryPoint
 class OrderList : Fragment() {
     private var _binding: FragmentOrderListBinding? = null

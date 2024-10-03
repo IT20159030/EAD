@@ -1,5 +1,9 @@
 package com.example.mobile.dto
 
+/*
+* Data classes for orders.
+* */
+
 data class Order (
     var orderId: String,
     var status: Int,

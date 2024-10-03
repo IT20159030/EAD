@@ -5,6 +5,11 @@ import com.example.mobile.services.api.order.OrderApiService
 import com.example.mobile.utils.apiRequestFlow
 import javax.inject.Inject
 
+/*
+* A repository class for orders.
+* Manages the API calls for orders.
+* */
+
 class OrderRepository @Inject constructor(
     private val orderApiService: OrderApiService,
 ) {

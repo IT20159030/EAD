@@ -18,6 +18,11 @@ import com.example.mobile.dto.OrderResponse
 import com.example.mobile.utils.resolveOrderStatus
 import java.util.Locale
 
+/*
+* An adapter class for displaying orders in a RecyclerView.
+* Shows the order ID, date, status, and price of each order.
+* */
+
 class OrderCardAdapter(
     private val orders: MutableList<OrderResponse>,
     private val context: Context,

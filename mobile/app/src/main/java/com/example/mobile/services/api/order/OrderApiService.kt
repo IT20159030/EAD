@@ -8,6 +8,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
+/*
+* A service interface for orders APIs
+* */
+
 interface OrderApiService {
     @POST("Order")
     suspend fun createOrder(@Body order: Order): Response<Order>
