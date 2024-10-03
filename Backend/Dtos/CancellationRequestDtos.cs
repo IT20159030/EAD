@@ -6,10 +6,7 @@ namespace Backend.Dtos
     // DTO for creating a cancellation request
     public class CreateCancellationRequestDto
     {
-        [Required]
         public string OrderId { get; set; } = string.Empty;
-
-        [Required]
         public string CustomerId { get; set; } = string.Empty;
 
         [Required]
@@ -20,30 +17,28 @@ namespace Backend.Dtos
     // DTO for processing a cancellation request
     public class ProcessCancellationRequestDto
     {
-        [Required]
-        public string ProcessedBy { get; set; } // CSR or Admin ID
+        public required string ProcessedBy { get; set; } // CSR or Admin ID
 
         [Required]
-        public string Status { get; set; } // Approved or Denied
+        public required string Status { get; set; } // Approved or Denied
 
-        [StringLength(500)]
         public string? DecisionNote { get; set; } // Optional note for why the decision was made
     }
 
     // DTO to return a simplified view of a cancellation request
     public class CancellationRequestDto
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
-        public string OrderId { get; set; }
+        public required string OrderId { get; set; }
 
-        public string CustomerId { get; set; }
+        public required string CustomerId { get; set; }
 
         public DateTime RequestDate { get; set; }
 
-        public string Status { get; set; }
+        public required string Status { get; set; }
 
-        public string Reason { get; set; }
+        public required string Reason { get; set; }
 
         public string? ProcessedBy { get; set; }
 

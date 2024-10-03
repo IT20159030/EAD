@@ -85,3 +85,22 @@ export const useMarkOrderCancelled = () => {
     },
   });
 };
+
+export const useGetOrderCancellationDetails = (id) => {
+  return useQuery({
+    queryKey: ['cancellationRequests'],
+    queryFn: () => order.getOrderCancellationDetails(id),
+  });
+};
+
+export const useUpdateOrderCancellationDetails = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: order.updateOrderCancellationDetails,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['cancellationRequests', 'orders'],
+      });
+    },
+  });
+};

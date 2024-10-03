@@ -82,17 +82,17 @@ public class UserManagementService : IUserManagementService
     };
   }
 
-  public async Task<DeleteUserResponse> DeleteUserAsync(string userId)
+  public Task<DeleteUserResponse> DeleteUserAsync(string userId)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<GetUserResponse> GetUserAsync(string userId)
+  public Task<GetUserResponse> GetUserAsync(string userId)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<UpdateUserResponse> UpdateUserAsync(string userId, UpdateUserRequest request)
+  public Task<UpdateUserResponse> UpdateUserAsync(string userId, UpdateUserRequest request)
   {
     throw new NotImplementedException();
   }
@@ -117,7 +117,7 @@ public class UserManagementService : IUserManagementService
       {
         Id = u.Id.ToString(),
         Name = u.Name,
-        Email = u.Email,
+        Email = u.Email ?? string.Empty,
         Status = u.Status.ToString().ToLower(),
         CreatedAt = u.CreatedAt
         // Add other properties as needed

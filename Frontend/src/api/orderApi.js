@@ -50,3 +50,29 @@ export const markOrderCancelled = async (id) => {
   const response = await axios.put(`${baseUrl}/Order/cancel/${id}`);
   return response.data;
 };
+
+export const getOrderCancellationDetails = async (id) => {
+  const response = await axios.get(
+    `${baseUrl}/cancellation-request/order/${id}`
+  );
+  return response.data;
+};
+
+export const updateOrderCancellationDetails = async (
+  orderCancellationDetails
+) => {
+  const response = await axios.put(
+    `${baseUrl}/cancellation-request/${orderCancellationDetails.id}`,
+    {
+      processedBy: orderCancellationDetails.processedBy,
+      status: orderCancellationDetails.status,
+      decisionNote: orderCancellationDetails.decisionNote,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};

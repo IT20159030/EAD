@@ -17,6 +17,11 @@ import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
+/*
+* A fragment that displays the details of a product.
+* Shows the product name, description, category, price, and vendor.
+* */
+
 @AndroidEntryPoint
 class ViewProductFragment : Fragment() {
     private var _binding: FragmentViewProductBinding? = null

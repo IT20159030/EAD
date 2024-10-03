@@ -54,7 +54,7 @@ namespace Backend.Services.notification
                     if (product != null)
                     {
                         var vendorId = product.VendorId;
-                        var orderDetails = order.Id.ToString();
+                        var orderDetails = order.Id?.ToString();
                         var message = string.Empty;
 
                         // Create a message based on the order status
