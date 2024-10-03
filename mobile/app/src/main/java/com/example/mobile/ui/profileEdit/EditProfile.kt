@@ -198,7 +198,9 @@ class EditProfile : Fragment() {
                 is ApiResponse.Success -> {
                     showLoading(false)
                     tokenViewModel.deleteToken()
-                    navController.navigate(R.id.action_editProfile_to_navigation_profile)
+                    // go back to previous screen
+                    // removed the explicit navigation since it would affect the back button press behaviour
+                    navController.navigateUp()
                 }
                 is ApiResponse.Failure -> {
                     showLoading(false)
