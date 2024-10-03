@@ -123,7 +123,7 @@ const Navbar = () => {
                     notification.type === "LowStock"
                       ? "/products"
                       : notification.type === "AccountApproval"
-                      ? "/customers"
+                      ? "/staff"
                       : "/orders"
                   }
                   onClick={() => {

@@ -94,7 +94,20 @@ const Notifications = () => {
       });
     }
 
-    navigate(notification.type === "LowStock" ? `/products` : `/orders`);
+    switch (notification.type) {
+      case "LowStock":
+        navigate("/products");
+        break;
+      case "AccountApproval":
+        navigate("/staff");
+        break;
+      case "AccountActivated":
+        navigate("/staff");
+        break;
+      default:
+        navigate("/products");
+        break;
+    }
   };
 
   const filteredNotifications = notifications
