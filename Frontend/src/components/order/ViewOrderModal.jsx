@@ -24,6 +24,8 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
     orderHooks.useMarkOrderReady();
   const { mutate: markOrderDelivered, isLoading: isMarkingDelivered } =
     orderHooks.useMarkOrderDelivered();
+  const { data: orderCancellationDetails, isLoadingCancellationDetails } =
+    orderHooks.useGetOrderCancellationDetails(orderDetails.id);
 
   useEffect(() => {
     if (orderDetails) {
@@ -92,7 +94,7 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
         <h6>Order ID: {orderDetails?.orderId}</h6>
         <h6>Vendor ID: {orderDetails?.vendorId}</h6>
         <h6>Order Status: {resolveOrderStatus(orderStatus)}</h6>
-        <h6>Order Items:</h6>
+        <h6>Order Items</h6>
 
         <Table striped bordered hover responsive>
           <thead>
@@ -114,10 +116,18 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
                 <td>
                   {item.status === 0 ? (
                     <Button
-                      variant='primary'
+                      variant={
+                        orderStatus === 5 || orderStatus === 6
+                          ? 'secondary'
+                          : 'primary'
+                      }
                       onClick={() => handleOrderItemStatusChange(item)}
                       disabled={
-                        isUpdatingOrder || isMarkingReady || isMarkingDelivered
+                        isUpdatingOrder ||
+                        isMarkingReady ||
+                        isMarkingDelivered ||
+                        orderStatus === 5 ||
+                        orderStatus === 6
                       }>
                       {isUpdatingOrder ||
                       isMarkingReady ||
@@ -135,6 +145,26 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
             ))}
           </tbody>
         </Table>
+
+        {(orderDetails?.status === 5 || orderDetails?.status === 6) && (
+          <div>
+            <h6>Order Cancellation Details</h6>
+            {isLoadingCancellationDetails ? (
+              <Spinner animation='border' size='sm' />
+            ) : (
+              <div>
+                <p>
+                  Reason for cancellation: {orderCancellationDetails?.reason}
+                </p>
+                <Button>
+                  {orderDetails?.status === 5
+                    ? 'Approve Cancellation'
+                    : 'Reject Cancellation'}
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant='secondary' onClick={handleClose}>

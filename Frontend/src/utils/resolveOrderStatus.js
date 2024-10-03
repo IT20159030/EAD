@@ -11,7 +11,7 @@ const resolveOrderStatus = (code) => {
     case 4:
       return 'Completed';
     case 5:
-      return 'CancelRequested';
+      return 'Cancel Requested';
     case 6:
       return 'Cancelled';
     default:

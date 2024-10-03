@@ -85,3 +85,10 @@ export const useMarkOrderCancelled = () => {
     },
   });
 };
+
+export const useGetOrderCancellationDetails = (id) => {
+  return useQuery({
+    queryKey: ['cancellationRequests'],
+    queryFn: () => order.getOrderCancellationDetails(id),
+  });
+};

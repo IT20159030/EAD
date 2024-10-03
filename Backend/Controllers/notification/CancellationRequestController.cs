@@ -26,7 +26,38 @@ namespace Backend.Controllers
         public CancellationRequestController(ILogger<CancellationRequestController> logger, MongoDBService mongoDBService)
         {
             _logger = logger;
-            _cancellationRequests = mongoDBService.Database.GetCollection<CancellationRequest>("cancellationRequests");
+            _cancellationRequests = mongoDBService.Database.GetCollection<CancellationRequest>("CancellationRequests");
+        }
+
+        private CancellationRequestDto ConvertToDto(CancellationRequest request)
+        {
+            return new CancellationRequestDto
+            {
+                Id = request.Id ?? ObjectId.Empty.ToString(),
+                OrderId = request.OrderId,
+                CustomerId = request.CustomerId,
+                RequestDate = request.RequestDate,
+                Status = request.Status,
+                Reason = request.Reason,
+                ProcessedBy = request.ProcessedBy,
+                ProcessedDate = request.ProcessedDate,
+                DecisionNote = request.DecisionNote
+            };
+        }
+
+        private CancellationRequest ConvertToModel(CreateCancellationRequestDto dto)
+        {
+            return new CancellationRequest
+            {
+                OrderId = dto.OrderId,
+                CustomerId = dto.CustomerId,
+                RequestDate = DateTime.UtcNow,
+                Status = "Pending",
+                Reason = dto.Reason,
+                ProcessedBy = string.Empty,
+                ProcessedDate = null,
+                DecisionNote = null
+            };
         }
 
         // POST: api/v1/cancellation-request
@@ -61,18 +92,7 @@ namespace Backend.Controllers
             if (request == null)
                 return NotFound();
 
-            return Ok(new CancellationRequestDto
-            {
-                Id = request.Id!,
-                OrderId = request.OrderId,
-                CustomerId = request.CustomerId,
-                RequestDate = request.RequestDate,
-                Status = request.Status,
-                Reason = request.Reason,
-                ProcessedBy = request.ProcessedBy,
-                ProcessedDate = request.ProcessedDate,
-                DecisionNote = request.DecisionNote
-            });
+            return Ok(ConvertToDto(request));
         }
 
         // GET: api/v1/cancellation-request
@@ -116,6 +136,18 @@ namespace Backend.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+
+        // GET: api/v1/cancellation-request/order/{orderId}
+        [HttpGet("order/{orderId}", Name = "GetRequestByOrderId")]
+        // [Authorize(Roles = "Admin, CSR")]
+        public async Task<IActionResult> GetRequestByOrderId(string orderId)
+        {
+            var request = await _cancellationRequests.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+            if (request == null)
+                return NotFound("No cancellation request found for the specified order.");
+
+            return Ok(request);
         }
     }
 }
