@@ -47,12 +47,13 @@ class OrderCardAdapter(
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
+        val date = order.orderDate.split("T")[0]
 
         // Bind data to the views
         holder.orderId.text = String.format(Locale.getDefault(),
             context.getString(R.string.orderid_s), order.orderId)
         holder.date.text = String.format(Locale.getDefault(),
-            context.getString(R.string.date_s), order.orderDate)
+            context.getString(R.string.date_s), date)
         holder.status.text = resolveOrderStatus(order.status)
         holder.price.text = String.format(Locale.getDefault(), context.getString(R.string.s_2f),
             context.getString(R.string.currency), order.totalPrice)

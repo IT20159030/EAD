@@ -40,7 +40,6 @@
                 android:id="@+id/order_item_card_order_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/date_s"
                 android:textAlignment="textEnd"
                 android:textSize="12sp"
@@ -63,7 +62,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/common_google_signin_btn_text_light_disabled"
             android:layout_marginVertical="8dp"/>
 
         <!-- Toggle Button for Expanding ListView -->
