@@ -76,6 +76,11 @@ class OrderCardAdapter(
             }
         }
 
+        // only allow to cancel is the order is in pending status
+        if (order.status != 0) {
+            holder.cancelButton.visibility = View.GONE
+        }
+
         // Set cancel button listener
         holder.cancelButton.setOnClickListener {
             onCancelOrder(order.id)

@@ -163,6 +163,10 @@ public class OrderController : ControllerBase
         {
             return BadRequest("User not found");
         }
+        else if (order.Status != OrderStatus.Pending)
+        {
+            return BadRequest("Order cannot be cancelled");
+        }
 
         request.CustomerId = customerId;
         request.OrderId = orderId;

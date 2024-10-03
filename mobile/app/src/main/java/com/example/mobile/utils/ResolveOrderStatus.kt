@@ -10,7 +10,7 @@ package com.example.mobile.utils
 fun resolveOrderStatus(status: Int): String {
     return when (status) {
         0 -> "Pending"
-        1 -> "Ready"
+        1 -> "Partial"
         2 -> "Approved"
         3 -> "Rejected"
         4 -> "Completed"
