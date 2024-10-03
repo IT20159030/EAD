@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.HomeFragment">
+    tools:context=".ui.home.HomeFragment">
 
     <!-- Search Bar -->
     <EditText
         android:id="@+id/search_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Search for products..."
+        android:hint="@string/search_for_products"
         android:padding="12dp"
         android:background="@android:drawable/editbox_background"
         android:drawableStart="@android:drawable/ic_menu_search"

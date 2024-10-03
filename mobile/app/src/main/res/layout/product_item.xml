@@ -7,8 +7,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="6dp"
+    android:focusable="true"
     android:padding="8dp"
     android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
     app:cardCornerRadius="12dp"
     app:cardUseCompatPadding="true">
 
@@ -24,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:contentDescription="Product Image"
+            android:contentDescription="@string/product_image"
             android:layout_marginBottom="8dp" />
 
         <!-- Product Name and Price Container -->
@@ -40,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Product Name"
+                android:text="@string/product_name"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:maxLines="2"
@@ -53,7 +55,7 @@
                 android:id="@+id/product_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$10.00"
+                android:text="@string/s_2f"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/holo_green_dark" />
