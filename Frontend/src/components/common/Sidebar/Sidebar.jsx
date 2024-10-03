@@ -42,6 +42,11 @@ const Sidebar = () => {
       title: "Users",
       icon: <BsPeople />,
       subLinks: [
+        {
+          title: "Approval Requests",
+          path: "/customers/approval-requests",
+          icon: <BsPerson />,
+        },
         { title: "Customers", path: "/customers", icon: <BsPerson /> },
         { title: "Vendors", path: "/vendors", icon: <BsPerson /> },
         { title: "Staff", path: "/staff", icon: <BsPerson /> },

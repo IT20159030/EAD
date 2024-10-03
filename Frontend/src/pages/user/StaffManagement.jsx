@@ -15,7 +15,7 @@ import {
 
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
-import AddEditStaffModal from "../../components/staffManagement/AddEditStaffModal.jsx";
+import AddEditStaffModal from "../../components/userManagement/AddEditStaffModal.jsx";
 import { useAuth } from "../../provider/authProvider";
 const StaffManagement = () => {
   const [showModal, setShowModal] = useState(false);
@@ -86,7 +86,7 @@ const StaffManagement = () => {
   return (
     <div>
       <CommonTitle
-        title="Staff Management"
+        title="Staff"
         buttonLabel="Add New Staff Account"
         onButtonClick={handleModalOpen}
       />
