@@ -6,10 +6,7 @@ namespace Backend.Dtos
     // DTO for creating a cancellation request
     public class CreateCancellationRequestDto
     {
-        [Required]
         public string OrderId { get; set; } = string.Empty;
-
-        [Required]
         public string CustomerId { get; set; } = string.Empty;
 
         [Required]

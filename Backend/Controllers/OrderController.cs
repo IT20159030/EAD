@@ -172,7 +172,7 @@ public class OrderController : ControllerBase
         await _cancellationRequests.InsertOneAsync(cancellationRequest);
 
         order.Status = OrderStatus.CancelRequested;
-        await _orders.ReplaceOneAsync(o => o.OrderId == orderId, order);
+        await _orders.ReplaceOneAsync(o => o.Id == orderId, order);
         return Ok(ConvertToDto(order));
     }
 
