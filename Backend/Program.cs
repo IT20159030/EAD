@@ -141,6 +141,7 @@ builder.Services.AddHostedService<MonitoringWorker>();
 builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
 builder.Services.AddScoped<UserManagementService>();
+builder.Services.AddScoped<StaffManagementService>();
 
 var app = builder.Build();
 

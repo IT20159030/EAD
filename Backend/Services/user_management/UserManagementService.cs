@@ -45,6 +45,7 @@ public class UserManagementService : IUserManagementService
     var newUser = new User
     {
       Name = request.Name,
+      NIC = request.NIC,
       Email = request.Email,
       UserName = request.Email,
       Status = AccountStatus.Active,
