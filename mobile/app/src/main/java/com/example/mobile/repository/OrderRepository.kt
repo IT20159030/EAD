@@ -11,4 +11,10 @@ class OrderRepository @Inject constructor(
     fun createOrder(order: Order) = apiRequestFlow {
         orderApiService.createOrder(order)
     }
+    fun getOrders() = apiRequestFlow {
+        orderApiService.getOrders()
+    }
+    fun cancelOrder(id: String) = apiRequestFlow {
+        orderApiService.cancelOrder(id)
+    }
 }

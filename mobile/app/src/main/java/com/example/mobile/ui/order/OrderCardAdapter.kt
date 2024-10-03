@@ -7,9 +7,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +19,7 @@ import com.example.mobile.utils.resolveOrderStatus
 import java.util.Locale
 
 class OrderCardAdapter(
-    private val orders: List<OrderResponse>,
+    private val orders: MutableList<OrderResponse>,
     private val context: Context,
     private val onCancelOrder: (String) -> Unit
 ) : RecyclerView.Adapter<OrderCardAdapter.OrderViewHolder>() {
@@ -62,6 +62,7 @@ class OrderCardAdapter(
         holder.orderItemToggle.setOnClickListener {
             if (holder.orderItemListView.visibility == View.GONE) {
                 expand(holder.orderItemListView)
+                setListViewHeightBasedOnChildren(holder.orderItemListView)
                 holder.orderItemToggle.text = context.getString(R.string.hide_items)
             } else {
                 collapse(holder.orderItemListView)
@@ -77,19 +78,51 @@ class OrderCardAdapter(
 
     override fun getItemCount(): Int = orders.size
 
-    private fun expand(view: View) {
-        view.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val targetHeight = view.measuredHeight
+    fun updateList(newOrders: List<OrderResponse>) {
+        this.orders.clear()
+        this.orders.addAll(newOrders)
+        notifyDataSetChanged()
+    }
 
-        view.layoutParams.height = 0
-        view.visibility = View.VISIBLE
-        val animation = ValueAnimator.ofInt(0, targetHeight)
-        animation.addUpdateListener { valueAnimator ->
-            view.layoutParams.height = valueAnimator.animatedValue as Int
-            view.requestLayout()
+    private fun setListViewHeightBasedOnChildren(listView: ListView): Int {
+        val listAdapter = listView.adapter ?: return 0
+
+        var totalHeight = 0
+        for (i in 0 until listAdapter.count) {
+            val listItem = listAdapter.getView(i, null, listView)
+            listItem.measure(
+                View.MeasureSpec.makeMeasureSpec(listView.width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.UNSPECIFIED
+            )
+            totalHeight += listItem.measuredHeight
         }
-        animation.duration = 300
-        animation.start()
+
+        return totalHeight + (listView.dividerHeight * (listAdapter.count - 1))
+    }
+
+    private fun expand(listView: ListView) {
+        listView.visibility = View.VISIBLE
+
+        // Wait for the ListView to be laid out properly before animating
+        listView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // Now, calculate the proper height
+                val targetHeight = setListViewHeightBasedOnChildren(listView)
+
+                // Remove the listener to prevent it from being called multiple times
+                listView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                // Now animate the height from 0 to the calculated target height
+                listView.layoutParams.height = 0
+                val animation = ValueAnimator.ofInt(0, targetHeight)
+                animation.addUpdateListener { valueAnimator ->
+                    listView.layoutParams.height = valueAnimator.animatedValue as Int
+                    listView.requestLayout()
+                }
+                animation.duration = 300
+                animation.start()
+            }
+        })
     }
 
     private fun collapse(view: View) {

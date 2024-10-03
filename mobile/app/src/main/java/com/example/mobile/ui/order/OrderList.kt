@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobile.R
 import com.example.mobile.databinding.FragmentOrderListBinding
 import com.example.mobile.dto.OrderResponse
+import com.example.mobile.utils.ApiResponse
+import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,12 +26,15 @@ class OrderList : Fragment() {
     private lateinit var orderListRecyclerView: RecyclerView
     private lateinit var orderListLoadingIndicator: View
     private lateinit var orderListErrorText: TextView
+    private lateinit var orderAdapter: OrderCardAdapter
+
+    private val orderViewModel: OrderViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentOrderListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -44,17 +50,58 @@ class OrderList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize RecyclerView and Adapter
-        val orderAdapter = OrderCardAdapter(orderResponses, requireContext()) { _id ->
+        orderAdapter = OrderCardAdapter(orderResponses, requireContext()) { id ->
             // TODO: Handle cancel order action
         }
+        orderListRecyclerView.layoutManager = LinearLayoutManager(context)
         orderListRecyclerView.adapter = orderAdapter
-        
+
+        setupObservers()
+        loadOrders()
+    }
+
+    private fun setupObservers() {
+        orderViewModel.orderGetResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+                is ApiResponse.Success -> {
+                    showLoading(false)
+                    orderResponses.clear()
+                    orderResponses.addAll(response.data)
+                    orderAdapter.updateList(response.data)
+                }
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    showError(response.errorMessage)
+                }
+            }
+        }
+    }
+
+    private fun loadOrders() {
+        orderViewModel.getOrdersRequest(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                showError(message)
+            }
+        })
+    }
+
+    private fun showLoading(loading: Boolean) {
+        if (loading) {
+            orderListLoadingIndicator.visibility = View.VISIBLE
+        } else {
+            orderListLoadingIndicator.visibility = View.GONE
+        }
+    }
+
+    private fun showError(message: String) {
+        orderListErrorText.text = message
+        orderListErrorText.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
