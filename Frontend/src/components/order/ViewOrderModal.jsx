@@ -25,8 +25,13 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
     orderHooks.useMarkOrderReady();
   const { mutate: markOrderDelivered, isLoading: isMarkingDelivered } =
     orderHooks.useMarkOrderDelivered();
+  const { mutate: markOrderCancelled } = orderHooks.useMarkOrderCancelled();
   const { data: orderCancellationDetails, isLoadingCancellationDetails } =
     orderHooks.useGetOrderCancellationDetails(orderDetails.id);
+  const {
+    mutate: updateOrderCancellationDetails,
+    isUpdatingCancellationRequest,
+  } = orderHooks.useUpdateOrderCancellationDetails();
 
   useEffect(() => {
     if (orderDetails) {
@@ -87,7 +92,30 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
   };
 
   const handleOrderCancellationRequestAccept = () => {
-    // if order is cancelled, reject the cancellation
+    updateOrderCancellationDetails(
+      {
+        id: orderCancellationDetails.id,
+        processedBy: 'Vendor',
+        status: 'Approved',
+        decisionNote: 'Order cancellation request accepted by CSR',
+      },
+      {
+        onSuccess: () => {
+          markOrderCancelled(orderDetails.id, {
+            onSuccess: () => {
+              handleToast('Order cancellation request accepted');
+              setOrderStatus(6);
+            },
+          });
+        },
+        onError: () => {
+          handleToast(
+            'Failed to accept order cancellation request',
+            'bg-danger'
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -185,9 +213,16 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
                 </p>
                 {orderDetails?.status === 5 && (
                   <Button
+                    disabled={isUpdatingCancellationRequest}
                     onClick={handleOrderCancellationRequestAccept}
-                    variant='success'>
-                    Approve Cancellation
+                    variant={
+                      isUpdatingCancellationRequest ? 'secondary' : 'success'
+                    }>
+                    {isUpdatingCancellationRequest ? (
+                      <Spinner animation='border' size='sm' />
+                    ) : (
+                      <i className='bi bi-check-circle'>Approve Cancellation</i>
+                    )}
                   </Button>
                 )}
               </>

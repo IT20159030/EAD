@@ -17,13 +17,11 @@ namespace Backend.Dtos
     // DTO for processing a cancellation request
     public class ProcessCancellationRequestDto
     {
-        [Required]
         public required string ProcessedBy { get; set; } // CSR or Admin ID
 
         [Required]
         public required string Status { get; set; } // Approved or Denied
 
-        [StringLength(500)]
         public string? DecisionNote { get; set; } // Optional note for why the decision was made
     }
 

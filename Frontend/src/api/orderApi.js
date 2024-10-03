@@ -57,3 +57,22 @@ export const getOrderCancellationDetails = async (id) => {
   );
   return response.data;
 };
+
+export const updateOrderCancellationDetails = async (
+  orderCancellationDetails
+) => {
+  const response = await axios.put(
+    `${baseUrl}/cancellation-request/${orderCancellationDetails.id}`,
+    {
+      processedBy: orderCancellationDetails.processedBy,
+      status: orderCancellationDetails.status,
+      decisionNote: orderCancellationDetails.decisionNote,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};

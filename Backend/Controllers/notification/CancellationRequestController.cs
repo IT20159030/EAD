@@ -105,24 +105,25 @@ namespace Backend.Controllers
 
         // PUT: api/v1/cancellation-request/{id}
         [HttpPut("{id}", Name = "ProcessCancellationRequest")]
-        [Authorize(Roles = "Admin, CSR")]
+        // [Authorize(Roles = "Admin, CSR")]
         public async Task<IActionResult> ProcessCancellationRequest(string id, [FromBody] ProcessCancellationRequestDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            // if (!ModelState.IsValid)
+            //     return BadRequest(ModelState);
 
-            var updateDefinition = Builders<CancellationRequest>.Update
-                .Set(r => r.Status, dto.Status)
-                .Set(r => r.ProcessedBy, dto.ProcessedBy)
-                .Set(r => r.ProcessedDate, DateTime.UtcNow)
-                .Set(r => r.DecisionNote, dto.DecisionNote);
+            var result = await _cancellationRequests.FindOneAndUpdateAsync(
+                r => r.Id == id,
+                Builders<CancellationRequest>.Update
+                    .Set(r => r.Status, dto.Status)
+                    .Set(r => r.ProcessedBy, User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty)
+                    .Set(r => r.ProcessedDate, DateTime.UtcNow)
+                    .Set(r => r.DecisionNote, dto.DecisionNote)
+            );
 
-            var result = await _cancellationRequests.UpdateOneAsync(r => r.Id == id, updateDefinition);
+            if (result == null)
+                return NotFound("No cancellation request found with the specified ID.");
 
-            if (result.MatchedCount == 0)
-                return NotFound();
-
-            return NoContent();
+            return Ok(result);
         }
 
         // DELETE: api/v1/cancellation-request/{id}
