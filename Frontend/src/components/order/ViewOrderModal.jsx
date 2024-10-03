@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
+import Badge from 'react-bootstrap/Badge';
 import { Table } from 'react-bootstrap';
 import resolveOrderStatus from '../../utils/resolveOrderStatus';
 import * as orderHooks from '../../hooks/orderHooks';
@@ -85,87 +86,116 @@ const ViewOrderModal = ({ show, handleClose, orderDetails, handleToast }) => {
     }
   };
 
+  const handleOrderCancellationRequestAccept = () => {
+    // if order is cancelled, reject the cancellation
+  };
+
   return (
     <Modal show={show} onHide={handleClose} size='lg' centered>
       <Modal.Header closeButton>
-        <Modal.Title>Order Details</Modal.Title>
+        <Modal.Title className='text-primary'>Order Details</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <h6>Order ID: {orderDetails?.orderId}</h6>
-        <h6>Vendor ID: {orderDetails?.vendorId}</h6>
-        <h6>Order Status: {resolveOrderStatus(orderStatus)}</h6>
-        <h6>Order Items</h6>
+      <Modal.Body className='p-4'>
+        <div className='mb-3'>
+          <p>
+            <strong>Order ID:</strong> {orderDetails?.orderId}
+          </p>
+          <p>
+            <strong>Vendor ID:</strong> {orderDetails?.vendorId}
+          </p>
+          <p>
+            <strong>Order Status:</strong>
+            <Badge
+              bg={
+                resolveOrderStatus(orderStatus) === 'Delivered'
+                  ? 'success'
+                  : 'warning'
+              }>
+              {resolveOrderStatus(orderStatus)}
+            </Badge>
+          </p>
+        </div>
 
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderItems.map((item, index) => (
-              <tr key={item.id}>
-                <td>{index + 1}</td>
-                <td>{item.productName}</td>
-                <td>{item.quantity}</td>
-                <td>{item.price}</td>
-                <td>
-                  {item.status === 0 ? (
-                    <Button
-                      variant={
-                        orderStatus === 5 || orderStatus === 6
-                          ? 'secondary'
-                          : 'primary'
-                      }
-                      onClick={() => handleOrderItemStatusChange(item)}
-                      disabled={
-                        isUpdatingOrder ||
-                        isMarkingReady ||
-                        isMarkingDelivered ||
-                        orderStatus === 5 ||
-                        orderStatus === 6
-                      }>
-                      {isUpdatingOrder ||
-                      isMarkingReady ||
-                      isMarkingDelivered ? (
-                        <Spinner animation='border' size='sm' />
-                      ) : (
-                        'Mark as Delivered'
-                      )}
-                    </Button>
-                  ) : (
-                    'Delivered'
-                  )}
-                </td>
+        <div className='mb-4'>
+          <h6 className='text-secondary'>Order Items</h6>
+          <Table striped bordered hover responsive className='table-sm'>
+            <thead className='table-light'>
+              <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {orderItems.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.productName}</td>
+                  <td>{item.quantity}</td>
+                  <td>${item.price.toFixed(2)}</td>
+                  <td>
+                    {item.status === 0 ? (
+                      <Button
+                        variant={
+                          orderStatus === 5 || orderStatus === 6
+                            ? 'secondary'
+                            : 'primary'
+                        }
+                        size='sm'
+                        onClick={() => handleOrderItemStatusChange(item)}
+                        disabled={
+                          isUpdatingOrder ||
+                          isMarkingReady ||
+                          isMarkingDelivered ||
+                          orderStatus === 5 ||
+                          orderStatus === 6
+                        }>
+                        {isUpdatingOrder ||
+                        isMarkingReady ||
+                        isMarkingDelivered ? (
+                          <Spinner animation='border' size='sm' />
+                        ) : (
+                          <i className='bi bi-check-circle'>
+                            Mark as Delivered
+                          </i>
+                        )}
+                      </Button>
+                    ) : (
+                      <Badge bg='success'>Delivered</Badge>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
 
         {(orderDetails?.status === 5 || orderDetails?.status === 6) && (
-          <div>
-            <h6>Order Cancellation Details</h6>
+          <div className='border p-3 rounded'>
+            <h6 className='text-danger'>Order Cancellation Details</h6>
             {isLoadingCancellationDetails ? (
               <Spinner animation='border' size='sm' />
             ) : (
-              <div>
+              <>
                 <p>
-                  Reason for cancellation: {orderCancellationDetails?.reason}
+                  <strong>Reason for cancellation:</strong>{' '}
+                  {orderCancellationDetails?.reason}
                 </p>
-                <Button>
-                  {orderDetails?.status === 5
-                    ? 'Approve Cancellation'
-                    : 'Reject Cancellation'}
-                </Button>
-              </div>
+                {orderDetails?.status === 5 && (
+                  <Button
+                    onClick={handleOrderCancellationRequestAccept}
+                    variant='success'>
+                    Approve Cancellation
+                  </Button>
+                )}
+              </>
             )}
           </div>
         )}
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant='secondary' onClick={handleClose}>
           Close
