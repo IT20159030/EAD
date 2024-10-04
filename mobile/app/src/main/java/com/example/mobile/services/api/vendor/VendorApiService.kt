@@ -5,6 +5,7 @@ import com.example.mobile.dto.UpdateReview
 import com.example.mobile.dto.Vendor
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -23,5 +24,8 @@ interface VendorApiService {
 
     @PUT("Vendor/rating")
     suspend fun updateVendorRating(@Body vendorReview: UpdateReview): Response<Vendor>
+
+    @DELETE("Vendor/rating/{vendorId}/{reviewId}")
+    suspend fun deleteVendorRating(@Path("vendorId") vendorId: String, @Path("reviewId") reviewId: String): Response<Vendor>
 
 }

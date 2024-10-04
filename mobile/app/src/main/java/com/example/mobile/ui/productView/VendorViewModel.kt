@@ -30,17 +30,28 @@ class VendorViewModel @Inject constructor (
         vendorRepository.getVendorById(id)
     }
 
-    fun addVendorRating(vendorReview: AddReview, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+    fun addVendorRating(vendorReview: AddReview,
+                        coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _vendor,
         coroutinesErrorHandler,
     ) {
         vendorRepository.addVendorRating(vendorReview)
     }
 
-    fun updateVendorRating(vendorReview: UpdateReview, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+    fun updateVendorRating(vendorReview: UpdateReview,
+                           coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _vendor,
         coroutinesErrorHandler,
     ) {
         vendorRepository.updateVendorRating(vendorReview)
+    }
+
+    fun deleteVendorRating(vendorId: String,
+                           reviewId: String,
+                           coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _vendor,
+        coroutinesErrorHandler,
+    ) {
+        vendorRepository.deleteVendorRating(vendorId, reviewId)
     }
 }

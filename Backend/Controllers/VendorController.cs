@@ -196,8 +196,15 @@ public class VendorController : ControllerBase
         vendor.Reviews.Remove(review);
 
         // update vendor rating
-        vendor.VendorRating = ((vendor.VendorRating * vendor.VendorRatingCount) - review.ReviewRating) / (vendor.VendorRatingCount - 1);
         vendor.VendorRatingCount--;
+        if (vendor.VendorRatingCount == 0)
+        {
+            vendor.VendorRating = 0;
+        }
+        else
+        {
+            vendor.VendorRating = (vendor.VendorRating * (vendor.VendorRatingCount + 1) - review.ReviewRating) / vendor.VendorRatingCount;
+        }
 
         await _vendors.ReplaceOneAsync(v => v.Id == Guid.Parse(vendorId), vendor);
         return Ok(ConvertToDto(vendor));

@@ -75,4 +75,5 @@
     <string name="review_comment_optional">Review / Comment (optional)</string>
     <string name="you_d">Your Rating: %d</string>
     <string name="edit">Edit</string>
+    <string name="no_comment_given">No comment Given</string>
 </resources>

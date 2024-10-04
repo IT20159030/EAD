@@ -26,4 +26,8 @@ class VendorRepository @Inject constructor (
         mainApiService.updateVendorRating(vendorReview)
     }
 
+    fun deleteVendorRating(vendorId: String, reviewId: String) = apiRequestFlow {
+        mainApiService.deleteVendorRating(vendorId, reviewId)
+    }
+
 }

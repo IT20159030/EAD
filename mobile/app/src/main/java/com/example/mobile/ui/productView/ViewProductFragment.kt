@@ -135,18 +135,7 @@ class ViewProductFragment : Fragment() {
         setCartCountButtonListeners()
         setAddToCartButtonListener(productName, productId, productImageUrl)
         addReviewButtonListener()
-
-        productUserEditReviewButton.setOnClickListener {
-            showEditReviewDialog(
-                requireContext(),
-                vendor.reviews.first { it.reviewerId == currentUserInfo.id },
-                { newReview->
-                    updateVendorReview(newReview)
-                },
-                { reviewId ->
-                    // Delete review
-                })
-        }
+        userReviewEditButtonListener()
 
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
@@ -165,12 +154,31 @@ class ViewProductFragment : Fragment() {
         getCurrentUserInformation()
     }
 
+    private fun userReviewEditButtonListener() {
+        productUserEditReviewButton.setOnClickListener {
+            showEditReviewDialog(
+                requireContext(),
+                vendor.reviews.first { it.reviewerId == currentUserInfo.id },
+                { newReview ->
+                    updateVendorReview(newReview)
+                },
+                { reviewId ->
+                    deleteVendorReview(reviewId)
+                })
+        }
+    }
+
     private fun setCurrentUserReviewDisplay() {
         if (this::vendor.isInitialized && vendor.reviews.isNotEmpty()
             && this::currentUserInfo.isInitialized) {
             if (vendor.reviews.any { it.reviewerId == currentUserInfo.id }) {
-                productVendorUserReviewView.text =
-                    vendor.reviews.first { it.reviewerId == currentUserInfo.id }.comment
+                val comment = vendor.reviews.first { it.reviewerId == currentUserInfo.id }.comment
+
+                if (comment != "") {
+                    productVendorUserReviewView.text = comment
+                } else {
+                    productVendorUserReviewView.text = getString(R.string.no_comment_given)
+                }
                 productUserRatingView.text =
                     String.format(Locale.getDefault(), getString(R.string.you_d),
                         vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
@@ -227,17 +235,24 @@ class ViewProductFragment : Fragment() {
                     vendor = response.data
                     setLoading(false)
 
-                    if (vendor.vendorRatingCount <= 0) return@observe
-
-                    productVendorAverageRatingView.text = String.format(
-                        Locale.getDefault(),
-                        "%.1f", vendor.vendorRating
-                    )
-                    productVendorReviewCountView.text = String.format(
-                        Locale.getDefault(),
-                        getString(R.string.review_count), vendor.vendorRatingCount
-                    )
-                    setCurrentUserReviewDisplay()
+                    if (vendor.vendorRatingCount <= 0) {
+                        productVendorAverageRatingView.text = "0.0"
+                        productVendorReviewCountView.text = String.format(
+                            Locale.getDefault(),
+                            getString(R.string.review_count), 0
+                        )
+                        productUserReviewLayout.visibility = View.GONE
+                    } else {
+                        productVendorAverageRatingView.text = String.format(
+                            Locale.getDefault(),
+                            "%.1f", vendor.vendorRating
+                        )
+                        productVendorReviewCountView.text = String.format(
+                            Locale.getDefault(),
+                            getString(R.string.review_count), vendor.vendorRatingCount
+                        )
+                        setCurrentUserReviewDisplay()
+                    }
                 }
 
                 is ApiResponse.Failure -> {
@@ -258,6 +273,14 @@ class ViewProductFragment : Fragment() {
 
     private fun updateVendorReview(review: UpdateReview) {
         vendorViewModel.updateVendorRating(review, object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun deleteVendorReview(reviewId: String) {
+        vendorViewModel.deleteVendorRating(vendor.vendorId, reviewId, object : CoroutinesErrorHandler {
             override fun onError(message: String) {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
