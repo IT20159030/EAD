@@ -12,24 +12,32 @@ public class Vendor
     [BsonElement("vendorId")]
     public required string VendorId { get; set; }
 
-    [BsonElement("VendorName")]
-    public required string VendorName { get; set; }
-
-    [BsonElement("VendorEmail")]
-    public required string VendorEmail { get; set; }
-
-    [BsonElement("VendorPhone")]
-    public required string VendorPhone { get; set; }
-
-    [BsonElement("VendorAddress")]
-    public required string VendorAddress { get; set; }
-
-    [BsonElement("VendorCity")]
-    public required string VendorCity { get; set; }
-
+    // cumulative rating of the vendor
     [BsonElement("VendorRating")]
-    public required float VendorRating { get; set; }
+    public required int VendorRating { get; set; }
 
     [BsonElement("VendorRatingCount")]
     public required int VendorRatingCount { get; set; }
+
+    [BsonElement("Reviews")]
+    public required List<Review> Reviews { get; set; }
+}
+
+public class Review
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
+
+    [BsonElement("reviewerId")]
+    public required string ReviewerId { get; set; }
+
+    [BsonElement("reviewerName")]
+    public required string ReviewerName { get; set; }
+
+    [BsonElement("reviewRating")]
+    public required int ReviewRating { get; set; }
+
+    [BsonElement("reviewText")]
+    public string? ReviewText { get; set; }
 }
