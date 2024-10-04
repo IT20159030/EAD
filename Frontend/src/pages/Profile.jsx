@@ -1,15 +1,6 @@
 /* eslint-disable indent */
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Modal,
-  Form,
-  Alert,
-  Spinner,
-  Card,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Modal, Form, Alert, Spinner, Card } from "react-bootstrap";
 import { useAuth } from "../provider/authProvider";
 import { useGetProfile, useUpdateProfile } from "../hooks/profileHooks";
 import CommonTitle from "../components/common/Title/Title";

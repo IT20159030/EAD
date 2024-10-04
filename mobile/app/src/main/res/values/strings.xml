@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">E-commerce</string>
+    <string name="app_name">QuickMart</string>
     <!--    Bottom Navigation Items-->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
