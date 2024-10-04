@@ -17,16 +17,11 @@ import {
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AddEditCustomerModal from "../../components/userManagement/AddEditCustomerModal";
-import { useAuth } from "../../provider/authProvider";
 const CustomerManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [customerToEdit, setCustomerToEdit] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-
-  const {
-    user: { id: currentUserId },
-  } = useAuth();
 
   const {
     data: customerAccounts,
@@ -181,11 +176,8 @@ const CustomerManagement = () => {
               .map((customer, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>
-                    {customer.name} {customer.id === currentUserId && "(you)"}
-                  </td>
+                  <td>{customer.name}</td>
                   <td>{customer.email}</td>
-
                   <td>
                     {customer.status === "Unapproved" ? (
                       <Badge bg="warning">Pending Approval</Badge>
@@ -197,32 +189,25 @@ const CustomerManagement = () => {
                       <Badge bg="secondary">Deactivated</Badge>
                     )}
                   </td>
-
-                  {customer.id !== currentUserId ? (
-                    <td className={styles.actions}>
-                      <Button
-                        className={styles.button}
-                        onClick={() => {
-                          setCustomerToEdit(customer);
-                          setShowModal(true);
-                        }}
-                      >
-                        <MdEdit />
-                        <span className="ms-2">Edit</span>
-                      </Button>
-                      <Button
-                        className={styles.button}
-                        onClick={() => handleDeleteCustomer(customer.id)}
-                      >
-                        <MdDelete />
-                        <span className="ms-2">Delete</span>
-                      </Button>
-                    </td>
-                  ) : (
-                    <td>
-                      <span className="text-muted">-</span>
-                    </td>
-                  )}
+                  <td className={styles.actions}>
+                    <Button
+                      className={styles.button}
+                      onClick={() => {
+                        setCustomerToEdit(customer);
+                        setShowModal(true);
+                      }}
+                    >
+                      <MdEdit />
+                      <span className="ms-2">Edit</span>
+                    </Button>
+                    <Button
+                      className={styles.button}
+                      onClick={() => handleDeleteCustomer(customer.id)}
+                    >
+                      <MdDelete />
+                      <span className="ms-2">Delete</span>
+                    </Button>
+                  </td>
                 </tr>
               ))}
           </tbody>
