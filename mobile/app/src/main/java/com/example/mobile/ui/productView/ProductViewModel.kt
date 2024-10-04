@@ -9,6 +9,11 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/*
+* A ViewModel class for handling product-related operations.
+* Handles the retrieval of products.
+* */
+
 @HiltViewModel
 class ProductViewModel @Inject constructor (
     private val productRepository: ProductRepository

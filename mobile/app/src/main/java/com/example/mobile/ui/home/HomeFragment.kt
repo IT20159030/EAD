@@ -25,6 +25,12 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import com.example.mobile.viewModels.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/*
+* A Fragment class for the home page.
+* Displays a list of products.
+* Allows the user to search for products.
+* */
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 

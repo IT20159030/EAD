@@ -119,6 +119,13 @@ builder.Services.AddSingleton(sp =>
 {
     var client = sp.GetRequiredService<IMongoClient>();
     var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
+    return database.GetCollection<Order>("Orders");
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    var database = client.GetDatabase(new MongoUrl(builder.Configuration.GetConnectionString("MongoDB")).DatabaseName);
     return database.GetCollection<Notification>("Notification");
 });
 
@@ -142,6 +149,8 @@ builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
 builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddScoped<StaffManagementService>();
+builder.Services.AddScoped<CustomerManagementService>();
+builder.Services.AddScoped<VendorManagementService>();
 
 var app = builder.Build();
 

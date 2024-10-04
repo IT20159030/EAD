@@ -7,6 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.mobile.data.model.CartItem
 
+/*
+* A database helper class for the cart database.
+* Implements the SQLiteOpenHelper interface
+* Manages the creation and updates of the database.
+* */
+
 class CartDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {

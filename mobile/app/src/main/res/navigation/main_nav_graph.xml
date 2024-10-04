@@ -43,9 +43,6 @@
         android:name="com.example.mobile.ui.profileEdit.EditProfile"
         android:label="Edit Account Details"
         tools:layout="@layout/fragment_edit_profile">
-        <action
-            android:id="@+id/action_editProfile_to_navigation_profile"
-            app:popUpTo="@id/navigation_profile" />
         <argument
             android:name="firstName"
             app:argType="string" />
@@ -90,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderList"
-        android:name="com.example.mobile.OrderList"
-        android:label="fragment_order_list"
+        android:name="com.example.mobile.ui.order.OrderListFragment"
+        android:label="@string/my_orders"
         tools:layout="@layout/fragment_order_list" />
 </navigation>

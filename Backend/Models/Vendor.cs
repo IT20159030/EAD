@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -6,11 +7,7 @@ namespace Backend.Models;
 public class Vendor
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
-    [BsonElement("vendorId")]
-    public required string VendorId { get; set; }
+    public Guid Id { get; set; }
 
     // cumulative rating of the vendor
     [BsonElement("VendorRating")]

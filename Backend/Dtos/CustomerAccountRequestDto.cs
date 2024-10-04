@@ -6,7 +6,7 @@ namespace Backend.Dtos
     public class CreateCustomerAccountRequestDto
     {
         [Required]
-        public string CustomerId { get; set; }
+        public required string CustomerId { get; set; }
 
         [Required]
         public DateTime RequestDate { get; set; }
@@ -18,10 +18,10 @@ namespace Backend.Dtos
     public class ProcessCustomerAccountRequestDto
     {
         [Required]
-        public string Status { get; set; } // Approved or Denied
+        public required string Status { get; set; } // Approved or Denied
 
         [Required]
-        public string ProcessedBy { get; set; }
+        public required string ProcessedBy { get; set; }
 
         public DateTime? ProcessedDate { get; set; } = DateTime.UtcNow;
     }
@@ -29,9 +29,9 @@ namespace Backend.Dtos
     // DTO to return a simplified view of the customer account request
     public class CustomerAccountRequestDto
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
-        public string CustomerId { get; set; }
+        public required string CustomerId { get; set; }
 
         public DateTime RequestDate { get; set; }
 

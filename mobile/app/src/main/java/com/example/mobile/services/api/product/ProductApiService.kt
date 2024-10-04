@@ -5,6 +5,10 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/*
+* A service interface for products APIs
+* */
+
 interface ProductApiService {
     @GET("Product/active")
     suspend fun getProducts(): Response<List<Product>>

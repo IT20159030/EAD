@@ -11,6 +11,11 @@ import com.example.mobile.repository.CartRepository
 import com.example.mobile.viewModels.TokenViewModel
 import java.util.Locale
 
+/*
+* A ViewModel class for the cart.
+* Handles the cart items and their quantity.
+* */
+
 class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val cartRepository = CartRepository(application)
     private val _cartItems = MutableLiveData<List<CartItem>>()

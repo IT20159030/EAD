@@ -14,6 +14,11 @@ import com.example.mobile.dto.Product
 import com.squareup.picasso.Picasso
 import java.util.Locale
 
+/*
+* A RecyclerView adapter for displaying a list of products.
+* Displays the product name, price, and image.
+* */
+
 class ProductAdapter(private var products: List<Product>, private var navController: NavController) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 

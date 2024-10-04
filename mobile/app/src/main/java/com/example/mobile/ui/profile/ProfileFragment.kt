@@ -94,7 +94,7 @@ class ProfileFragment : Fragment() {
 
 
             ordersButton.setOnClickListener {
-                // TODO: Navigate to orders
+                navController.navigate(R.id.action_navigation_profile_to_orderList)
             }
 
             wishlistButton.setOnClickListener {

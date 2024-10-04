@@ -4,6 +4,11 @@ import android.content.Context
 import com.example.mobile.data.model.CartItem
 import com.example.mobile.utils.CartDatabaseHelper
 
+/*
+* A repository class for cart items.
+* Manages the database operations for cart items.
+* */
+
 class CartRepository(context: Context) {
     private val dbHelper = CartDatabaseHelper(context)
 

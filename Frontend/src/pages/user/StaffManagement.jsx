@@ -15,8 +15,9 @@ import {
 
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
-import AddEditStaffModal from "../../components/staffManagement/AddEditStaffModal.jsx";
+import AddEditStaffModal from "../../components/userManagement/AddEditStaffModal.jsx";
 import { useAuth } from "../../provider/authProvider";
+import { Alert } from "react-bootstrap";
 const StaffManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [staffToEdit, setStaffToEdit] = useState(null);
@@ -26,8 +27,11 @@ const StaffManagement = () => {
     user: { id: currentUserId },
   } = useAuth();
 
-  const { data: staffAccounts, isLoading: isLoadingStaffAccounts } =
-    useGetAllStaffAccounts();
+  const {
+    data: staffAccounts,
+    isLoading: isLoadingStaffAccounts,
+    isError: isLoadingError,
+  } = useGetAllStaffAccounts();
 
   const { mutate: createStaffAccount, isLoading: isCreating } =
     useCreateStaffAccount();
@@ -83,10 +87,19 @@ const StaffManagement = () => {
     setShowModal(true);
   };
 
+  if (isLoadingError) {
+    return (
+      <div>
+        <CommonTitle title="Staff" />
+        <Alert variant="danger">Failed to load staff accounts</Alert>
+      </div>
+    );
+  }
+
   return (
     <div>
       <CommonTitle
-        title="Staff Management"
+        title="Staff"
         buttonLabel="Add New Staff Account"
         onButtonClick={handleModalOpen}
       />

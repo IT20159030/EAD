@@ -22,6 +22,13 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
+/*
+* Fragment class for cart.
+* Displays cart items in a RecyclerView.
+* Displays the total price of the cart items.
+* Allows the user to place an order.
+* */
+
 @AndroidEntryPoint
 class CartFragment : Fragment() {
 
@@ -69,7 +76,6 @@ class CartFragment : Fragment() {
         cartSubTotal = binding.cartSubTotal
 
         // Load cart data from ViewModel
-        // TODO: query to get cartItems should have customer ID
         cartViewModel.getCartItems().observe(viewLifecycleOwner) { cartItems ->
             cartAdapter.updateList(cartItems)
             setCartSubTotal(cartItems)

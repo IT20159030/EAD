@@ -94,11 +94,22 @@ const Notifications = () => {
       });
     }
 
-    navigate(
-      notification.type === "LowStock"
-        ? `/inventory/${notification.messageID}`
-        : `/orders/${notification.messageID}`
-    );
+    switch (notification.type) {
+      case "LowStock":
+        navigate("/products");
+        break;
+      case "AccountApproval":
+        navigate("/staff");
+        break;
+      case "AccountActivated":
+        navigate("/staff");
+        break;
+      case "OrderStatus":
+        navigate("/orders");
+      default:
+        navigate("/products");
+        break;
+    }
   };
 
   const filteredNotifications = notifications
