@@ -146,24 +146,30 @@ public class VendorController : ControllerBase
     {
         var vendor = await _vendors.Find(v => v.Id == Guid.Parse(dto.VendorId)).FirstOrDefaultAsync();
 
-        if (vendor == null)
-        {
-            return NotFound("Vendor not found");
-        }
+        if (vendor == null) return NotFound("Vendor not found");
+        if (vendor.Reviews == null) return NotFound("Vendor has no reviews");
 
         var review = vendor.Reviews.Find(r => r.Id == dto.Id);
 
-        if (review == null)
-        {
-            return NotFound("Review not found");
-        }
+        if (review == null) return NotFound("Review not found");
 
         // update vendor rating
-        vendor.VendorRating = ((vendor.VendorRating * vendor.VendorRatingCount) - review.ReviewRating + dto.ReviewRating) / vendor.VendorRatingCount;
+        if (vendor.VendorRatingCount == 0 || vendor.VendorRating == 0)
+        {
+            vendor.VendorRating = dto.ReviewRating;
+        }
+        else
+        {
+            vendor.VendorRating = ((vendor.VendorRating * vendor.VendorRatingCount) - review.ReviewRating + dto.ReviewRating) / vendor.VendorRatingCount;
+        }
 
         // update review
         review.ReviewRating = dto.ReviewRating;
         review.ReviewText = dto.ReviewText;
+
+        // update vendor reviews
+        int updateIndex = vendor.Reviews.FindIndex(r => r.Id == dto.Id);
+        vendor.Reviews[updateIndex] = review;
 
         await _vendors.ReplaceOneAsync(v => v.Id == Guid.Parse(dto.VendorId), vendor);
         return Ok(ConvertToDto(vendor));

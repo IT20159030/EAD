@@ -17,8 +17,10 @@ import androidx.fragment.app.viewModels
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentViewProductBinding
 import com.example.mobile.dto.AddReview
+import com.example.mobile.dto.UserInfo
 import com.example.mobile.dto.Vendor
 import com.example.mobile.ui.cart.CartViewModel
+import com.example.mobile.ui.profile.ProfileViewModel
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import com.squareup.picasso.Picasso
@@ -47,7 +49,9 @@ class ViewProductFragment : Fragment() {
 
     private lateinit var productVendorAverageRatingView: TextView
     private lateinit var productVendorReviewCountView: TextView
+    private lateinit var productUserReviewLayout: View
     private lateinit var productVendorAddReviewButton: Button
+    private lateinit var productUserRatingView: TextView
     private lateinit var productVendorUserReviewView: TextView
     private lateinit var productLoadingIndicator: View
 
@@ -56,8 +60,11 @@ class ViewProductFragment : Fragment() {
     private lateinit var productCartPlusButton: TextView
     private lateinit var productCartCountView: TextView
 
+    private lateinit var currentUserInfo: UserInfo
+
     private val cartViewModel: CartViewModel by viewModels()
     private val vendorViewModel: VendorViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     private val placeholderImage = "https://images2.alphacoders.com/655/655076.jpg"
 
@@ -79,10 +86,12 @@ class ViewProductFragment : Fragment() {
 
         productVendorAverageRatingView = binding.productViewAvgRating
         productVendorReviewCountView = binding.productViewReviewCount
+        productUserReviewLayout = binding.productViewUserReviewLayout
         productVendorAddReviewButton = binding.productViewAddReviewButton
+
         productVendorUserReviewView = binding.productViewUserReview
         productLoadingIndicator = binding.productViewLoadingIndicator
-
+        productUserRatingView = binding.productViewUserRating
         productAddToCartButton = binding.productViewAddToCartButton
         productCartMinusButton = binding.productViewCartMinus
         productCartPlusButton = binding.productViewCartPlus
@@ -114,12 +123,14 @@ class ViewProductFragment : Fragment() {
             getVendorDetails(productVendorId)
         }
 
-        //set observer for vendor details
+        //set observers
         vendorDetailsObserver()
+        currentUserInfoObserver()
 
         // button listeners
         setCartCountButtonListeners()
         setAddToCartButtonListener(productName, productId, productImageUrl)
+        addReviewButtonListener()
 
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
@@ -135,7 +146,46 @@ class ViewProductFragment : Fragment() {
             .load(productImageUrl ?: placeholderImage)
             .into(productImageView)
 
-        // set add review button listener
+        getCurrentUserInformation()
+    }
+
+    private fun setCurrentUserReviewDisplay() {
+        if (this::vendor.isInitialized && vendor.reviews.isNotEmpty()
+            && this::currentUserInfo.isInitialized) {
+            if (vendor.reviews.any { it.reviewerId == currentUserInfo.id }) {
+                productVendorUserReviewView.text =
+                    vendor.reviews.first { it.reviewerId == currentUserInfo.id }.comment
+                productUserRatingView.text =
+                    String.format(Locale.getDefault(), getString(R.string.you_d),
+                        vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
+                productUserReviewLayout.visibility = View.VISIBLE
+            } else {
+                productUserReviewLayout.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun getCurrentUserInformation() {
+        profileViewModel.getUserInfo(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun currentUserInfoObserver() {
+        profileViewModel.userInfoResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Success -> {
+                    currentUserInfo = response.data.data
+                    setCurrentUserReviewDisplay()
+                }
+                else -> {}
+            }
+        }
+    }
+
+    private fun addReviewButtonListener() {
         productVendorAddReviewButton.setOnClickListener {
             if (this::vendor.isInitialized) {
                 showRatingDialog(requireContext()) { rating, comment ->
@@ -170,6 +220,7 @@ class ViewProductFragment : Fragment() {
                         Locale.getDefault(),
                         getString(R.string.review_count), vendor.vendorRatingCount
                     )
+                    setCurrentUserReviewDisplay()
                 }
 
                 is ApiResponse.Failure -> {
