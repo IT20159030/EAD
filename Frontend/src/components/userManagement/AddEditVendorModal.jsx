@@ -12,68 +12,130 @@ const AddEditVendorModal = ({
   isInProgress,
 }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    nic: "",
-    email: "",
-    password: "",
-    role: "",
+    vendorDetails: {
+      vendorName: "",
+      vendorEmail: "",
+      vendorPhone: "",
+      vendorAddress: "",
+      vendorCity: "",
+    },
+    vendorAccountDetails: {
+      name: "",
+      email: "",
+      nic: "",
+      password: "",
+    },
   });
 
   useEffect(() => {
     if (vendorToEdit) {
       setFormData({
-        firstName: vendorToEdit.firstName || "",
-        lastName: vendorToEdit.lastName || "",
-        nic: vendorToEdit.nic || "",
-        password: "", // Password should be empty on edit
-        email: vendorToEdit.email || "",
-        role: vendorToEdit.role || "",
+        vendorDetails: {
+          vendorName: vendorToEdit.vendorDetails.vendorName || "",
+          vendorEmail: vendorToEdit.vendorDetails.vendorEmail || "",
+          vendorPhone: vendorToEdit.vendorDetails.vendorPhone || "",
+          vendorAddress: vendorToEdit.vendorDetails.vendorAddress || "",
+          vendorCity: vendorToEdit.vendorDetails.vendorCity || "",
+        },
+        vendorAccountDetails: {
+          name: vendorToEdit.vendorAccountDetails.name || "",
+          email: vendorToEdit.vendorAccountDetails.email || "",
+          nic: vendorToEdit.vendorAccountDetails.nic || "",
+          password: "",
+        },
       });
     } else {
       setFormData({
-        firstName: "",
-        lastName: "",
-        nic: "",
-        email: "",
-        password: "",
-        role: "",
+        vendorDetails: {
+          vendorName: "",
+          vendorEmail: "",
+          vendorPhone: "",
+          vendorAddress: "",
+          vendorCity: "",
+        },
+        vendorAccountDetails: {
+          name: "",
+          email: "",
+          nic: "",
+          password: "",
+        },
+        // vendorDetails: {
+        //   vendorName: "Test Vendor",
+        //   vendorEmail: "info@example.com"
+        //   vendorPhone: "123123123",
+        //   vendorAddress: "123, Test Street",
+        //   vendorCity: "Colombo",
+        // },
+        // vendorAccountDetails: {
+        //   name: "vendor test",
+        //   email: "vendortest@example.com",
+        //   nic: "123123123123",
+        //   password: "password",
+        // },
       });
     }
   }, [vendorToEdit]);
+
   const [errors, setErrors] = useState({});
+
   const validateForm = () => {
     let newErrors = {};
     let isValid = true;
 
-    // Check for required fields
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key] && (key !== "password" || !vendorToEdit)) {
-        newErrors[key] = "This field is required";
+    // Validate vendorDetails
+    Object.keys(formData.vendorDetails).forEach((key) => {
+      if (!formData.vendorDetails[key]) {
+        newErrors[`vendorDetails.${key}`] = "This field is required";
         isValid = false;
       }
     });
 
-    // Validate first name and last name
-    if (formData.firstName && formData.firstName.includes(" ")) {
-      newErrors.firstName = "First name cannot contain spaces";
-      isValid = false;
-    }
-    if (formData.lastName && formData.lastName.includes(" ")) {
-      newErrors.lastName = "Last name cannot contain spaces";
+    // Validate vendorAccountDetails
+    Object.keys(formData.vendorAccountDetails).forEach((key) => {
+      if (
+        !formData.vendorAccountDetails[key] &&
+        (key !== "password" || !vendorToEdit)
+      ) {
+        newErrors[`vendorAccountDetails.${key}`] = "This field is required";
+        isValid = false;
+      }
+    });
+
+    // validate phone number
+    if (
+      formData.vendorDetails.vendorPhone &&
+      !/^\d{10}$/.test(formData.vendorDetails.vendorPhone)
+    ) {
+      newErrors["vendorDetails.vendorPhone"] =
+        "Please enter a valid phone number";
       isValid = false;
     }
 
-    // Validate email
-    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+    // Validate emails
+    if (
+      formData.vendorDetails.vendorEmail &&
+      !/\S+@\S+\.\S+/.test(formData.vendorDetails.vendorEmail)
+    ) {
+      newErrors["vendorDetails.vendorEmail"] =
+        "Please enter a valid email address";
+      isValid = false;
+    }
+    if (
+      formData.vendorAccountDetails.email &&
+      !/\S+@\S+\.\S+/.test(formData.vendorAccountDetails.email)
+    ) {
+      newErrors["vendorAccountDetails.email"] =
+        "Please enter a valid email address";
       isValid = false;
     }
 
     // Validate NIC
     const nicRegex = /^(\d{12}|\d{9}[vV])$/;
-    if (formData.nic && !nicRegex.test(formData.nic)) {
-      newErrors.nic =
+    if (
+      formData.vendorAccountDetails.nic &&
+      !nicRegex.test(formData.vendorAccountDetails.nic)
+    ) {
+      newErrors["vendorAccountDetails.nic"] =
         'NIC must be either a 12-digit number or a 9-digit number ending with "v" or "V"';
       isValid = false;
     }
@@ -91,7 +153,14 @@ const AddEditVendorModal = ({
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
+    const [section, field] = id.split(".");
+    setFormData({
+      ...formData,
+      [section]: {
+        ...formData[section],
+        [field]: value,
+      },
+    });
     // Clear the error for this field as the user types
     if (errors[id]) {
       setErrors({ ...errors, [id]: "" });
@@ -106,89 +175,131 @@ const AddEditVendorModal = ({
 
       <Modal.Body className="modalBody">
         <Form>
-          <Form.Group controlId="firstName">
-            <Form.Label>First Name</Form.Label>
+          <h5>Store Details</h5>
+          <Form.Group controlId="vendorDetails.vendorName">
+            <Form.Label>Store Name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter first name"
-              value={formData.firstName}
+              placeholder="Enter store name"
+              value={formData.vendorDetails.vendorName}
               onChange={handleInputChange}
-              isInvalid={!!errors.firstName}
+              isInvalid={!!errors["vendorDetails.vendorName"]}
             />
             <Form.Control.Feedback type="invalid">
-              {errors.firstName}
+              {errors["vendorDetails.vendorName"]}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="lastName" className="mt-3">
-            <Form.Label>Last Name</Form.Label>
+          <Form.Group controlId="vendorDetails.vendorEmail" className="mt-3">
+            <Form.Label>Store Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter vendor email"
+              value={formData.vendorDetails.vendorEmail}
+              onChange={handleInputChange}
+              isInvalid={!!errors["vendorDetails.vendorEmail"]}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors["vendorDetails.vendorEmail"]}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="vendorDetails.vendorPhone" className="mt-3">
+            <Form.Label>Store Phone</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter last name"
-              value={formData.lastName}
+              placeholder="Enter store phone"
+              value={formData.vendorDetails.vendorPhone}
               onChange={handleInputChange}
-              isInvalid={!!errors.lastName}
+              isInvalid={!!errors["vendorDetails.vendorPhone"]}
             />
             <Form.Control.Feedback type="invalid">
-              {errors.lastName}
+              {errors["vendorDetails.vendorPhone"]}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="nic" className="mt-3">
-            <Form.Label>NIC</Form.Label>
+          <Form.Group controlId="vendorDetails.vendorAddress" className="mt-3">
+            <Form.Label>Store Address</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter NIC"
-              value={formData.nic}
+              placeholder="Enter store address"
+              value={formData.vendorDetails.vendorAddress}
               onChange={handleInputChange}
-              isInvalid={!!errors.nic}
+              isInvalid={!!errors["vendorDetails.vendorAddress"]}
             />
             <Form.Control.Feedback type="invalid">
-              {errors.nic}
+              {errors["vendorDetails.vendorAddress"]}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="email" className="mt-3">
+          <Form.Group controlId="vendorDetails.vendorCity" className="mt-3">
+            <Form.Label>Store City</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter store city"
+              value={formData.vendorDetails.vendorCity}
+              onChange={handleInputChange}
+              isInvalid={!!errors["vendorDetails.vendorCity"]}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors["vendorDetails.vendorCity"]}
+            </Form.Control.Feedback>
+          </Form.Group>
+
+          <h5 className="mt-4">Account Details</h5>
+          <Form.Group controlId="vendorAccountDetails.name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter name"
+              value={formData.vendorAccountDetails.name}
+              onChange={handleInputChange}
+              isInvalid={!!errors["vendorAccountDetails.name"]}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors["vendorAccountDetails.name"]}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="vendorAccountDetails.email" className="mt-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
-              value={formData.email}
+              value={formData.vendorAccountDetails.email}
               onChange={handleInputChange}
-              isInvalid={!!errors.email}
+              isInvalid={!!errors["vendorAccountDetails.email"]}
             />
             <Form.Control.Feedback type="invalid">
-              {errors.email}
+              {errors["vendorAccountDetails.email"]}
             </Form.Control.Feedback>
           </Form.Group>
-          {vendorToEdit ? null : (
-            <Form.Group controlId="password" className="mt-3">
+          <Form.Group controlId="vendorAccountDetails.nic" className="mt-3">
+            <Form.Label>Account holder NIC</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter NIC"
+              value={formData.vendorAccountDetails.nic}
+              onChange={handleInputChange}
+              isInvalid={!!errors["vendorAccountDetails.nic"]}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors["vendorAccountDetails.nic"]}
+            </Form.Control.Feedback>
+          </Form.Group>
+          {!vendorToEdit && (
+            <Form.Group
+              controlId="vendorAccountDetails.password"
+              className="mt-3"
+            >
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Enter password"
-                value={formData.password}
+                value={formData.vendorAccountDetails.password}
                 onChange={handleInputChange}
-                isInvalid={!!errors.password}
+                isInvalid={!!errors["vendorAccountDetails.password"]}
               />
               <Form.Control.Feedback type="invalid">
-                {errors.password}
+                {errors["vendorAccountDetails.password"]}
               </Form.Control.Feedback>
             </Form.Group>
           )}
-          <Form.Group controlId="role" className="mt-3">
-            <Form.Label>Role</Form.Label>
-            <Form.Control
-              as="select"
-              value={formData.role}
-              onChange={handleInputChange}
-              isInvalid={!!errors.role}
-            >
-              <option value="">Select role</option>
-              <option value="admin">Admin</option>
-              <option value="csr">CSR (Customer Service Representative)</option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {errors.role}
-            </Form.Control.Feedback>
-          </Form.Group>
         </Form>
       </Modal.Body>
 

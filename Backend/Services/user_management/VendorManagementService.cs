@@ -287,11 +287,20 @@ public class VendorManagementService : IVendorManagementService
   {
     try
     {
-      var updatedUser = await _userManager.UpdateAsync(new User
+      var user = await _userManager.FindByIdAsync(id);
+
+      if (user == null)
       {
-        Id = Guid.Parse(id),
-        Status = newStatus,
-      });
+        return new UpdateVendorAccountStatusResponse
+        {
+          IsSuccess = false,
+          Message = "User not found",
+        };
+      }
+
+      user.Status = newStatus;
+
+      var updatedUser = await _userManager.UpdateAsync(user);
 
       if (!updatedUser.Succeeded)
       {
