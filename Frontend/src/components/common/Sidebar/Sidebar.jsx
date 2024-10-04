@@ -59,7 +59,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebarLogo">
-        <h1>Logo</h1>
+        <img src="/logo.png" alt="logo" />
       </div>
       <div className="sidebarContent">
         {navLinks.map((link, index) => (

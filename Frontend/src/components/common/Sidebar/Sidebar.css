@@ -22,6 +22,10 @@
   color: var(--text-secondary-color);
 }
 
+.sidebarLogo img {
+  width: 70%;
+}
+
 .navItem,
 .subItem {
   display: flex;
