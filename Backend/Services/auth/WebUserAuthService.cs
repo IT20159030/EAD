@@ -82,12 +82,87 @@ public class WebUserAuthService : IWebUserAuthService
       IsSuccess = true,
       AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
       Message = "Login successful",
-      Name = user.Name,
-      Email = user.Email,
-      Role = roles.FirstOrDefault() ?? string.Empty,
-      UserId = user.Id.ToString()
+      Profile = new Profile
+      {
+        UserId = user.Id.ToString(),
+        Name = user.Name,
+        Email = user.Email,
+        Role = roles.FirstOrDefault(),
+        NIC = user.NIC
+      }
     };
 
+  }
+
+  public async Task<ProfileResponse> GetProfileAsync(string userId)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new ProfileResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    var roles = await _userManager.GetRolesAsync(user);
+
+    return new ProfileResponse
+    {
+      IsSuccess = true,
+      Profile = new Profile
+      {
+        UserId = user.Id.ToString(),
+        Name = user.Name,
+        Email = user.Email,
+        Role = roles.FirstOrDefault(),
+        NIC = user.NIC,
+        CreatedAt = user.CreatedAt
+      }
+    };
+  }
+
+  public async Task<ProfileResponse> UpdateProfileAsync(string userId, UpdateProfileRequest request)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new ProfileResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    user.Name = request.Name;
+    user.Email = request.Email;
+    user.NIC = request.NIC;
+
+    var result = await _userManager.UpdateAsync(user);
+
+    if (!result.Succeeded)
+    {
+      return new ProfileResponse
+      {
+        IsSuccess = false,
+        Message = "Failed to update profile"
+      };
+    }
+
+    return new ProfileResponse
+    {
+      IsSuccess = true,
+      Profile = new Profile
+      {
+        UserId = user.Id.ToString(),
+        Name = user.Name,
+        Email = user.Email,
+        Role = roles.FirstOrDefault(),
+        NIC = user.NIC,
+        CreatedAt = user.CreatedAt
+      }
+    };
   }
 
 }
