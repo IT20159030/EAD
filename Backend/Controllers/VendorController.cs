@@ -143,6 +143,34 @@ public class VendorController : ControllerBase
         return Ok(ConvertToDto(vendor));
     }
 
+    [HttpDelete("rating/{vendorId}/{reviewId}", Name = "DeleteReview")]
+    [Authorize(Roles = "customer")]
+    public async Task<IActionResult> DeleteReview(string vendorId, string reviewId)
+    {
+        var vendor = await _vendors.Find(v => v.Id == Guid.Parse(vendorId)).FirstOrDefaultAsync();
+
+        if (vendor == null)
+        {
+            return NotFound("Vendor not found");
+        }
+
+        var review = vendor.Reviews.Find(r => r.Id == reviewId);
+
+        if (review == null)
+        {
+            return NotFound("Review not found");
+        }
+
+        vendor.Reviews.Remove(review);
+
+        // update vendor rating
+        vendor.VendorRating = ((vendor.VendorRating * vendor.VendorRatingCount) - review.ReviewRating) / (vendor.VendorRatingCount - 1);
+        vendor.VendorRatingCount--;
+
+        await _vendors.ReplaceOneAsync(v => v.Id == Guid.Parse(vendorId), vendor);
+        return Ok(ConvertToDto(vendor));
+    }
+
     [HttpPut("{id}", Name = "UpdateVendor")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateVendor(string id, [FromBody] UpdateVendorRequestDto dto)
