@@ -9,6 +9,21 @@ public class Vendor
     [BsonId]
     public Guid Id { get; set; }
 
+    [BsonElement("VendorName")]
+    public string VendorName { get; set; } = string.Empty;
+
+    [BsonElement("VendorEmail")]
+    public string VendorEmail { get; set; } = string.Empty;
+
+    [BsonElement("VendorPhone")]
+    public string VendorPhone { get; set; } = string.Empty;
+
+    [BsonElement("VendorAddress")]
+    public string VendorAddress { get; set; } = string.Empty;
+
+    [BsonElement("VendorCity")]
+    public string VendorCity { get; set; } = string.Empty;
+
     // cumulative rating of the vendor
     [BsonElement("VendorRating")]
     public required int VendorRating { get; set; }
