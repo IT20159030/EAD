@@ -102,7 +102,7 @@ const VendorManagement = () => {
     <div>
       <CommonTitle
         title="Vendors"
-        buttonLabel="Add New Vendor Account"
+        buttonLabel="Add New Vendor"
         onButtonClick={handleModalOpen}
       />
       <div className={styles.pageActions}>
@@ -120,9 +120,9 @@ const VendorManagement = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Vendor Name</th>
+            <th>Store Name</th>
+            <th>Account name</th>
+            <th>Account email</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -147,12 +147,12 @@ const VendorManagement = () => {
               .map((vendor, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
+                  <td>{vendor.vendorDetails.vendorName}</td>
                   <td>
                     {vendor.vendorAccountDetails.name}{" "}
                     {vendor.id === currentUserId && "(you)"}
                   </td>
                   <td>{vendor.vendorAccountDetails.email}</td>
-                  <td>{vendor.vendorDetails.vendorName}</td>
                   {vendor.id !== currentUserId ? (
                     <td>
                       <Form.Check
@@ -172,6 +172,7 @@ const VendorManagement = () => {
                                 : "Active",
                           })
                         }
+                        disabled={isChangingStatus}
                       />
                     </td>
                   ) : (
@@ -215,18 +216,7 @@ const VendorManagement = () => {
           show={showModal}
           handleClose={() => setShowModal(false)}
           handleSaveVendor={handleSaveVendor}
-          vendorToEdit={
-            vendorToEdit
-              ? {
-                  firstName: vendorToEdit.name.split(" ")[0],
-                  lastName: vendorToEdit.name.split(" ")[1],
-                  nic: vendorToEdit.nic,
-                  email: vendorToEdit.email,
-                  password: " ",
-                  role: vendorToEdit.role,
-                }
-              : null
-          }
+          vendorToEdit={vendorToEdit}
           isInProgress={isCreating || isUpdating}
         />
       )}
