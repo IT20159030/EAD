@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Table, Form, Modal, Spinner, Alert } from "react-bootstrap";
+import styles from "../styles/Pages.module.css";
 import { MdRemoveRedEye } from "react-icons/md";
 import CommonTitle from "../../components/common/Title/Title";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
@@ -87,16 +88,19 @@ const CustomerManagement = () => {
   return (
     <div>
       <CommonTitle title="Approval Requests" />
-      <Form className="mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </Form>
+      <div className={styles.pageActions}>
+        <Form className="mb-3">
+          <Form.Control
+            className={styles.search}
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Form>
+      </div>
       {isLoadingCustomerAccounts ? (
-        <Table striped hover responsive>
+        <Table striped hover responsive className={styles.table}>
           <thead>
             <tr>
               <th>ID</th>
@@ -110,7 +114,7 @@ const CustomerManagement = () => {
       ) : filteredCustomers.length === 0 ? (
         <Alert variant="info">No approval requests found</Alert>
       ) : (
-        <Table striped hover responsive>
+        <Table striped hover responsive className={styles.table}>
           <thead>
             <tr>
               <th>ID</th>
@@ -127,8 +131,9 @@ const CustomerManagement = () => {
                   {customer.name} {customer.id === currentUserId && "(you)"}
                 </td>
                 <td>{customer.email}</td>
-                <td>
+                <td className={styles.actions}>
                   <Button
+                    className={styles.button}
                     onClick={() => handleModalOpen(customer.id)}
                     disabled={isChangingStatus}
                   >
