@@ -1,5 +1,6 @@
 package com.example.mobile.viewModels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,14 +14,15 @@ import javax.inject.Inject
 @HiltViewModel
 class TokenViewModel @Inject constructor(
     private val tokenManager: TokenManager
-): ViewModel() {
+) : ViewModel() {
     val token = MutableLiveData<String?>()
+    val userId: LiveData<String?> get() = tokenManager.userId
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            tokenManager.getToken().collect {
+            tokenManager.getToken().collect { fetchedToken ->
                 withContext(Dispatchers.Main) {
-                    token.value = it
+                    token.value = fetchedToken
                 }
             }
         }

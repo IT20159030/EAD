@@ -15,11 +15,13 @@ namespace Backend.Services.notification
     {
         private readonly UserMonitoringService _monitoringService;
         private readonly StockMonitoringService _stockMonitoringService;
+        private readonly OrderMonitoringService _orderMonitoringService;
 
-        public MonitoringWorker(UserMonitoringService monitoringService, StockMonitoringService stockMonitoringService)
+        public MonitoringWorker(UserMonitoringService monitoringService, StockMonitoringService stockMonitoringService, OrderMonitoringService orderMonitoringService)
         {
             _monitoringService = monitoringService;
             _stockMonitoringService = stockMonitoringService;
+            _orderMonitoringService = orderMonitoringService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,6 +30,7 @@ namespace Backend.Services.notification
             {
                 await _monitoringService.MonitorUserActivityAsync();
                 await _stockMonitoringService.MonitorStockLevelsAsync();
+                await _orderMonitoringService.MonitorOrderStatusesAsync();
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Run every 1 minutes
             }
         }
