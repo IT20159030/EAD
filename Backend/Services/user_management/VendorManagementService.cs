@@ -131,6 +131,9 @@ public class VendorManagementService : IVendorManagementService
         VendorPhone = vendorDetails.VendorPhone,
         VendorAddress = vendorDetails.VendorAddress,
         VendorCity = vendorDetails.VendorCity,
+        VendorRating = 0,
+        VendorRatingCount = 0,
+        Reviews = new List<Review>(),
       };
 
       await _vendors.InsertOneAsync(vendor);

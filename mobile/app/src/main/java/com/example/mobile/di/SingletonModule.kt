@@ -9,6 +9,7 @@ import com.example.mobile.services.api.notification.NotificationApiService
 import com.example.mobile.services.api.order.OrderApiService
 import com.example.mobile.services.api.product.ProductApiService
 import com.example.mobile.services.api.profile.ProfileApiService
+import com.example.mobile.services.api.vendor.VendorApiService
 import com.example.mobile.utils.AuthInterceptor
 import com.example.mobile.utils.TokenManager
 import dagger.Module
@@ -54,7 +55,7 @@ class SingletonModule {
     @Provides
     fun provideRetrofitBuilder(): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("http://192.168.56.1:5159/api/v1/")
+            .baseUrl("http://192.168.1.2:5159/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
 
     @Singleton
@@ -87,6 +88,14 @@ class SingletonModule {
             .client(okHttpClient)
             .build()
             .create(OrderApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideVendorAPIService(okHttpClient: OkHttpClient, retrofit: Retrofit.Builder): VendorApiService =
+        retrofit
+            .client(okHttpClient)
+            .build()
+            .create(VendorApiService::class.java)
 
     @Singleton
     @Provides

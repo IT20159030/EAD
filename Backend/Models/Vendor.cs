@@ -10,23 +10,46 @@ public class Vendor
     public Guid Id { get; set; }
 
     [BsonElement("VendorName")]
-    public required string VendorName { get; set; }
+    public string VendorName { get; set; } = string.Empty;
 
     [BsonElement("VendorEmail")]
-    public required string VendorEmail { get; set; }
+    public string VendorEmail { get; set; } = string.Empty;
 
     [BsonElement("VendorPhone")]
-    public required string VendorPhone { get; set; }
+    public string VendorPhone { get; set; } = string.Empty;
 
     [BsonElement("VendorAddress")]
-    public required string VendorAddress { get; set; }
+    public string VendorAddress { get; set; } = string.Empty;
 
     [BsonElement("VendorCity")]
-    public required string VendorCity { get; set; }
+    public string VendorCity { get; set; } = string.Empty;
 
+    // cumulative rating of the vendor
     [BsonElement("VendorRating")]
-    public float VendorRating { get; set; } = 0;
+    public required double VendorRating { get; set; }
 
     [BsonElement("VendorRatingCount")]
-    public int VendorRatingCount { get; set; } = 0;
+    public required int VendorRatingCount { get; set; }
+
+    [BsonElement("Reviews")]
+    public required List<Review> Reviews { get; set; }
+}
+
+public class Review
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
+
+    [BsonElement("reviewerId")]
+    public required string ReviewerId { get; set; }
+
+    [BsonElement("reviewerName")]
+    public required string ReviewerName { get; set; }
+
+    [BsonElement("reviewRating")]
+    public required int ReviewRating { get; set; }
+
+    [BsonElement("reviewText")]
+    public string? ReviewText { get; set; }
 }

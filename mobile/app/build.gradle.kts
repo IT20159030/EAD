@@ -50,12 +50,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
 
     // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.1")
-    implementation("androidx.annotation:annotation:1.6.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.2")
+    implementation("androidx.annotation:annotation:1.8.2")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("androidx.fragment:fragment-ktx:1.5.6")
-    implementation("androidx.activity:activity:1.9.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.4")
+    implementation("androidx.activity:activity-ktx:1.9.2")
     implementation("androidx.compose.ui:ui-desktop:1.7.0")
 
     testImplementation("junit:junit:4.13.2")

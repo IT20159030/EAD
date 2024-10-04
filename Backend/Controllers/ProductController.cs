@@ -17,6 +17,7 @@ namespace Backend.Controllers
         private readonly IMongoCollection<Product> _products;
         private readonly IMongoCollection<ProductCategory> _productsCategory;
         private readonly IMongoCollection<User> _users;
+        private readonly IMongoCollection<Vendor> _vendors;
 
         private readonly ILogger<ProductController> _logger;
 
@@ -26,6 +27,7 @@ namespace Backend.Controllers
             _products = mongoDBService.Database.GetCollection<Product>("Products");
             _productsCategory = mongoDBService.Database.GetCollection<ProductCategory>("ProductCategories");
             _users = mongoDBService.Database.GetCollection<User>("Users");
+            _vendors = mongoDBService.Database.GetCollection<Vendor>("Vendors");
         }
 
         private ProductDto ConvertToDto(Product product) => new ProductDto
@@ -75,8 +77,8 @@ namespace Backend.Controllers
             var category = await _productsCategory.Find(c => c.Id == product.Category).FirstOrDefaultAsync();
             var categoryName = category != null ? category.Name : string.Empty;
 
-            var vendor = await _users.Find(u => u.Id.ToString() == product.VendorId).FirstOrDefaultAsync();
-            var vendorName = vendor != null ? vendor.Name : string.Empty;
+            var vendor = await _vendors.Find(u => u.Id.ToString() == product.VendorId).FirstOrDefaultAsync();
+            var vendorName = vendor != null ? vendor.VendorName : string.Empty;
 
             return new ProductDto
             {

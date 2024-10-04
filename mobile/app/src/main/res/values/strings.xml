@@ -64,4 +64,16 @@
     <string name="no_longer_need_item">No longer need item</string>
     <string name="other">Other</string>
     <string name="please_specify">Please specify</string>
+    <string name="description">Description</string>
+    <string name="ratings_reviews">Vendor Score</string>
+    <string name="add_review">Add Review</string>
+    <string name="choose_quantity">Choose Quantity: </string>
+    <string name="review_count">(%d)</string>
+    <string name="write_your_comment_here">Write your comment here...</string>
+    <string name="confirm">Confirm</string>
+    <string name="rating_out_of_5">Rating (out of 5)</string>
+    <string name="review_comment_optional">Review / Comment (optional)</string>
+    <string name="you_d">Your Rating: %d</string>
+    <string name="edit">Edit</string>
+    <string name="no_comment_given">No comment Given</string>
 </resources>
