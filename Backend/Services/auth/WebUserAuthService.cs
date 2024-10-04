@@ -87,7 +87,7 @@ public class WebUserAuthService : IWebUserAuthService
         UserId = user.Id.ToString(),
         Name = user.Name,
         Email = user.Email,
-        Role = roles.FirstOrDefault(),
+        Role = roles.FirstOrDefault() ?? "",
         NIC = user.NIC
       }
     };
@@ -115,10 +115,10 @@ public class WebUserAuthService : IWebUserAuthService
       {
         UserId = user.Id.ToString(),
         Name = user.Name,
-        Email = user.Email,
-        Role = roles.FirstOrDefault(),
+        Email = user.Email ?? "",
+        Role = roles.FirstOrDefault() ?? "",
         NIC = user.NIC,
-        CreatedAt = user.CreatedAt
+        CreatedAt = user?.CreatedAt.ToString() ?? ""
       }
     };
   }
@@ -150,6 +150,8 @@ public class WebUserAuthService : IWebUserAuthService
       };
     }
 
+    var roles = await _userManager.GetRolesAsync(user);
+
     return new ProfileResponse
     {
       IsSuccess = true,
@@ -158,9 +160,9 @@ public class WebUserAuthService : IWebUserAuthService
         UserId = user.Id.ToString(),
         Name = user.Name,
         Email = user.Email,
-        Role = roles.FirstOrDefault(),
+        Role = roles.FirstOrDefault() ?? "",
         NIC = user.NIC,
-        CreatedAt = user.CreatedAt
+        CreatedAt = user.CreatedAt.ToString()
       }
     };
   }
