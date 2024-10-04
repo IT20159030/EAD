@@ -64,4 +64,8 @@
     <string name="no_longer_need_item">No longer need item</string>
     <string name="other">Other</string>
     <string name="please_specify">Please specify</string>
+    <string name="description">Description</string>
+    <string name="ratings_reviews"><![CDATA[Ratings & Reviews]]></string>
+    <string name="add_review">Add Review</string>
+    <string name="choose_quantity">Choose Quantity: </string>
 </resources>
