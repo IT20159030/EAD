@@ -74,4 +74,5 @@
     <string name="rating_out_of_5">Rating (out of 5)</string>
     <string name="review_comment_optional">Review / Comment (optional)</string>
     <string name="you_d">Your Rating: %d</string>
+    <string name="edit">Edit</string>
 </resources>

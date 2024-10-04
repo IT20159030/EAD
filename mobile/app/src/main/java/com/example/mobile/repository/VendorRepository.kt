@@ -1,6 +1,7 @@
 package com.example.mobile.repository
 
 import com.example.mobile.dto.AddReview
+import com.example.mobile.dto.UpdateReview
 import com.example.mobile.services.api.vendor.VendorApiService
 import com.example.mobile.utils.apiRequestFlow
 import javax.inject.Inject
@@ -19,6 +20,10 @@ class VendorRepository @Inject constructor (
 
     fun addVendorRating(vendorReview: AddReview) = apiRequestFlow {
         mainApiService.addVendorRating(vendorReview)
+    }
+
+    fun updateVendorRating(vendorReview: UpdateReview) = apiRequestFlow {
+        mainApiService.updateVendorRating(vendorReview)
     }
 
 }

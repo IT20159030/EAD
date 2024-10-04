@@ -17,6 +17,8 @@ import androidx.fragment.app.viewModels
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentViewProductBinding
 import com.example.mobile.dto.AddReview
+import com.example.mobile.dto.Review
+import com.example.mobile.dto.UpdateReview
 import com.example.mobile.dto.UserInfo
 import com.example.mobile.dto.Vendor
 import com.example.mobile.ui.cart.CartViewModel
@@ -53,6 +55,7 @@ class ViewProductFragment : Fragment() {
     private lateinit var productVendorAddReviewButton: Button
     private lateinit var productUserRatingView: TextView
     private lateinit var productVendorUserReviewView: TextView
+    private lateinit var productUserEditReviewButton: Button
     private lateinit var productLoadingIndicator: View
 
     private lateinit var productAddToCartButton: Button
@@ -88,10 +91,11 @@ class ViewProductFragment : Fragment() {
         productVendorReviewCountView = binding.productViewReviewCount
         productUserReviewLayout = binding.productViewUserReviewLayout
         productVendorAddReviewButton = binding.productViewAddReviewButton
-
         productVendorUserReviewView = binding.productViewUserReview
         productLoadingIndicator = binding.productViewLoadingIndicator
         productUserRatingView = binding.productViewUserRating
+        productUserEditReviewButton = binding.productViewEditReviewButton
+
         productAddToCartButton = binding.productViewAddToCartButton
         productCartMinusButton = binding.productViewCartMinus
         productCartPlusButton = binding.productViewCartPlus
@@ -132,6 +136,18 @@ class ViewProductFragment : Fragment() {
         setAddToCartButtonListener(productName, productId, productImageUrl)
         addReviewButtonListener()
 
+        productUserEditReviewButton.setOnClickListener {
+            showEditReviewDialog(
+                requireContext(),
+                vendor.reviews.first { it.reviewerId == currentUserInfo.id },
+                { newReview->
+                    updateVendorReview(newReview)
+                },
+                { reviewId ->
+                    // Delete review
+                })
+        }
+
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
 
@@ -159,6 +175,7 @@ class ViewProductFragment : Fragment() {
                     String.format(Locale.getDefault(), getString(R.string.you_d),
                         vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
                 productUserReviewLayout.visibility = View.VISIBLE
+                productVendorAddReviewButton.visibility = View.GONE
             } else {
                 productUserReviewLayout.visibility = View.GONE
             }
@@ -239,6 +256,14 @@ class ViewProductFragment : Fragment() {
         })
     }
 
+    private fun updateVendorReview(review: UpdateReview) {
+        vendorViewModel.updateVendorRating(review, object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun showRatingDialog(context: Context, onConfirm: (rating: Int, review: String?) -> Unit) {
         // Inflate the custom layout for the dialog
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_rating, null)
@@ -260,6 +285,57 @@ class ViewProductFragment : Fragment() {
                 dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+        // Show the dialog
+        dialogBuilder.create().show()
+    }
+
+    private fun showEditReviewDialog(
+        context: Context,
+        review: Review,
+        onConfirm: (newReview: UpdateReview) -> Unit,
+        onDelete: (reviewId: String) -> Unit
+    ) {
+        // Inflate the custom layout for the dialog
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_rating, null)
+
+        // Get the views from the inflated layout
+        val ratingBar = dialogView.findViewById<RatingBar>(R.id.dialog_rating_bar)
+        val reviewInput = dialogView.findViewById<EditText>(R.id.dialog_review_input)
+
+        // Set current values for editing
+        ratingBar.rating = review.rating.toFloat()
+        reviewInput.setText(review.comment)
+
+        // Build the dialog
+        val dialogBuilder = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setTitle("Edit Review")
+            .setPositiveButton("Confirm") { dialog, _ ->
+                val newRating = ratingBar.rating.toInt()
+                val newReview = reviewInput.text.toString().ifEmpty { null } // Allow empty comment
+
+                //create update review object
+                val updateReview = UpdateReview(
+                    review.reviewId,
+                    vendor.vendorId,
+                    review.reviewerId,
+                    review.reviewerName,
+                    newRating,
+                    newReview ?: ""
+                )
+                // Call the confirm handler function
+                onConfirm(updateReview)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNeutralButton("Delete") { dialog, _ ->
+                // Call the delete handler function
+                onDelete(review.reviewId)
                 dialog.dismiss()
             }
 

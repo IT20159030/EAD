@@ -2,6 +2,7 @@ package com.example.mobile.ui.productView
 
 import androidx.lifecycle.MutableLiveData
 import com.example.mobile.dto.AddReview
+import com.example.mobile.dto.UpdateReview
 import com.example.mobile.dto.Vendor
 import com.example.mobile.repository.VendorRepository
 import com.example.mobile.utils.ApiResponse
@@ -34,5 +35,12 @@ class VendorViewModel @Inject constructor (
         coroutinesErrorHandler,
     ) {
         vendorRepository.addVendorRating(vendorReview)
+    }
+
+    fun updateVendorRating(vendorReview: UpdateReview, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _vendor,
+        coroutinesErrorHandler,
+    ) {
+        vendorRepository.updateVendorRating(vendorReview)
     }
 }

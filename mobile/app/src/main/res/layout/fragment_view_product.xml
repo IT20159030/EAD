@@ -128,7 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:numStars="1"
-                        android:progressTint="@color/purple_200"
+                        android:progressTint="@color/purple_500"
                         android:isIndicator="true"
                         android:rating="1"
                         android:scaleX="0.8"
@@ -160,47 +160,74 @@
                 </LinearLayout>
 
                 <!-- User's Review (if any) -->
-                <LinearLayout
+                <androidx.cardview.widget.CardView
                     android:id="@+id/product_view_user_review_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="10dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="10dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
+                        android:padding="10dp">
+
                         <TextView
                             android:id="@+id/product_view_user_rating"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/you_d"
-                            android:layout_marginStart="20dp"
+                            android:layout_marginStart="10dp"
                             android:paddingHorizontal="10dp"
-                            android:textSize="14sp" />
-                        <!-- Star Icon -->
+                            android:text="@string/you_d"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <RatingBar
+                            android:id="@+id/ratingBar"
                             style="?android:attr/ratingBarStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:numStars="1"
-                            android:isIndicator="true"
                             android:layout_gravity="center_vertical"
-                            android:rating="0"
-                            />
-                    </LinearLayout>
-                    <TextView
-                        android:id="@+id/product_view_user_review"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="Great product!"
-                        android:layout_marginStart="20dp"
-                        android:paddingHorizontal="10dp"
-                        android:paddingBottom="10dp"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                            android:isIndicator="true"
+                            android:numStars="1"
+                            android:progressTint="@color/purple_500"
+                            android:rating="1"
+                            app:layout_constraintBottom_toTopOf="@+id/product_view_user_review"
+                            app:layout_constraintStart_toEndOf="@+id/product_view_user_rating"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/product_view_user_review"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:paddingHorizontal="10dp"
+                            android:textSize="14sp"
+                            android:textStyle="italic"
+                            app:layout_constraintEnd_toStartOf="@+id/button"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/product_view_user_rating"
+                            tools:text="Great product!" />
+
+                        <Button
+                            android:id="@+id/product_view_edit_review_button"
+                            style="@android:style/Widget.Holo.Button.Borderless.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit"
+                            android:textStyle="italic"
+                            android:textColor="@color/black"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"

@@ -26,3 +26,12 @@ data class AddReview(
     @SerializedName("reviewRating") var rating: Int,
     @SerializedName("reviewText") var comment: String
 )
+
+data class UpdateReview(
+    @SerializedName("id") var reviewId: String,
+    var vendorId: String,
+    val reviewerId: String,
+    val reviewerName: String,
+    @SerializedName("reviewRating") var rating: Int,
+    @SerializedName("reviewText") var comment: String
+)
