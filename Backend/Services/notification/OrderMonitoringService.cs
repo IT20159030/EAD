@@ -1,6 +1,6 @@
 /**
 * This service is responsible for monitoring the orders placed by customers.
-* It checks the orders collection for orders that are Pending, Ready, Approved, Rejected, Completed, CancelRequested, Cancelled and sends a notification to the vendor.
+* It checks the orders collection for orders that are Pending, Ready, Approved, Rejected, Completed, CancelRequested, Cancelled and sends a notification to the vendor and customer.
 * It uses the Order and Notification models to interact with the database.
 */
 
@@ -38,12 +38,12 @@ namespace Backend.Services.notification
             var recentOrders = await _orders
                 .Find(order => order.Status == OrderStatus.Ready ||
                                order.Status == OrderStatus.Approved ||
-                               order.Status == OrderStatus.CancelRequested)
+                               order.Status == OrderStatus.CancelRequested ||
+                               order.Status == OrderStatus.Cancelled)
                 .ToListAsync();
 
             foreach (var order in recentOrders)
             {
-                // Loop through each OrderItem to get the vendor IDs
                 foreach (var item in order.OrderItems)
                 {
                     // Fetch the product to get the vendor ID
@@ -57,53 +57,86 @@ namespace Backend.Services.notification
                         var orderDetails = order.Id?.ToString();
                         var message = string.Empty;
 
-                        // Create a message based on the order status
                         switch (order.Status)
                         {
-                            case OrderStatus.Ready:
-                                message = $"Order {orderDetails} is ready";
-                                break;
                             case OrderStatus.Approved:
                                 message = $"Order {orderDetails} has been approved";
                                 break;
                             case OrderStatus.CancelRequested:
                                 message = $"Order {orderDetails} has a cancellation request";
                                 break;
+                            case OrderStatus.Cancelled:
+                                message = $"Order {orderDetails} has been cancelled";
+                                break;
+                            case OrderStatus.Ready:
+                                message = $"Order {orderDetails} is ready";
+                                break;
                         }
 
-                        // Check if a notification for this order status already exists
-                        var existingNotification = await _notifications
+                        var notificationType = $"OrderStatus";
+                        var existingVendorNotification = await _notifications
                             .Find(n => n.MessageID == order.Id &&
                                        n.RecipientId == vendorId &&
-                                       n.Type == order.Status.ToString() &&
+                                       n.Type == notificationType &&
                                        !n.IsRead)
                             .FirstOrDefaultAsync();
 
-                        // If no unread notification exists, create and send a new notification
-                        if (existingNotification == null)
+                        if (existingVendorNotification == null)
                         {
-                            var notification = new Notification
+                            var vendorNotification = new Notification
                             {
                                 RecipientId = vendorId,
                                 Role = "vendor",
                                 Message = message,
                                 MessageID = order.Id,
                                 CreatedAt = DateTime.UtcNow,
-                                Type = order.Status.ToString(),
+                                Type = notificationType, // Unique notification type
                                 IsRead = false
                             };
 
-                            // Insert the notification into the database
-                            await _notifications.InsertOneAsync(notification);
-
-                            // Send notification via SignalR
-                            await _hubContext.Clients.User(vendorId).SendAsync("ReceiveNotification", notification.Message);
-
-                            _logger.LogInformation($"Order status notification sent for Order {orderDetails}");
+                            await _notifications.InsertOneAsync(vendorNotification);
+                            await _hubContext.Clients.User(vendorId).SendAsync("ReceiveNotification", vendorNotification.Message);
+                            _logger.LogInformation($"Order status notification sent to Vendor for Order {orderDetails}");
                         }
                         else
                         {
                             _logger.LogInformation($"Notification already exists for Order {orderDetails} and Vendor {vendorId}. Skipping...");
+                        }
+
+                        if (order.Status == OrderStatus.Ready || order.Status == OrderStatus.Cancelled)
+                        {
+                            var customerMessage = order.Status == OrderStatus.Ready
+                                ? $"Your order {orderDetails} is ready"
+                                : $"Your order {orderDetails} has been cancelled";
+
+                            var existingCustomerNotification = await _notifications
+                                .Find(n => n.MessageID == order.Id &&
+                                           n.RecipientId == order.CustomerId &&
+                                           n.Type == notificationType &&
+                                           !n.IsRead)
+                                .FirstOrDefaultAsync();
+
+                            if (existingCustomerNotification == null)
+                            {
+                                var customerNotification = new Notification
+                                {
+                                    RecipientId = order.CustomerId,
+                                    Role = "customer",
+                                    Message = customerMessage,
+                                    MessageID = order.Id,
+                                    CreatedAt = DateTime.UtcNow,
+                                    Type = notificationType, // Unique notification type
+                                    IsRead = false
+                                };
+
+                                await _notifications.InsertOneAsync(customerNotification);
+                                await _hubContext.Clients.User(order.CustomerId).SendAsync("ReceiveNotification", customerNotification.Message);
+                                _logger.LogInformation($"Order status notification sent to Customer for Order {orderDetails}");
+                            }
+                            else
+                            {
+                                _logger.LogInformation($"Notification already exists for Order {orderDetails} and Customer {order.CustomerId}. Skipping...");
+                            }
                         }
                     }
                     else

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,27 +20,11 @@ import StaffManagement from "./pages/user/StaffManagement";
 import CustomerManagement from "./pages/user/CustomerManagement";
 import ApprovalRequests from "./pages/user/ApprovalRequests";
 import VendorManagement from "./pages/user/VendorManagement";
+import Profile from "./pages/Profile";
+import queryClient from "./utils/queryClient";
 
 import "./App.css";
 import Order from "./pages/Order.jsx";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      refetchOnWindowFocus: false,
-      staleTime: 300000,
-      onError: (error) => {
-        console.error("Error fetching data:", error);
-      },
-    },
-    mutations: {
-      onError: (error) => {
-        console.error("Error performing mutation:", error);
-      },
-    },
-  },
-});
 
 function App() {
   const { user, setUser, clearUser } = useStore();
@@ -53,6 +37,7 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
 
               <Route path="categories" element={<ProductCategory />} />
               <Route path="orders" element={<Order />} />

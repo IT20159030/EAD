@@ -13,6 +13,17 @@ const AuthProvider = ({ children }) => {
     _setUser(newUser);
   };
 
+  const updateUser = (newUser) => {
+    _setUser((prevUser) => {
+      return {
+        ...prevUser,
+        name: newUser.name,
+        email: newUser.email,
+        nic: newUser.nic,
+      };
+    });
+  };
+
   useEffect(() => {
     if (user) {
       axiosInstance.defaults.headers.common["Authorization"] =
@@ -28,6 +39,7 @@ const AuthProvider = ({ children }) => {
     () => ({
       user: user,
       setUser: setUser,
+      updateUser: updateUser,
     }),
     [user]
   );

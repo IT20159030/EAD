@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.mobile.services.api.auth.AuthApiService
+import com.example.mobile.services.api.notification.NotificationApiService
 import com.example.mobile.services.api.order.OrderApiService
 import com.example.mobile.services.api.product.ProductApiService
 import com.example.mobile.services.api.profile.ProfileApiService
@@ -96,4 +97,11 @@ class SingletonModule {
             .build()
             .create(VendorApiService::class.java)
 
+    @Singleton
+    @Provides
+    fun provideNotificationAPIService(okHttpClient: OkHttpClient, retrofit: Retrofit.Builder): NotificationApiService =
+        retrofit
+            .client(okHttpClient)
+            .build()
+            .create(NotificationApiService::class.java)
 }

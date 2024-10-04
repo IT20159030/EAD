@@ -40,10 +40,11 @@ const Login = () => {
       const res = await login(formData);
       setUser({
         token: res.accessToken,
-        name: res.name,
-        email: res.email,
-        role: res.role,
-        id: res.userId,
+        name: res.profile.name,
+        email: res.profile.email,
+        role: res.profile.role,
+        id: res.profile.userId,
+        nic: res.profile.nic,
       });
       navigate("/", { replace: true });
     } catch (error) {
