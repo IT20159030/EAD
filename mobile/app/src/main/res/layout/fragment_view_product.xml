@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.productView.ViewProductFragment">
 
+    <!-- Horizontal loader -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/product_view_loading_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:visibility="gone"
+        android:indeterminate="true"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -50,6 +58,15 @@
                     tools:text="@string/product_name"
                     android:gravity="center_horizontal" />
 
+                <!-- Vendor Information -->
+                <TextView
+                    android:id="@+id/product_view_vendor_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/by_s"
+                    android:textStyle="bold|italic"
+                    tools:text="By Unknown Vendor" />
+
                 <!-- Category and Price -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -83,7 +100,6 @@
 
                 <!-- Ratings and Reviews Section -->
                 <TextView
-                    android:id="@+id/ratings_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ratings_reviews"
@@ -108,10 +124,26 @@
 
                     <!-- Star Icon -->
                     <RatingBar
+                        style="?android:attr/ratingBarStyleIndicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:numStars="1"
+                        android:isIndicator="true"
                         android:rating="1"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        />
+
+                    <!-- Review Count -->
+                    <TextView
+                        android:id="@+id/product_view_review_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="(100)"
+                        android:text="@string/review_count"
+                        android:textSize="20sp"
+                        android:padding="5dp"
+                        android:layout_marginEnd="5dp"
                         />
 
                     <!-- Add Rating Button -->
@@ -199,17 +231,6 @@
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-
-                <!-- Vendor Information -->
-                <TextView
-                    android:id="@+id/product_view_vendor_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/by_s"
-                    tools:text="By Unknown Vendor"
-                    android:textStyle="bold|italic"
-                    android:padding="10dp"
-                    android:layout_marginTop="16dp" />
 
                 <!-- Description -->
                 <TextView

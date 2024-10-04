@@ -26,7 +26,7 @@ public class Vendor
 
     // cumulative rating of the vendor
     [BsonElement("VendorRating")]
-    public required int VendorRating { get; set; }
+    public required double VendorRating { get; set; }
 
     [BsonElement("VendorRatingCount")]
     public required int VendorRatingCount { get; set; }

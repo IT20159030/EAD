@@ -84,6 +84,9 @@
         <argument
             android:name="productVendor"
             app:argType="string" />
+        <argument
+            android:name="productVendorId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/orderList"

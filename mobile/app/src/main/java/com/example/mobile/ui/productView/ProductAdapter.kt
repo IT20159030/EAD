@@ -1,7 +1,7 @@
 package com.example.mobile.ui.productView
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +36,7 @@ class ProductAdapter(private var products: List<Product>, private var navControl
         return products.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newProducts: List<Product>) {
         products = newProducts
         notifyDataSetChanged()
@@ -62,6 +63,7 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                     putString("productDescription", product.description)
                     putString("productCategory", product.categoryName)
                     putString("productVendor", product.vendorName)
+                    putString("productVendorId", product.vendorId)
                 }
                 // navigate to product view
                 navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)

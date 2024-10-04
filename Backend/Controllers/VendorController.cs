@@ -20,7 +20,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-[Authorize(Roles = "admin,vendor,csr")]
+[Authorize]
 public class VendorController : ControllerBase
 {
     private readonly IMongoCollection<Vendor> _vendors;
@@ -79,7 +79,17 @@ public class VendorController : ControllerBase
 
         if (vendor == null)
         {
-            return Ok("Vendor does not have any reviews yet.");
+            return NotFound("Vendor not found");
+        }
+        else if (vendor.Reviews == null)
+        {
+            return Ok(new VendorDto
+            {
+                Id = vendor.Id.ToString(),
+                VendorRating = vendor.VendorRating,
+                VendorRatingCount = vendor.VendorRatingCount,
+                Reviews = new List<ReviewDto>()
+            });
         }
         else
         {
@@ -103,14 +113,30 @@ public class VendorController : ControllerBase
         review.ReviewerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
         review.ReviewerName = User.FindFirstValue(ClaimTypes.Email) ?? "anonymous";
 
+        if (vendor.Reviews == null)
+        {
+            vendor.Reviews = new List<Review>();
+        }
+
         // add review to vendor
         vendor.Reviews.Add(review);
 
         // update vendor rating
-        vendor.VendorRating = (vendor.VendorRating * vendor.VendorRatingCount + review.ReviewRating) / (vendor.VendorRatingCount + 1);
+        if (vendor.VendorRatingCount == 0 || vendor.VendorRating == 0)
+        {
+            vendor.VendorRating = review.ReviewRating;
+        }
+        else
+        {
+            vendor.VendorRating = (vendor.VendorRating * vendor.VendorRatingCount + review.ReviewRating) / (vendor.VendorRatingCount + 1);
+        }
         vendor.VendorRatingCount++;
 
-        await _vendors.InsertOneAsync(vendor);
+        await _vendors.UpdateOneAsync(v => v.Id == Guid.Parse(dto.VendorId),
+            Builders<Vendor>.Update
+            .Set("Reviews", vendor.Reviews)
+            .Set("VendorRating", vendor.VendorRating)
+            .Set("VendorRatingCount", vendor.VendorRatingCount));
         return Ok(ConvertToDto(vendor));
     }
 

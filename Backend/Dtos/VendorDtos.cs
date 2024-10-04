@@ -13,7 +13,7 @@ namespace Backend.Dtos;
 public class VendorDto
 {
     public string Id { get; set; } = string.Empty;
-    public int VendorRating { get; set; }
+    public double VendorRating { get; set; }
     public int VendorRatingCount { get; set; }
     public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
 }
@@ -22,7 +22,7 @@ public class CreateVendorRequestDto
 {
 
     [Required]
-    public int VendorRating { get; set; }
+    public double VendorRating { get; set; }
 
     [Required]
     public int VendorRatingCount { get; set; }
@@ -36,7 +36,7 @@ public class UpdateVendorRequestDto
     public string Id { get; set; } = string.Empty;
 
     [Required]
-    public int VendorRating { get; set; }
+    public double VendorRating { get; set; }
 
     [Required]
     public int VendorRatingCount { get; set; }
