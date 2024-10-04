@@ -180,8 +180,9 @@ const VendorManagement = () => {
                     </td>
                   )}
                   {vendor.id !== currentUserId ? (
-                    <td>
+                    <td className={styles.actions}>
                       <Button
+                        className={styles.button}
                         onClick={() => {
                           setVendorToEdit(vendor);
                           setShowModal(true);
@@ -190,7 +191,10 @@ const VendorManagement = () => {
                         <MdEdit />
                         <span className="ms-2">Edit</span>
                       </Button>
-                      <Button onClick={() => handleDeleteVendor(vendor.id)}>
+                      <Button
+                        className={styles.button}
+                        onClick={() => handleDeleteVendor(vendor.id)}
+                      >
                         <MdDelete />
                         <span className="ms-2">Delete</span>
                       </Button>
