@@ -133,7 +133,7 @@ class ViewProductFragment : Fragment() {
 
         // button listeners
         setCartCountButtonListeners()
-        setAddToCartButtonListener(productName, productId, productImageUrl)
+        setAddToCartButtonListener(productName, productId, productImageUrl, productPrice)
         addReviewButtonListener()
         userReviewEditButtonListener()
 
@@ -144,7 +144,8 @@ class ViewProductFragment : Fragment() {
         productViewNameView.text = productName ?: "Unknown Product"
         productViewDescriptionText.text = productDescription ?: "No Description"
         productCategoryView.text = productCategory ?: "Unknown"
-        productPriceView.text = productPrice ?: "Price Not Set"
+        productPriceView.text = String.format(Locale.getDefault(), "%s%.2f",
+            getString(R.string.currency), productPrice?.toFloat() ?: 0.0f)
         productVendorView.text = String.format(Locale.getDefault(),
             getString(R.string.by_s), vendorName)
         Picasso.get()
@@ -381,15 +382,16 @@ class ViewProductFragment : Fragment() {
     private fun setAddToCartButtonListener(
         productName: String?,
         productId: String?,
-        productImageUrl: String?
+        productImageUrl: String?,
+        productPrice: String?
     ) {
         productAddToCartButton.setOnClickListener {
             val quantity = productCartCountView.text.toString().toInt()
-            val price = cleanPriceText(productPriceView.text.toString())
-            val totalPrice = price * quantity
+            val product = cleanPriceText(productPrice)
+            val totalPrice = product * quantity
 
-            // Add product to cart in database
-            if (productName != null && productId != null) {
+            if (productId != null && productName != null) {
+                // Add product to cart in database
                 val rowId = cartViewModel.addToCart(
                     productId,
                     productName,
@@ -424,7 +426,10 @@ class ViewProductFragment : Fragment() {
         }
     }
 
-    private fun cleanPriceText(priceText: String): Double {
+    private fun cleanPriceText(priceText: String?): Double {
+        if (priceText == null) {
+            return 0.0
+        }
         // Remove symbols like $ and commas, and convert to Double
         return priceText.replace(Regex("[^0-9.]"), "").toDouble()
     }

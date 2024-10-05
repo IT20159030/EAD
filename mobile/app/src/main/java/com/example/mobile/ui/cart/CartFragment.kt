@@ -66,7 +66,7 @@ class CartFragment : Fragment() {
         // get views
         val cartRecyclerView  = binding.cartRecyclerView
         cartRecyclerView.layoutManager = LinearLayoutManager(context)
-        cartAdapter = CartAdapter(cartItems) { cartItem ->
+        cartAdapter = CartAdapter(cartItems, requireContext()) { cartItem ->
             cartViewModel.removeCartItem(cartItem)
         }
         cartRecyclerView.adapter = cartAdapter
