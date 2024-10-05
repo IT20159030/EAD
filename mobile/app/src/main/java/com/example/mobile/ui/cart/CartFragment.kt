@@ -17,7 +17,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile.R
 import com.example.mobile.data.model.CartItem
-
 import com.example.mobile.databinding.FragmentCartBinding
 import com.example.mobile.dto.Order
 import com.example.mobile.ui.order.OrderViewModel

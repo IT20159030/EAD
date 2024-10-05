@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile.R
 import com.example.mobile.data.model.CartItem
@@ -43,7 +44,16 @@ class CartAdapter(
 
             // Remove button click listener
             removeButton.setOnClickListener {
-                onRemoveClick(cartItem)
+                val dialog = AlertDialog.Builder(context)
+                    .setTitle("Remove Item")
+                    .setMessage("Are you sure you want to remove this item from the cart?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        onRemoveClick(cartItem)
+                    }
+                    .setNegativeButton("No", null)
+                    .create()
+
+                dialog.show()
             }
         }
     }
