@@ -75,7 +75,7 @@ namespace Backend.Services.notification
 
                         var notificationType = $"OrderStatus";
                         var existingVendorNotification = await _notifications
-                            .Find(n => n.MessageID == order.OrderId &&
+                            .Find(n => n.MessageID == order.Id &&
                                        n.RecipientId == vendorId &&
                                        n.Type == notificationType &&
                                        !n.IsRead)
@@ -110,7 +110,7 @@ namespace Backend.Services.notification
                                 : $"Your order {orderDetails} has been cancelled";
 
                             var existingCustomerNotification = await _notifications
-                                .Find(n => n.MessageID == order.OrderId &&
+                                .Find(n => n.MessageID == order.Id &&
                                            n.RecipientId == order.CustomerId &&
                                            n.Type == notificationType &&
                                            !n.IsRead)
