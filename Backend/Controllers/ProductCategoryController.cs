@@ -43,7 +43,6 @@ namespace Backend.Controllers
         }
 
         [HttpGet(Name = "GetAllProductCategories")]
-        [Authorize(Roles = "admin")]
         public async Task<IEnumerable<ProductCategoryDto>> Get()
         {
             var categories = await _productCategories.Find(new BsonDocument()).ToListAsync();
