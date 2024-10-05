@@ -30,14 +30,14 @@
                 app:cardCornerRadius="10dp"
                 app:cardUseCompatPadding="true"
                 android:elevation="10dp">
+
                 <ImageView
                     android:id="@+id/product_view_image"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:contentDescription="@string/product_view_image_desc"
                     android:scaleType="centerCrop"
-                    tools:src="@drawable/ic_launcher_foreground"
-                    tools:background="@drawable/ic_launcher_background" />
+                    tools:background="@color/black" />
             </androidx.cardview.widget.CardView>
 
             <LinearLayout
@@ -208,7 +208,7 @@
                             android:paddingHorizontal="10dp"
                             android:textSize="14sp"
                             android:textStyle="italic"
-                            app:layout_constraintEnd_toStartOf="@+id/button"
+                            app:layout_constraintEnd_toStartOf="@+id/product_view_edit_review_button"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/product_view_user_rating"
@@ -242,13 +242,23 @@
                         android:orientation="vertical"
                         android:padding="10dp">
 
+                        <TextView
+                            android:id="@+id/product_view_out_of_stock_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/out_of_stock"
+                            android:textStyle="bold|italic"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+
                         <!-- Quantity Controls -->
                         <LinearLayout
+                            android:id="@+id/product_view_quantity_controls"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="16dp">
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/product_view_stock_text"
@@ -260,9 +270,10 @@
 
                             <Button
                                 android:id="@+id/product_view_cart_minus"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/round_button"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                style="?attr/borderlessButtonStyle"
+                                android:textStyle="bold"
                                 android:text="@string/minus" />
 
                             <TextView
@@ -276,9 +287,10 @@
 
                             <Button
                                 android:id="@+id/product_view_cart_plus"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/round_button"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:textStyle="bold"
+                                style="?attr/borderlessButtonStyle"
                                 android:text="@string/plus" />
                         </LinearLayout>
 

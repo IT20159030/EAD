@@ -46,6 +46,8 @@
                 android:textColor="@android:color/white"
                 android:backgroundTint="@color/black"
                 android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginEnd="8dp"
                 app:chipCornerRadius="8dp" />
         </FrameLayout>
 

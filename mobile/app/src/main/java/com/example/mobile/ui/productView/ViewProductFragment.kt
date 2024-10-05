@@ -64,6 +64,8 @@ class ViewProductFragment : Fragment() {
     private lateinit var productCartPlusButton: TextView
     private lateinit var productCartCountView: TextView
     private lateinit var productStockView: TextView
+    private lateinit var productOutOfStockView: TextView
+    private lateinit var productQuantityControls: View
 
     private lateinit var currentUserInfo: UserInfo
 
@@ -103,6 +105,8 @@ class ViewProductFragment : Fragment() {
         productCartPlusButton = binding.productViewCartPlus
         productCartCountView = binding.productViewCartCounter
         productStockView = binding.productViewStockText
+        productOutOfStockView = binding.productViewOutOfStockText
+        productQuantityControls = binding.productViewQuantityControls
 
         //default values
         productCartCountView.text = 1.toString()
@@ -143,6 +147,12 @@ class ViewProductFragment : Fragment() {
 
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
+
+        if (productStock == 0) {
+            productOutOfStockView.visibility = View.VISIBLE
+            productQuantityControls.visibility = View.GONE
+            productAddToCartButton.visibility = View.GONE
+        } 
 
         // set views
         productViewNameView.text = productName ?: "Unknown Product"
