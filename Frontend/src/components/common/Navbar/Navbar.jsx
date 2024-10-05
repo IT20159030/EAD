@@ -89,8 +89,9 @@ const Navbar = () => {
             (notification) =>
               !notification.isRead &&
               !(
-                (user.role === "admin" || user.role === "csr") &&
-                notification.type === "LowStock"
+                (user.role === "admin" && notification.type === "LowStock") ||
+                ((user.role === "csr" || user.role === "admin") &&
+                  notification.type === "OrderStatus")
               )
           )
           .slice(0, 5)
@@ -124,8 +125,8 @@ const Navbar = () => {
                       ? "/products"
                       : notification.type === "AccountApproval"
                       ? "/staff"
-                        ? notification.type === "OrderStatus"
-                        : "/orders"
+                      : notification.type === "OrderStatus"
+                      ? "/orders"
                       : "/notifications"
                   }
                   onClick={() => {
