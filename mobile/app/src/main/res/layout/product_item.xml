@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/product_item_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="6dp"
+    android:elevation="4dp"
     android:focusable="true"
-    android:padding="8dp"
-    android:background="?android:attr/selectableItemBackground"
+    android:padding="0dp"
     android:clickable="true"
-    app:cardCornerRadius="12dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="8dp">
 
+    <!-- Vertical Layout for Image and Text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:orientation="vertical">
 
-        <!-- Product Image -->
-        <ImageView
-            android:id="@+id/product_item_image"
+        <!-- FrameLayout to overlay the Chip on the ImageView -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/product_image"
-            android:layout_marginBottom="8dp" />
+            android:layout_height="wrap_content">
+
+            <!-- Product Image -->
+            <ImageView
+                android:id="@+id/product_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/product_image"
+                android:background="?attr/selectableItemBackground"
+                tools:background="@drawable/ic_launcher_background"
+                />
+
+            <!-- Out of Stock Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/out_of_stock_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:text="@string/out_of_stock"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/black"
+                android:visibility="gone"
+                app:chipCornerRadius="8dp" />
+        </FrameLayout>
 
         <!-- Product Name and Price Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="8dp"
             android:gravity="center_vertical">
 
             <!-- Product Name -->
@@ -43,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/product_name"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -57,7 +78,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/s_2f"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/holo_green_dark" />
         </LinearLayout>
     </LinearLayout>

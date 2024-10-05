@@ -54,7 +54,7 @@
     <string name="s_2f">%s%.2f</string>
     <string name="cancel_order">Cancel Order</string>
     <string name="product_image">Product Image</string>
-    <string name="search_for_products">Search for products...</string>
+    <string name="search_for_products">Search for products…</string>
     <string name="orderid_s">OrderID: %s</string>
     <string name="date_s">Date: %s</string>
     <string name="show_items">Show Items ▼</string>
@@ -67,9 +67,9 @@
     <string name="description">Description</string>
     <string name="ratings_reviews">Vendor Score</string>
     <string name="add_review">Add Review</string>
-    <string name="choose_quantity">Choose Quantity: </string>
+    <string name="choose_quantity_d_left">Choose Quantity (%d left): </string>
     <string name="review_count">(%d)</string>
-    <string name="write_your_comment_here">Write your comment here...</string>
+    <string name="write_your_comment_here">Write your comment here…</string>
     <string name="confirm">Confirm</string>
     <string name="rating_out_of_5">Rating (out of 5)</string>
     <string name="review_comment_optional">Review / Comment (optional)</string>
@@ -77,4 +77,5 @@
     <string name="edit">Edit</string>
     <string name="no_comment_given">No comment Given</string>
     <string name="enter_delivery_address">Enter Delivery Address</string>
+    <string name="out_of_stock">Out of stock</string>
 </resources>

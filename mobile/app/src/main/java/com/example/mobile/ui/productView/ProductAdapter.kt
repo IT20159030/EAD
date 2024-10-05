@@ -47,6 +47,7 @@ class ProductAdapter(private var products: List<Product>, private var navControl
         private val productNameTextView: TextView = itemView.findViewById(R.id.product_item_name)
         private val productPriceTextView: TextView = itemView.findViewById(R.id.product_item_price)
         private val productCardView: View = itemView.findViewById(R.id.product_item_card)
+        private val outOfStockChip: View = itemView.findViewById(R.id.out_of_stock_chip)
 
         fun bind(product: Product, navController: NavController) {
             val priceString: String = String.format(Locale.getDefault(),
@@ -54,13 +55,21 @@ class ProductAdapter(private var products: List<Product>, private var navControl
             productNameTextView.text = product.name
             productPriceTextView.text = priceString
             Picasso.get().load(product.imageUrl).into(productImageView)
+
+            if (product.stock == 0) {
+                outOfStockChip.visibility = View.VISIBLE
+            } else {
+                outOfStockChip.visibility = View.GONE
+            }
+
             productCardView.setOnClickListener {
                 val bundle = Bundle().apply {
                     putString("productId", product.productId)
                     putString("productName", product.name)
-                    putString("productPrice", product.price.toString())
+                    putFloat("productPrice", product.price.toFloat())
                     putString("productImageUrl", product.imageUrl)
                     putString("productDescription", product.description)
+                    putInt("productStock", product.stock)
                     putString("productCategory", product.categoryName)
                     putString("productVendor", product.vendorName)
                     putString("productVendorId", product.vendorId)

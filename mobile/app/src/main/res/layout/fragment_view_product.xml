@@ -251,9 +251,10 @@
                             android:layout_marginTop="16dp">
 
                             <TextView
+                                android:id="@+id/product_view_stock_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/choose_quantity"
+                                android:text="@string/choose_quantity_d_left"
                                 android:layout_marginEnd="20dp"
                                 android:textStyle="bold" />
 
