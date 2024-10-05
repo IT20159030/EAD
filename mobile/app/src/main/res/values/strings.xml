@@ -78,4 +78,5 @@
     <string name="no_comment_given">No comment Given</string>
     <string name="enter_delivery_address">Enter Delivery Address</string>
     <string name="out_of_stock">Out of stock</string>
+    <string name="review_request_prompt">You have purchased this item before. Would you like to leave a review?</string>
 </resources>

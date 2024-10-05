@@ -107,10 +107,11 @@
                     android:paddingTop="16dp" />
 
                 <!-- Ratings and Reviews -->
+
+                <!-- User's Review (if any) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <!-- Average Rating -->
@@ -118,48 +119,69 @@
                         android:id="@+id/product_view_avg_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="4.5"
+                        android:padding="8dp"
                         android:textSize="20sp"
-                        android:padding="8dp" />
+                        tools:text="4.5" />
 
                     <!-- Star Icon -->
                     <RatingBar
+                        android:id="@+id/ratingBar2"
                         style="?android:attr/ratingBarStyleIndicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:isIndicator="true"
                         android:numStars="1"
                         android:progressTint="@color/purple_500"
-                        android:isIndicator="true"
                         android:rating="1"
                         android:scaleX="0.8"
                         android:scaleY="0.8"
-                        />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/product_view_avg_rating"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <!-- Review Count -->
                     <TextView
                         android:id="@+id/product_view_review_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="(100)"
+                        android:padding="5dp"
                         android:text="@string/review_count"
                         android:textSize="20sp"
-                        android:padding="5dp"
-                        android:layout_marginEnd="5dp"
-                        />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ratingBar2"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="(100)" />
 
-                    <!-- Add Rating Button -->
+                </LinearLayout>
+                <!-- Add Rating Button -->
+
+                <LinearLayout
+                    android:id="@+id/product_view_user_review_prompt_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/product_view_add_review_prompt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/review_request_prompt"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:textSize="14sp" />
+
                     <Button
                         android:id="@+id/product_view_add_review_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_review"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:backgroundTint="@color/white"
-                        android:textColor="@color/black"
-                        android:layout_marginStart="20dp" />
+                        android:text="@string/add_review"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
 
-                <!-- User's Review (if any) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/product_view_user_review_layout"
                     android:visibility="gone"

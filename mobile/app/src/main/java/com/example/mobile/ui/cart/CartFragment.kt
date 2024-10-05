@@ -106,7 +106,8 @@ class CartFragment : Fragment() {
             requireContext(),
             android.R.layout.simple_list_item_1,
             order.orderItems.map {
-                "${it.productName} x ${it.quantity} - ${getString(R.string.currency)}${it.price}"
+                "${it.productName} x ${it.quantity} - ${getString(R.string.currency)}${
+                    String.format(Locale.getDefault(), "%.2f", it.price)}"
             })
         listView.adapter = adapter
 
