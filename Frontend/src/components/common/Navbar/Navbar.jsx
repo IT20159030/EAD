@@ -124,7 +124,9 @@ const Navbar = () => {
                       ? "/products"
                       : notification.type === "AccountApproval"
                       ? "/staff"
-                      : "/orders"
+                        ? notification.type === "OrderStatus"
+                        : "/orders"
+                      : "/notifications"
                   }
                   onClick={() => {
                     setShowNotifications(false);

@@ -54,7 +54,7 @@ namespace Backend.Services.notification
                     if (product != null)
                     {
                         var vendorId = product.VendorId;
-                        var orderDetails = order.Id?.ToString();
+                        var orderDetails = order.OrderId;
                         var message = string.Empty;
 
                         switch (order.Status)
@@ -75,7 +75,7 @@ namespace Backend.Services.notification
 
                         var notificationType = $"OrderStatus";
                         var existingVendorNotification = await _notifications
-                            .Find(n => n.MessageID == order.Id &&
+                            .Find(n => n.MessageID == order.OrderId &&
                                        n.RecipientId == vendorId &&
                                        n.Type == notificationType &&
                                        !n.IsRead)
@@ -88,7 +88,7 @@ namespace Backend.Services.notification
                                 RecipientId = vendorId,
                                 Role = "vendor",
                                 Message = message,
-                                MessageID = order.Id,
+                                MessageID = order.OrderId,
                                 CreatedAt = DateTime.UtcNow,
                                 Type = notificationType, // Unique notification type
                                 IsRead = false
@@ -110,7 +110,7 @@ namespace Backend.Services.notification
                                 : $"Your order {orderDetails} has been cancelled";
 
                             var existingCustomerNotification = await _notifications
-                                .Find(n => n.MessageID == order.Id &&
+                                .Find(n => n.MessageID == order.OrderId &&
                                            n.RecipientId == order.CustomerId &&
                                            n.Type == notificationType &&
                                            !n.IsRead)
@@ -123,7 +123,7 @@ namespace Backend.Services.notification
                                     RecipientId = order.CustomerId,
                                     Role = "customer",
                                     Message = customerMessage,
-                                    MessageID = order.Id,
+                                    MessageID = order.OrderId,
                                     CreatedAt = DateTime.UtcNow,
                                     Type = notificationType, // Unique notification type
                                     IsRead = false
