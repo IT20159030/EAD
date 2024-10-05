@@ -58,7 +58,7 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                 val bundle = Bundle().apply {
                     putString("productId", product.productId)
                     putString("productName", product.name)
-                    putString("productPrice", priceString)
+                    putString("productPrice", product.price.toString())
                     putString("productImageUrl", product.imageUrl)
                     putString("productDescription", product.description)
                     putString("productCategory", product.categoryName)

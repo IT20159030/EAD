@@ -41,7 +41,7 @@
     <string name="title_cart">Cart</string>
     <string name="product_details">Product Details</string>
 
-    <string name="currency">$</string>
+    <string name="currency">Rs.</string>
     <string name="product_added_to_cart">Product added to cart</string>
     <string name="product_add_failed">Failed to add product to cart</string>
     <string name="sub_total_2f">Subtotal: %s%.2f</string>
@@ -76,4 +76,5 @@
     <string name="you_d">Your Rating: %d</string>
     <string name="edit">Edit</string>
     <string name="no_comment_given">No comment Given</string>
+    <string name="enter_delivery_address">Enter Delivery Address</string>
 </resources>

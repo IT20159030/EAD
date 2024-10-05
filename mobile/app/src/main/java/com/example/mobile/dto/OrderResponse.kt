@@ -8,6 +8,7 @@ data class Order (
     var orderId: String,
     var status: Int,
     var orderDate: String,
+    var deliveryAddress: String,
     var orderItems: List<OrderItem>,
     var totalPrice: Double
 )
@@ -17,6 +18,7 @@ data class OrderResponse (
     var orderId: String,
     var status: Int,
     var orderDate: String,
+    var deliveryAddress: String,
     var orderItems: List<OrderItem>,
     var totalPrice: Double,
     val customerId: String,
