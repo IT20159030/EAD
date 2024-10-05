@@ -18,6 +18,9 @@ public class Order
     [BsonElement("orderDate")]
     public DateTime OrderDate { get; set; }
 
+    [BsonElement("deliveryAddress")]
+    public string DeliveryAddress { get; set; } = string.Empty;
+
     [BsonElement("orderItems")]
     public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 

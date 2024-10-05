@@ -76,4 +76,5 @@
     <string name="you_d">Your Rating: %d</string>
     <string name="edit">Edit</string>
     <string name="no_comment_given">No comment Given</string>
+    <string name="enter_delivery_address">Enter Delivery Address</string>
 </resources>

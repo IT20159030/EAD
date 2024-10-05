@@ -16,8 +16,6 @@
 *   11. GET /api/v1/Order/GetByVendorId/{vendorId}: Get all orders by vendor id.
 */
 
-// TODO: @Navod&Dinushka: When calling order cancellation, the order status should be updated to CancelRequested.
-// TODO: Call both APIs from frontend to update the order status and create a cancellation request.
 using System.Security.Claims;
 using Backend.Dtos;
 using Backend.Models;
@@ -52,6 +50,7 @@ public class OrderController : ControllerBase
         OrderId = order.OrderId,
         Status = order.Status,
         OrderDate = order.OrderDate,
+        DeliveryAddress = order.DeliveryAddress,
         OrderItems = order.OrderItems.Select(item => new OrderItemDto
         {
             Id = item.Id!,
@@ -73,6 +72,7 @@ public class OrderController : ControllerBase
         OrderId = dto.OrderId,
         Status = dto.Status,
         OrderDate = dto.OrderDate,
+        DeliveryAddress = dto.DeliveryAddress,
         OrderItems = dto.OrderItems.Select(item => new OrderItem
         {
             Id = ObjectId.GenerateNewId().ToString(),
@@ -94,6 +94,7 @@ public class OrderController : ControllerBase
         OrderId = dto.OrderId,
         Status = dto.Status,
         OrderDate = dto.OrderDate,
+        DeliveryAddress = dto.DeliveryAddress,
         OrderItems = dto.OrderItems.Select(item => new OrderItem
         {
             Id = item.Id,
