@@ -35,6 +35,7 @@ public class OrderController : ControllerBase
 {
     private readonly IMongoCollection<Order> _orders;
     private readonly IMongoCollection<CancellationRequest> _cancellationRequests;
+    private readonly IMongoCollection<Product> _products;
     private readonly ILogger<OrderController> _logger;
 
     public OrderController(ILogger<OrderController> logger, MongoDBService mongoDBService)
@@ -42,6 +43,7 @@ public class OrderController : ControllerBase
         _logger = logger;
         _orders = mongoDBService.Database.GetCollection<Order>("Orders");
         _cancellationRequests = mongoDBService.Database.GetCollection<CancellationRequest>("CancellationRequests");
+        _products = mongoDBService.Database.GetCollection<Product>("Products");
     }
 
     private OrderDto ConvertToDto(Order order) => new OrderDto
@@ -132,6 +134,24 @@ public class OrderController : ControllerBase
             return BadRequest("User not found");
         }
 
+        // update product stock
+        foreach (var item in order.OrderItems)
+        {
+            var product = await _products.Find(p => p.Id == item.ProductId).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                return BadRequest("Product not found");
+            }
+
+            if (product.Stock < item.Quantity)
+            {
+                return BadRequest("Insufficient stock");
+            }
+
+            product.Stock -= item.Quantity;
+            await _products.ReplaceOneAsync(p => p.Id == item.ProductId, product);
+        }
+
         await _orders.InsertOneAsync(order);
         return CreatedAtRoute("GetOrder", new { id = order.Id }, ConvertToDto(order));
     }
@@ -183,6 +203,19 @@ public class OrderController : ControllerBase
         if (order == null)
         {
             return NotFound();
+        }
+
+        // update product stock
+        foreach (var item in order.OrderItems)
+        {
+            var product = await _products.Find(p => p.Id == item.ProductId).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                return BadRequest("Product not found");
+            }
+
+            product.Stock += item.Quantity;
+            await _products.ReplaceOneAsync(p => p.Id == item.ProductId, product);
         }
 
         order.Status = OrderStatus.Cancelled;
