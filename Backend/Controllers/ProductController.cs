@@ -118,7 +118,7 @@ namespace Backend.Controllers
         [Authorize(Roles = "admin, vendor, customer, csr")]
         public async Task<IEnumerable<ProductDto>> GetActive()
         {
-            var products = await _products.Find(p => p.IsActive).ToListAsync();
+            var products = await _products.Find(p => p.IsActive).Limit(10).ToListAsync();
             return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
@@ -164,7 +164,7 @@ namespace Backend.Controllers
         [HttpGet("search", Name = "SearchProducts")]
         public async Task<IEnumerable<ProductDto>> Search([FromQuery] string query)
         {
-            var products = await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).ToListAsync();
+            var products = await _products.Find(p => p.Name.ToLower().Contains(query.ToLower())).Limit(10).ToListAsync();
             return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 

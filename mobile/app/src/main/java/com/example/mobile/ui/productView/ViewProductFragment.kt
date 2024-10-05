@@ -41,6 +41,7 @@ class ViewProductFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var vendor: Vendor
+    private var productStock: Int = 0
 
     private lateinit var productViewNameView: TextView
     private lateinit var productImageView: ImageView
@@ -62,6 +63,9 @@ class ViewProductFragment : Fragment() {
     private lateinit var productCartMinusButton: TextView
     private lateinit var productCartPlusButton: TextView
     private lateinit var productCartCountView: TextView
+    private lateinit var productStockView: TextView
+    private lateinit var productOutOfStockView: TextView
+    private lateinit var productQuantityControls: View
 
     private lateinit var currentUserInfo: UserInfo
 
@@ -100,6 +104,9 @@ class ViewProductFragment : Fragment() {
         productCartMinusButton = binding.productViewCartMinus
         productCartPlusButton = binding.productViewCartPlus
         productCartCountView = binding.productViewCartCounter
+        productStockView = binding.productViewStockText
+        productOutOfStockView = binding.productViewOutOfStockText
+        productQuantityControls = binding.productViewQuantityControls
 
         //default values
         productCartCountView.text = 1.toString()
@@ -115,8 +122,9 @@ class ViewProductFragment : Fragment() {
 
         val productId = arguments?.getString("productId")
         val productName = arguments?.getString("productName")
-        val productPrice = arguments?.getString("productPrice")
+        val productPrice = arguments?.getFloat("productPrice") ?: 0.0f
         val productDescription = arguments?.getString("productDescription")
+        productStock = arguments?.getInt("productStock") ?: 0
         val productCategory = arguments?.getString("productCategory")
         val productImageUrl = arguments?.getString("productImageUrl")
         val productVendor = arguments?.getString("productVendor")
@@ -140,17 +148,25 @@ class ViewProductFragment : Fragment() {
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
 
+        if (productStock == 0) {
+            productOutOfStockView.visibility = View.VISIBLE
+            productQuantityControls.visibility = View.GONE
+            productAddToCartButton.visibility = View.GONE
+        } 
+
         // set views
         productViewNameView.text = productName ?: "Unknown Product"
         productViewDescriptionText.text = productDescription ?: "No Description"
         productCategoryView.text = productCategory ?: "Unknown"
         productPriceView.text = String.format(Locale.getDefault(), "%s%.2f",
-            getString(R.string.currency), productPrice?.toFloat() ?: 0.0f)
+            getString(R.string.currency), productPrice)
         productVendorView.text = String.format(Locale.getDefault(),
             getString(R.string.by_s), vendorName)
         Picasso.get()
             .load(productImageUrl ?: placeholderImage)
             .into(productImageView)
+        productStockView.text = String.format(Locale.getDefault(),
+            getString(R.string.choose_quantity_d_left), productStock)
 
         getCurrentUserInformation()
     }
@@ -383,12 +399,11 @@ class ViewProductFragment : Fragment() {
         productName: String?,
         productId: String?,
         productImageUrl: String?,
-        productPrice: String?
+        productPrice: Float
     ) {
         productAddToCartButton.setOnClickListener {
             val quantity = productCartCountView.text.toString().toInt()
-            val product = cleanPriceText(productPrice)
-            val totalPrice = product * quantity
+            val totalPrice = productPrice * quantity
 
             if (productId != null && productName != null) {
                 // Add product to cart in database
@@ -396,7 +411,7 @@ class ViewProductFragment : Fragment() {
                     productId,
                     productName,
                     quantity,
-                    totalPrice,
+                    totalPrice.toDouble(),
                     productImageUrl ?: placeholderImage
                 )
 
@@ -421,16 +436,14 @@ class ViewProductFragment : Fragment() {
 
         productCartPlusButton.setOnClickListener {
             var count = (productCartCountView.text as String).toInt()
-            count++
-            productCartCountView.text = count.toString()
+
+            if (count < productStock) {
+                count++
+                productCartCountView.text = count.toString()
+            } else {
+                Toast.makeText(context, "Maximum stock reached", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun cleanPriceText(priceText: String?): Double {
-        if (priceText == null) {
-            return 0.0
-        }
-        // Remove symbols like $ and commas, and convert to Double
-        return priceText.replace(Regex("[^0-9.]"), "").toDouble()
-    }
 }
