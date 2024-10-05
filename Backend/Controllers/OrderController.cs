@@ -85,7 +85,7 @@ public class OrderController : ControllerBase
             Price = item.Price,
             Status = item.Status
         }).ToList(),
-        TotalPrice = dto.OrderItems.Sum(item => item.Price * item.Quantity),
+        TotalPrice = dto.TotalPrice,
         CustomerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty,
         CustomerName = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
     };
@@ -107,7 +107,7 @@ public class OrderController : ControllerBase
             Price = item.Price,
             Status = item.Status
         }).ToList(),
-        TotalPrice = dto.OrderItems.Sum(item => item.Price * item.Quantity),
+        TotalPrice = dto.TotalPrice,
         CustomerId = dto.CustomerId,
         CustomerName = dto.CustomerName ?? string.Empty
     };
