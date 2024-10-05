@@ -22,6 +22,7 @@ import com.example.mobile.dto.UpdateReview
 import com.example.mobile.dto.UserInfo
 import com.example.mobile.dto.Vendor
 import com.example.mobile.ui.cart.CartViewModel
+import com.example.mobile.ui.order.OrderViewModel
 import com.example.mobile.ui.profile.ProfileViewModel
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
@@ -58,6 +59,8 @@ class ViewProductFragment : Fragment() {
     private lateinit var productVendorUserReviewView: TextView
     private lateinit var productUserEditReviewButton: Button
     private lateinit var productLoadingIndicator: View
+    private lateinit var productUserReviewPromptView: TextView
+    private lateinit var productUserReviewPromptLayout: View
 
     private lateinit var productAddToCartButton: Button
     private lateinit var productCartMinusButton: TextView
@@ -72,6 +75,7 @@ class ViewProductFragment : Fragment() {
     private val cartViewModel: CartViewModel by viewModels()
     private val vendorViewModel: VendorViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
+    private val orderViewModel: OrderViewModel by viewModels()
 
     private val placeholderImage = "https://images2.alphacoders.com/655/655076.jpg"
 
@@ -99,6 +103,8 @@ class ViewProductFragment : Fragment() {
         productLoadingIndicator = binding.productViewLoadingIndicator
         productUserRatingView = binding.productViewUserRating
         productUserEditReviewButton = binding.productViewEditReviewButton
+        productUserReviewPromptView = binding.productViewAddReviewPrompt
+        productUserReviewPromptLayout = binding.productViewUserReviewPromptLayout
 
         productAddToCartButton = binding.productViewAddToCartButton
         productCartMinusButton = binding.productViewCartMinus
@@ -152,7 +158,7 @@ class ViewProductFragment : Fragment() {
             productOutOfStockView.visibility = View.VISIBLE
             productQuantityControls.visibility = View.GONE
             productAddToCartButton.visibility = View.GONE
-        } 
+        }
 
         // set views
         productViewNameView.text = productName ?: "Unknown Product"
@@ -169,6 +175,37 @@ class ViewProductFragment : Fragment() {
             getString(R.string.choose_quantity_d_left), productStock)
 
         getCurrentUserInformation()
+
+        // check if user has this product in orders
+        getCurrentUserOrders()
+
+    }
+
+    private fun observeOrdersForCurrentProduct() {
+        orderViewModel.orderGetResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Success -> {
+                    val orderResponse = response.data
+                    val productId = arguments?.getString("productId")
+
+                    // check if user has this product in orders
+                    if (orderResponse.any { it -> it.orderItems.any { it.productId == productId } }) {
+                        productUserReviewPromptView.visibility = View.VISIBLE
+                        productVendorAddReviewButton.visibility = View.VISIBLE
+                    }
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    private fun getCurrentUserOrders() {
+        orderViewModel.getOrdersRequest(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun userReviewEditButtonListener() {
@@ -200,9 +237,10 @@ class ViewProductFragment : Fragment() {
                     String.format(Locale.getDefault(), getString(R.string.you_d),
                         vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
                 productUserReviewLayout.visibility = View.VISIBLE
-                productVendorAddReviewButton.visibility = View.GONE
+                productUserReviewPromptLayout.visibility = View.GONE
             } else {
                 productUserReviewLayout.visibility = View.GONE
+                observeOrdersForCurrentProduct()
             }
         }
     }
