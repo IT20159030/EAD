@@ -20,6 +20,7 @@ import com.example.mobile.data.model.CartItem
 import com.example.mobile.databinding.FragmentCartBinding
 import com.example.mobile.dto.Order
 import com.example.mobile.ui.order.OrderViewModel
+import com.example.mobile.ui.profile.AddressViewModel
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,7 @@ class CartFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var userAddressString: String
 
 
     private lateinit var navController: NavController
@@ -50,6 +52,7 @@ class CartFragment : Fragment() {
 
     private val cartViewModel: CartViewModel by viewModels()
     private val orderViewModel: OrderViewModel by viewModels()
+    private val addressViewModel: AddressViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +94,27 @@ class CartFragment : Fragment() {
         }
 
         orderResponseObserver()
+
+        addressViewModel.getAddresses(object: CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        addressViewModel.addressResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Success -> {
+                    if (response.data.data.line1 != "") {
+                        val address = response.data.data
+                        userAddressString = address.line1 + ", " + address.line2 + ", " +
+                                address.city + ", " + address.postalCode
+                    } else {
+                        userAddressString = ""
+                    }
+                }
+                else -> {}
+            }
+        }
     }
 
     private fun showOrderSummaryDialog(order: Order) {
@@ -100,6 +124,10 @@ class CartFragment : Fragment() {
         val listView = dialogView.findViewById<ListView>(R.id.order_items_list)
         val subtotalTextView = dialogView.findViewById<TextView>(R.id.order_subtotal)
         val deliveryAddressEditText = dialogView.findViewById<EditText>(R.id.delivery_address)
+
+        if (userAddressString != "") {
+            deliveryAddressEditText.setText(userAddressString)
+        }
 
         // Set the ListView adapter to display the order items
         val adapter = ArrayAdapter(
