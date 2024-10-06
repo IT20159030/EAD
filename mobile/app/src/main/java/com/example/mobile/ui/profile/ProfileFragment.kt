@@ -102,7 +102,7 @@ class ProfileFragment : Fragment() {
             }
 
             addressesButton.setOnClickListener {
-                // TODO: Navigate to addresses
+                navController.navigate(R.id.action_navigation_profile_to_addressFragment)
             }
 
             editProfileButton.setOnClickListener {

@@ -37,6 +37,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_navigation_profile_to_addressFragment"
+            app:destination="@id/addressFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfile"
@@ -96,4 +99,9 @@
         android:name="com.example.mobile.ui.order.OrderListFragment"
         android:label="@string/my_orders"
         tools:layout="@layout/fragment_order_list" />
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.example.mobile.ui.profile.AddressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address" />
 </navigation>

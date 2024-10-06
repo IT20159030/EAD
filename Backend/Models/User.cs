@@ -14,5 +14,18 @@ public class User : MongoIdentityUser<Guid>
 
   [BsonElement("updatedAt")]
   public DateTime UpdatedAt { get; set; }
+
+  public Address Address { get; set; } = new Address();
+
 }
 
+public class Address
+{
+  public string Line1 { get; set; } = string.Empty;
+
+  public string Line2 { get; set; } = string.Empty;
+
+  public string City { get; set; } = string.Empty;
+
+  public string PostalCode { get; set; } = string.Empty;
+}
