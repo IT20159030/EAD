@@ -27,9 +27,9 @@ import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 const filterOptions = [
   { id: 0, label: 'All' },
   { id: 1, label: 'Pending' },
-  { id: 2, label: 'Cancel Requests' },
   { id: 3, label: 'Partial' },
   { id: 4, label: 'Completed' },
+  { id: 2, label: 'Cancel Requests' },
   { id: 5, label: 'Cancelled' },
 ];
 
