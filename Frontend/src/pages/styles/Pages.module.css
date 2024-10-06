@@ -58,3 +58,10 @@ td {
   background-color: red;
   border-color: var(--danger-color);
 }
+
+.switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

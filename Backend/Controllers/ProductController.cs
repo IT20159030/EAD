@@ -58,7 +58,6 @@ namespace Backend.Controllers
             VendorId = dto.VendorId
         };
 
-
         private Product ConvertToModel(UpdateProductRequestDto dto) => new Product
         {
             Id = dto.Id,
@@ -96,7 +95,6 @@ namespace Backend.Controllers
             };
         }
 
-
         [HttpPost(Name = "CreateProduct")]
         [Authorize(Roles = "admin, vendor")]
         public async Task<IActionResult> Post([FromBody] CreateProductRequestDto dto)
@@ -128,7 +126,7 @@ namespace Backend.Controllers
             var product = await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
             if (product == null)
                 return NotFound();
-            return Ok(ConvertToDto(product));
+            return Ok(await ConvertToDtoAsync(product));
         }
 
         [HttpGet("vendor/{vendorId}", Name = "GetProductsByVendor")]
@@ -136,14 +134,14 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> GetByVendor(string vendorId)
         {
             var products = await _products.Find(p => p.VendorId == vendorId).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("vendor/{vendorId}/active", Name = "GetActiveProductsByVendor")]
         public async Task<IEnumerable<ProductDto>> GetActiveByVendor(string vendorId)
         {
             var products = await _products.Find(p => p.VendorId == vendorId && p.IsActive).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("vendor/{vendorId}/inactive", Name = "GetInactiveProductsByVendor")]
@@ -151,14 +149,14 @@ namespace Backend.Controllers
         public async Task<IEnumerable<ProductDto>> GetInactiveByVendor(string vendorId)
         {
             var products = await _products.Find(p => p.VendorId == vendorId && !p.IsActive).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("category/{categoryId}/active", Name = "GetActiveProductsByCategory")]
         public async Task<IEnumerable<ProductDto>> GetActiveByCategory(string categoryId)
         {
             var products = await _products.Find(p => p.Category == categoryId && p.IsActive).ToListAsync();
-            return products.Select(ConvertToDto);
+            return await Task.WhenAll(products.Select(ConvertToDtoAsync));
         }
 
         [HttpGet("search", Name = "SearchProducts")]
