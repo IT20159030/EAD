@@ -1,5 +1,14 @@
 package com.example.mobile.repository
 
+/*
+This class is used to represent the NotificationRepository object that is used to handle the notification data in the mobile application.
+The NotificationRepository object contains the following attributes:
+- notificationApiService: The service used to interact with the notification API
+The NotificationRepository object contains the following methods:
+- getNotificationsByRecipientId: Get all notifications for a specific recipient
+- markAsRead: Mark a notification as read
+*/
+
 import com.example.mobile.dto.NotificationMapper
 import com.example.mobile.data.model.Notification
 import com.example.mobile.services.api.notification.NotificationApiService

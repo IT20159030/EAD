@@ -73,6 +73,7 @@ namespace Backend.Controllers.notification
             });
         }
 
+        // Get notification by id 
         [HttpGet("{id}", Name = "GetNotificationById")]
         public async Task<IActionResult> Get(string id)
         {
@@ -97,6 +98,7 @@ namespace Backend.Controllers.notification
 #pragma warning restore CS8601 // Possible null reference assignment.
         }
 
+        // Create a new notification 
         [HttpPost(Name = "CreateNotification")]
         public async Task<IActionResult> Post([FromBody] CreateNotificationDto dto)
         {
@@ -126,6 +128,7 @@ namespace Backend.Controllers.notification
             });
         }
 
+        // Update notification by id 
         [HttpPut("{id}", Name = "UpdateNotification")]
         public async Task<IActionResult> Put(string id, [FromBody] UpdateNotificationDto dto)
         {
@@ -154,6 +157,7 @@ namespace Backend.Controllers.notification
 #pragma warning restore CS8601 // Possible null reference assignment.
         }
 
+        // Delete notification by id
         [HttpDelete("{id}", Name = "DeleteNotification")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -168,6 +172,7 @@ namespace Backend.Controllers.notification
             return NoContent();
         }
 
+        // Create a new low stock notification
         [HttpPost("lowStock", Name = "CreateLowStockNotification")]
         public async Task<IActionResult> CreateLowStockNotification([FromBody] CreateLowStockNotificationDto dto)
         {
@@ -257,6 +262,7 @@ namespace Backend.Controllers.notification
             });
         }
 
+        // Convert Notification to NotificationDto
         private NotificationDto ConvertToDto(Notification notification)
         {
 #pragma warning disable CS8601 // Possible null reference assignment.
@@ -273,6 +279,7 @@ namespace Backend.Controllers.notification
 #pragma warning restore CS8601 // Possible null reference assignment.
         }
 
+        // Convert CreateNotificationDto to Notification
         private Notification ConvertToModel(CreateNotificationDto dto)
         {
             return new Notification
