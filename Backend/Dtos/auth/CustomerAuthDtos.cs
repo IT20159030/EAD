@@ -89,3 +89,42 @@ public class MUpdateUserResponse
   public bool IsSuccess { get; set; }
   public string Message { get; set; } = string.Empty;
 }
+
+public class MAddressResponse
+{
+  public bool IsSuccess { get; set; }
+  public string Message { get; set; } = string.Empty;
+  public AddressDto Data { get; set; } = new AddressDto();
+}
+
+public class AddressDto
+{
+  public string Line1 { get; set; } = string.Empty;
+  public string Line2 { get; set; } = string.Empty;
+  public string City { get; set; } = string.Empty;
+  public string PostalCode { get; set; } = string.Empty;
+}
+
+public class MAddAddressRequest
+{
+
+  [Required]
+  public string Line1 { get; set; } = string.Empty;
+
+  [Required]
+  public string Line2 { get; set; } = string.Empty;
+
+  [Required]
+  public string City { get; set; } = string.Empty;
+
+  [Required]
+  public string PostalCode { get; set; } = string.Empty;
+}
+
+public class MAddAddressResponse
+{
+  public bool IsSuccess { get; set; }
+  public string Message { get; set; } = string.Empty;
+}
+
+

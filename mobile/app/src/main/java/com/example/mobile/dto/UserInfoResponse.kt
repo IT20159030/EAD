@@ -1,7 +1,9 @@
 package com.example.mobile.dto
 
 import com.google.gson.annotations.SerializedName
-
+/*
+* DTO for profile page calls
+ */
 
 data class UserInfoResponse (
     var isSuccess: Boolean,

@@ -15,14 +15,14 @@ namespace Backend.Controllers;
 [Authorize(Roles = "customer")]
 [Route("api/v1/customer-auth")]
 [Produces("application/json")]
-public class CustomerAuthenticationController : ControllerBase
+public class MobileAuthController : ControllerBase
 {
-  private readonly ILogger<CustomerAuthenticationController> _logger;
+  private readonly ILogger<MobileAuthController> _logger;
   private readonly IConfiguration _configuration;
   private readonly MobileUserAuthService _userAuthService;
 
 
-  public CustomerAuthenticationController(ILogger<CustomerAuthenticationController> logger, IConfiguration configuration, MobileUserAuthService userAuthService)
+  public MobileAuthController(ILogger<MobileAuthController> logger, IConfiguration configuration, MobileUserAuthService userAuthService)
   {
     _logger = logger;
     _configuration = configuration;
@@ -142,29 +142,51 @@ public class CustomerAuthenticationController : ControllerBase
     }
   }
 
-  // [HttpPost("change-password", Name = "Mobile Change Password")]
-  // [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MChangePasswordResponse))]
-  // public async Task<IActionResult> ChangePassword([FromBody] MChangePasswordRequest changePasswordRequest)
-  // {
-  //   try
-  //   {
-  //     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+  [HttpGet("address", Name = "Mobile Get Address")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MAddressResponse))]
+  public async Task<IActionResult> GetAddress()
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-  //     if (string.IsNullOrEmpty(userId))
-  //     {
-  //       return BadRequest("User not found");
-  //     }
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
 
-  //     var result = await _userAuthService.ChangePasswordAsync(userId, changePasswordRequest);
+      var result = await _userAuthService.GetAddressAsync(userId);
 
-  //     return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
-  //   }
-  //   catch (Exception ex)
-  //   {
-  //     _logger.LogError(ex, "Error changing password");
-  //     return BadRequest(ex.Message);
-  //   }
-  // }
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error getting address");
+      return BadRequest(ex.Message);
+    }
+  }
+  [HttpPut("address", Name = "Mobile Update Address")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MAddressResponse))]
+  public async Task<IActionResult> UpdateAddress([FromBody] MAddAddressRequest updateAddressRequest)
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+
+      var result = await _userAuthService.UpdateAddressAsync(userId, updateAddressRequest);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error updating address");
+      return BadRequest(ex.Message);
+    }
+  }
 }
 

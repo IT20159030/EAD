@@ -200,4 +200,68 @@ public class MobileUserAuthService : IMobileUserAuthService
       Message = result.Succeeded ? "User updated successfully" : "Failed to update user"
     };
   }
+
+  public async Task<MAddressResponse> GetAddressAsync(string userId)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new MAddressResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    return new MAddressResponse
+    {
+      IsSuccess = true,
+      Data = new AddressDto
+      {
+        Line1 = user.Address.Line1,
+        Line2 = user.Address.Line2,
+        City = user.Address.City,
+        PostalCode = user.Address.PostalCode
+      }
+    };
+  }
+
+
+  public async Task<MAddressResponse> UpdateAddressAsync(string userId, MAddAddressRequest request)
+  {
+    var user = await _userManager.FindByIdAsync(userId);
+    if (user == null)
+    {
+      return new MAddressResponse
+      {
+        IsSuccess = false,
+        Message = "User not found"
+      };
+    }
+
+    user.Address = new Address
+    {
+      Line1 = request.Line1,
+      Line2 = request.Line2,
+      City = request.City,
+      PostalCode = request.PostalCode
+    };
+
+    user.UpdatedAt = DateTime.Now;
+
+    var result = await _userManager.UpdateAsync(user);
+
+    return new MAddressResponse
+    {
+      IsSuccess = result.Succeeded,
+      Message = result.Succeeded ? "Address updated successfully" : "Failed to update address",
+      Data = new AddressDto
+      {
+        Line1 = user.Address.Line1,
+        Line2 = user.Address.Line2,
+        City = user.Address.City,
+        PostalCode = user.Address.PostalCode
+      }
+    };
+  }
 }
