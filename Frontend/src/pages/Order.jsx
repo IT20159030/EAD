@@ -9,6 +9,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ViewOrderModal from '../components/order/ViewOrderModal';
 import resolveOrderStatus from '../utils/resolveOrderStatus';
+import { useAuth } from '../provider/authProvider';
+import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 
 /**
  * The pain page for Order management
@@ -22,15 +24,32 @@ import resolveOrderStatus from '../utils/resolveOrderStatus';
  *
  */
 
+const filterOptions = [
+  { id: 0, label: 'All' },
+  { id: 1, label: 'Pending' },
+  { id: 2, label: 'Cancel Requests' },
+  { id: 3, label: 'Partial' },
+  { id: 4, label: 'Completed' },
+  { id: 5, label: 'Cancelled' },
+];
+
 const Order = () => {
+  const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
+  const [radioValue, setRadioValue] = useState(0);
 
-  const { data: orders, isLoading: isLoadingOrders } =
+  const { data: allOrders, isLoading: isLoadingAllOrders } =
     orderHooks.useGetAllOrders();
+  const { data: vendorOrders, isLoading: isLoadingVendorOrders } =
+    orderHooks.useGetOrderByVendorId(user?.id);
+
+  const orders = user.role === 'vendor' ? vendorOrders : allOrders;
+  const isLoadingOrders =
+    user.role === 'vendor' ? isLoadingVendorOrders : isLoadingAllOrders;
 
   const [filteredOrders, setFilteredOrders] = useState(orders);
 
@@ -38,7 +57,7 @@ const Order = () => {
     if (orders) {
       setFilteredOrders(orders);
     }
-  }, [orders]);
+  }, [allOrders, vendorOrders]);
 
   const handleToast = (message, type = 'success') => {
     setToastMessage(message);
@@ -65,51 +84,39 @@ const Order = () => {
       return;
     }
 
-    const status = selectedIndex === 1 ? 5 : selectedIndex === 2 ? 1 : 4;
+    // Map selectedIndex to status codes
+    const statusMap = [0, 0, 5, 1, 4, 6]; // Add more statuses if needed
+
+    // Get the status based on selectedIndex
+    const status = statusMap[selectedIndex] || 0;
 
     const filteredOrders = orders.filter((order) => order.status === status);
     setFilteredOrders(filteredOrders);
+  };
+
+  const handleButtonGroupChange = (selectedIndex) => {
+    setRadioValue(selectedIndex);
+    filterOrders(selectedIndex);
   };
 
   return (
     <div className={styles.pageContainer}>
       <CommonTitle title='Orders' />
 
-      <Form>
-        <Form.Check
-          inline
-          defaultChecked
-          label='All'
-          name='filterGroup'
-          type='radio'
-          onChange={() => filterOrders(0)}
-          id={`inline-radio-1`}
-        />
-        <Form.Check
-          inline
-          label='Cancel Requests'
-          name='filterGroup'
-          type='radio'
-          onChange={() => filterOrders(1)}
-          id={`inline-radio-2`}
-        />
-        <Form.Check
-          inline
-          label='Partial'
-          name='filterGroup'
-          type='radio'
-          onChange={() => filterOrders(2)}
-          id={`inline-radio-3`}
-        />
-        <Form.Check
-          inline
-          label='Completed'
-          name='filterGroup'
-          type='radio'
-          onChange={() => filterOrders(3)}
-          id={`inline-radio-4`}
-        />
-      </Form>
+      <ButtonGroup className='mb-3'>
+        {filterOptions.map((option) => (
+          <ToggleButton
+            key={option.id}
+            type='radio'
+            variant='outline-primary'
+            name='radio'
+            value={option.id}
+            checked={radioValue === option.id}
+            onClick={() => handleButtonGroupChange(option.id)}>
+            {option.label}
+          </ToggleButton>
+        ))}
+      </ButtonGroup>
 
       <Table striped bordered hover responsive className={styles.table}>
         <thead>
