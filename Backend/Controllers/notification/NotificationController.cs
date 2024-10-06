@@ -2,6 +2,20 @@
 * This is the Notification Controller.
 * It contains the CRUD operations for the Notification model
 * and is responsible for handling all requests related to Notifications.
+* It contains following routes:
+* [GET] /api/v1/notification
+* [GET] /api/v1/notification/{id}
+* [POST] /api/v1/notification
+* [PUT] /api/v1/notification/{id}
+* [DELETE] /api/v1/notification/{id}
+* [POST] /api/v1/notification/lowStock
+* [PUT] /api/v1/notification/{id}/read
+* [GET] /api/v1/notification/recipient/{recipientId}
+* All routes are protected and can only be accessed by authenticated users.
+* The controller uses MongoDB to store the Notification data.
+* The controller also uses ILogger to log all the relevant information.
+* The controller uses NotificationDto, CreateNotificationDto, UpdateNotificationDto, CreateLowStockNotificationDto
+* to transfer data between the controller and the client.
 */
 
 using System.Security.Claims;

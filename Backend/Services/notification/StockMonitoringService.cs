@@ -2,6 +2,10 @@
 * This service is responsible for monitoring the stock levels of products in the inventory.
 * It checks the inventory collection for products that are low on stock and sends a notification to the vendor.
 * It uses the Inventory and Notification models to interact with the database.
+* The MonitorStockLevelsAsync method fetches all products that are low on stock and sends notifications to the vendor.
+* The notification message is based on the product name.
+* The notification type is set to "LowStock" to differentiate it from other types of notifications.
+* The notification is sent to the vendor if a low stock notification does not already exist for the product.
 */
 
 using Backend.Hubs;

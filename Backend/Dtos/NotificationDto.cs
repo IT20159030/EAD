@@ -1,3 +1,20 @@
+/*
+    * NotificationDto.cs defines the data transfer objects for the Notification model.
+    * Data transfer objects are used to define the shape of the data that is transferred between the client and the server.
+    * The NotificationDto.cs file contains the following data transfer objects:
+    *  - CreateNotificationDto: DTO for creating a new notification
+    *  - NotificationDto: DTO for displaying a notification
+    *  - UpdateNotificationDto: DTO for updating a notification
+    *  - DeleteNotificationDto: DTO for deleting a notification
+    *  - GetNotificationsDto: DTO for getting a list of notifications
+    *  - GetNotificationsByRecipientDto: DTO for getting a list of notifications by recipient ID
+    *  - GetNotificationsByRoleDto: DTO for getting a list of notifications by role
+    *  - GetNotificationsByTypeDto: DTO for getting a list of notifications by type
+    *  - GetNotificationsByIsReadDto: DTO for getting a list of notifications by read status
+    *  - GetNotificationsByRecipientAndRoleDto: DTO for getting a list of notifications by recipient ID and role
+    *  - CreateLowStockNotificationDto: DTO for CreateLowStockNotificationDto
+*/
+
 using System;
 using System.ComponentModel.DataAnnotations;
 

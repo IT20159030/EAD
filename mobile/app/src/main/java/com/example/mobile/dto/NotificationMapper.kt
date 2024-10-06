@@ -10,6 +10,7 @@ import java.util.UUID
 
 object NotificationMapper {
 
+    // Convert a NotificationDto object to a Notification object
     fun fromDto(notificationDto: NotificationDto): Notification {
         return Notification(
             id =  notificationDto.id,
@@ -23,6 +24,7 @@ object NotificationMapper {
         )
     }
 
+    // Convert a Notification object to a NotificationDto object
     fun toDto(notification: Notification): NotificationDto {
         return NotificationDto(
             id = notification.id,
