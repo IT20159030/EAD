@@ -37,7 +37,7 @@ namespace Backend.Services.notification
                 await _monitoringService.MonitorUserActivityAsync();
                 await _stockMonitoringService.MonitorStockLevelsAsync();
                 await _orderMonitoringService.MonitorOrderStatusesAsync();
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Run every 1 minutes
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
     }
