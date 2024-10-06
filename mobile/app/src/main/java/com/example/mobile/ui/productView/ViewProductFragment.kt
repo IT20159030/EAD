@@ -148,7 +148,7 @@ class ViewProductFragment : Fragment() {
         // button listeners
         setCartCountButtonListeners()
         setAddToCartButtonListener(productName, productId, productImageUrl, productPrice)
-        addReviewButtonListener()
+        addReviewButtonListener(productId ?: "")
         userReviewEditButtonListener()
 
         val vendorName: String = if (productVendor == null || productVendor == "" )
@@ -225,23 +225,25 @@ class ViewProductFragment : Fragment() {
     private fun setCurrentUserReviewDisplay() {
         if (this::vendor.isInitialized && vendor.reviews.isNotEmpty()
             && this::currentUserInfo.isInitialized) {
-            if (vendor.reviews.any { it.reviewerId == currentUserInfo.id }) {
-                val comment = vendor.reviews.first { it.reviewerId == currentUserInfo.id }.comment
 
-                if (comment != "") {
-                    productVendorUserReviewView.text = comment
-                } else {
+            val productId = arguments?.getString("productId")
+            val review: Review? = vendor.reviews.firstOrNull { it.reviewerId == currentUserInfo.id
+                    && it.productId == productId }
+
+            if (review != null) {
+                if (review.comment == "") {
                     productVendorUserReviewView.text = getString(R.string.no_comment_given)
+                } else {
+                    productVendorUserReviewView.text = review.comment
                 }
                 productUserRatingView.text =
-                    String.format(Locale.getDefault(), getString(R.string.you_d),
-                        vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
-                productUserReviewLayout.visibility = View.VISIBLE
+                    String.format(Locale.getDefault(), getString(R.string.you_d), review.rating)
                 productUserReviewPromptLayout.visibility = View.GONE
-            } else {
-                productUserReviewLayout.visibility = View.GONE
-                observeOrdersForCurrentProduct()
+                productUserReviewLayout.visibility = View.VISIBLE
             }
+        } else {
+            productUserReviewLayout.visibility = View.GONE
+            observeOrdersForCurrentProduct()
         }
     }
 
@@ -265,7 +267,7 @@ class ViewProductFragment : Fragment() {
         }
     }
 
-    private fun addReviewButtonListener() {
+    private fun addReviewButtonListener(productId: String) {
         productVendorAddReviewButton.setOnClickListener {
             if (this::vendor.isInitialized) {
                 showRatingDialog(requireContext()) { rating, comment ->
@@ -275,7 +277,7 @@ class ViewProductFragment : Fragment() {
                         return@showRatingDialog
                     }
 
-                    val newReview = AddReview(vendor.vendorId, rating, comment ?: "")
+                    val newReview = AddReview(productId, vendor.vendorId, rating, comment ?: "")
                     addVendorReview(newReview)
                 }
             }
@@ -398,6 +400,7 @@ class ViewProductFragment : Fragment() {
                 //create update review object
                 val updateReview = UpdateReview(
                     review.reviewId,
+                    arguments?.getString("productId") ?: "",
                     vendor.vendorId,
                     review.reviewerId,
                     review.reviewerName,
