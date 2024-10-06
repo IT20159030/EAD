@@ -1,10 +1,5 @@
 /*
 * VendorController.cs provides the API endpoints for the Vendor model.
-* It contains the following routes:
-*   1. GET /api/v1/Vendor: Get all vendors.
-*   2. GET /api/v1/Vendor/{id}: Get a vendor by id.
-*   3. POST /api/v1/Vendor/rating: Add a rating to a vendor.
-*   4. PUT /api/v1/Vendor/rating: Update a rating for a vendor.
 */
 
 using System.Security.Claims;
@@ -32,6 +27,7 @@ public class VendorController : ControllerBase
         _vendors = mongoDBService.Database.GetCollection<Vendor>("Vendors");
     }
 
+    // Convert Vendor model to VendorDto
     private VendorDto ConvertToDto(Vendor vendor) => new VendorDto
     {
         Id = vendor.Id.ToString(),
@@ -48,6 +44,7 @@ public class VendorController : ControllerBase
         }).ToList()
     };
 
+    // Convert UpdateVendorRequestDto to Vendor model
     private Vendor ConvertToModel(UpdateVendorRequestDto dto) => new Vendor
     {
         Id = Guid.Parse(dto.Id),
@@ -65,6 +62,7 @@ public class VendorController : ControllerBase
 
     };
 
+    // Convert CreateReviewRequestDto to Review model
     private Review ConvertToReviewModel(CreateReviewRequestDto dto) => new Review
     {
         Id = ObjectId.GenerateNewId().ToString(),
@@ -75,6 +73,7 @@ public class VendorController : ControllerBase
         ReviewText = dto.ReviewText
     };
 
+    // GET: api/v1/Vendor
     [HttpGet("{id}", Name = "GetVendorDetails")]
     public async Task<IActionResult> GetVendor(string id)
     {
@@ -100,6 +99,7 @@ public class VendorController : ControllerBase
         }
     }
 
+    // POST: api/v1/Vendor/rating
     [HttpPost("rating", Name = "CreateVendor")]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> AddRating([FromBody] CreateReviewRequestDto dto)
@@ -143,6 +143,7 @@ public class VendorController : ControllerBase
         return Ok(ConvertToDto(vendor));
     }
 
+    // PUT: api/v1/Vendor/rating
     [HttpPut("rating", Name = "UpdateVendorRating")]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> UpdateRating([FromBody] UpdateReviewRequestDto dto)
@@ -178,6 +179,7 @@ public class VendorController : ControllerBase
         return Ok(ConvertToDto(vendor));
     }
 
+    // DELETE: api/v1/Vendor/rating/{vendorId}/{reviewId}
     [HttpDelete("rating/{vendorId}/{reviewId}", Name = "DeleteReview")]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> DeleteReview(string vendorId, string reviewId)
@@ -213,6 +215,7 @@ public class VendorController : ControllerBase
         return Ok(ConvertToDto(vendor));
     }
 
+    // PUT: api/v1/Vendor/{id}
     [HttpPut("{id}", Name = "UpdateVendor")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateVendor(string id, [FromBody] UpdateVendorRequestDto dto)

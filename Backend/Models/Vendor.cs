@@ -2,6 +2,11 @@ using System.Runtime.InteropServices;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
+/*
+    The model for a vendor and reviews.
+    A vendor is a seller that sells products on the platform. Each vendor has a collection of reviews.
+*/
+
 namespace Backend.Models;
 
 public class Vendor
