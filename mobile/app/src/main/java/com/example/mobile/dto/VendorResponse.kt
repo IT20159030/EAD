@@ -8,6 +8,11 @@ import com.google.gson.annotations.SerializedName
 
 data class Vendor(
     @SerializedName("id") var vendorId: String,
+    var vendorName: String = null.toString(),
+    var vendorEmail: String = null.toString(),
+    var vendorPhone: String = null.toString(),
+    var vendorAddress: String = null.toString(),
+    var vendorCity: String = null.toString(),
     var vendorRating: Double,
     var vendorRatingCount: Int,
     var reviews: List<Review>
