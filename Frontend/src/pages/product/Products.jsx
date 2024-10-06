@@ -9,8 +9,10 @@ import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
 import AddEditProductModal from "../../components/product/AddEditProductModal";
 import { downloadPDF } from "../../utils/downloadPDF";
 import styles from "../styles/Pages.module.css";
+import { useAuth } from "../../provider/authProvider";
 import {
   useGetAllProducts,
+  useGetProductsByVendor,
   useCreateProduct,
   useActivateProduct,
   useDeactivateProduct,
@@ -20,6 +22,7 @@ import {
 import { useGetAllProductCategories } from "../../hooks/productCategoryHooks";
 
 const Products = () => {
+  const { user } = useAuth();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
@@ -27,7 +30,15 @@ const Products = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
 
-  const { data: products, isLoading: isLoadingProducts } = useGetAllProducts();
+  const { data: vendorProducts, isLoading: isLoadingVendorProducts } =
+    useGetProductsByVendor(user?.id);
+  const { data: allProducts, isLoading: isLoadingAllProducts } =
+    useGetAllProducts();
+
+  const products = user.role === "vendor" ? vendorProducts : allProducts;
+
+  const isLoadingProducts =
+    user.role === "vendor" ? isLoadingVendorProducts : isLoadingAllProducts;
 
   const { mutate: createProduct, isLoading: isCreating } = useCreateProduct();
 
@@ -184,18 +195,20 @@ const Products = () => {
                     </td>
                     <td>{product.vendorName}</td>
                     <td>
-                      <Form.Check
-                        type="switch"
-                        id={`custom-switch-${product.id}`}
-                        label=""
-                        checked={product.isActive}
-                        onChange={() =>
-                          product.isActive
-                            ? deactivateProduct(product.id)
-                            : activateProduct(product.id)
-                        }
-                        disabled={isActivating || isDeactivating}
-                      />
+                      <div className={styles.switch}>
+                        <Form.Check
+                          type="switch"
+                          id={`custom-switch-${product.id}`}
+                          label=""
+                          checked={product.isActive}
+                          onChange={() =>
+                            product.isActive
+                              ? deactivateProduct(product.id)
+                              : activateProduct(product.id)
+                          }
+                          disabled={isActivating || isDeactivating}
+                        />
+                      </div>
                     </td>
                     <td className={styles.actions}>
                       <Button
