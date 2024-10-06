@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Fetch notifications for the user
+    // Fetch notifications for the user and show the notification popup
     private fun fetchNotifications() {
         userID?.let { id ->
             notificationViewModel.getNotifications(id).observe(this, Observer { notifications ->
@@ -106,12 +106,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Show the notification popup on the right side of the toolbar
+    // Show the notification popup on the right side of the toolbar with the list of notifications
     private fun showNotificationPopup(notifications: List<Notification>) {
         // Inflate the custom layout/view
         val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.notification_popup, null)
 
+        // Get the notification container from the popup layout
         val notificationContainer = popupView.findViewById<ViewGroup>(R.id.notification_container)
 
         notificationContainer.removeAllViews()
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity() {
             true
         )
 
+        // Add notifications to the popup window 
         notifications.forEach { notification ->
             val notificationItem = TextView(this).apply {
                 text = "${notification.message}"

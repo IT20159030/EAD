@@ -2,6 +2,10 @@
 * This service is responsible for monitoring the orders placed by customers.
 * It checks the orders collection for orders that are Pending, Ready, Approved, Rejected, Completed, CancelRequested, Cancelled and sends a notification to the vendor and customer.
 * It uses the Order and Notification models to interact with the database.
+* The MonitorOrderStatusesAsync method fetches all orders that have recently changed status and sends notifications to the vendor and customer.
+* The notification message is based on the order status.
+* The notification type is set to "OrderStatus" to differentiate it from other types of notifications.
+* The notification is sent to the vendor and customer based on the order status.
 */
 
 using Backend.Hubs;

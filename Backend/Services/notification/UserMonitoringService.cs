@@ -2,6 +2,10 @@
 * This service is responsible for monitoring the user's activity and sending notifications to the user.
 * User activity is monitored by checking the status of the user account and sending a notification to the user if the account is unapproved.
 * Additionally, if the user account's status changes from Unapproved to Active, a notification is sent to the user.
+* The UserMonitoringService class has a constructor that takes instances of the IMongoClient and IConfiguration classes.
+* The MonitorUserActivityAsync method fetches all users with an unapproved status and sends notifications to them.
+* The method also checks for users whose accounts have changed to Active and sends notifications to them.
+* The notifications are saved in the Notification collection in the MongoDB database.
 */
 
 using System;
