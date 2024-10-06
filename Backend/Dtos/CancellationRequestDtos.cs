@@ -1,5 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
+/*
+    The DTOs for creating, processing, and returning a cancellation request.
+*/
+
 namespace Backend.Dtos
 
 {

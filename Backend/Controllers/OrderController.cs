@@ -38,6 +38,7 @@ public class OrderController : ControllerBase
     private readonly IMongoCollection<Product> _products;
     private readonly ILogger<OrderController> _logger;
 
+    // Inject the logger and MongoDB service into the controller
     public OrderController(ILogger<OrderController> logger, MongoDBService mongoDBService)
     {
         _logger = logger;
@@ -46,6 +47,7 @@ public class OrderController : ControllerBase
         _products = mongoDBService.Database.GetCollection<Product>("Products");
     }
 
+    // Convert Order model to OrderDto
     private OrderDto ConvertToDto(Order order) => new OrderDto
     {
         Id = order.Id!,
@@ -68,6 +70,7 @@ public class OrderController : ControllerBase
         CustomerName = order.CustomerName ?? string.Empty
     };
 
+    // Convert CreateOrderRequestDto to Order model
     private Order ConvertToModel(CreateOrderRequestDto dto) => new Order
     {
         Id = ObjectId.GenerateNewId().ToString(),
@@ -90,6 +93,7 @@ public class OrderController : ControllerBase
         CustomerName = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
     };
 
+    // Convert UpdateOrderRequestDto to Order model
     private Order ConvertToModel(UpdateOrderRequestDto dto) => new Order
     {
         Id = dto.Id,
@@ -112,6 +116,7 @@ public class OrderController : ControllerBase
         CustomerName = dto.CustomerName ?? string.Empty
     };
 
+    // Convert CreateCancellationRequestDto to CancellationRequest model
     private CancellationRequest ConvertToModel(CreateCancellationRequestDto dto) => new CancellationRequest
     {
         Id = ObjectId.GenerateNewId().ToString(),
@@ -123,6 +128,7 @@ public class OrderController : ControllerBase
         Reason = dto.Reason
     };
 
+    // POST: api/v1/Order
     [HttpPost]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequestDto request)
@@ -156,6 +162,7 @@ public class OrderController : ControllerBase
         return CreatedAtRoute("GetOrder", new { id = order.Id }, ConvertToDto(order));
     }
 
+    // GET: api/v1/Order
     [HttpGet]
     public async Task<IEnumerable<OrderDto>> GetAllOrders()
     {
@@ -163,6 +170,7 @@ public class OrderController : ControllerBase
         return orders.Select(ConvertToDto);
     }
 
+    // POST: api/v1/Order/CancelRequest/{orderId}
     [HttpPost("CancelRequest/{orderId}")]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> CancelRequestOrder(string orderId, [FromBody] CreateCancellationRequestDto request)
@@ -195,6 +203,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // GET: api/v1/Order/cancel/{id}
     [HttpPut("cancel/{id}")]
     [Authorize(Roles = "admin,vendor,csr")]
     public async Task<IActionResult> CancelOrder(string id)
@@ -223,6 +232,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // GET: api/v1/Order/{id}
     [HttpGet("{id}", Name = "GetOrder")]
     public async Task<IActionResult> GetOrder(string id)
     {
@@ -235,6 +245,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // GET: api/v1/Order/GetByCustomerId
     [HttpGet("GetByCustomerId")]
     [Authorize(Roles = "customer")]
     public async Task<IEnumerable<OrderDto>> GetOrdersByCustomerId()
@@ -249,6 +260,7 @@ public class OrderController : ControllerBase
         return orders.Select(ConvertToDto);
     }
 
+    // PUT: api/v1/Order/{id}
     [HttpPut("{id}")]
     [Authorize(Roles = "admin,vendor,csr,customer")]
     public async Task<IActionResult> UpdateOrder(string id, [FromBody] UpdateOrderRequestDto request)
@@ -263,6 +275,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // DELETE: api/v1/Order/{id}
     [HttpDelete("{id}")]
     [Authorize(Roles = "admin,vendor,csr")]
     public async Task<IActionResult> DeleteOrder(string id)
@@ -276,6 +289,7 @@ public class OrderController : ControllerBase
         return NoContent();
     }
 
+    // PUT: api/v1/Order/ready/{orderId}
     [HttpPut("ready/{orderId}")]
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> MarkOrderAsReady(string orderId)
@@ -291,6 +305,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // PUT: api/v1/Order/delivered/{orderId}
     [HttpPut("delivered/{orderId}")]
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> MarkOrderAsDelivered(string orderId)
@@ -306,6 +321,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // PUT: api/v1/Order/reject/{orderId}
     [HttpPut("reject/{orderId}")]
     [Authorize(Roles = "vendor,csr,admin")]
     public async Task<IActionResult> RejectOrder(string orderId)
@@ -321,6 +337,7 @@ public class OrderController : ControllerBase
         return Ok(ConvertToDto(order));
     }
 
+    // GET: api/v1/Order/GetByVendorId/{vendorId}
     [HttpGet("GetByVendorId/{vendorId}")]
     [Authorize(Roles = "vendor")]
     public async Task<IEnumerable<OrderDto>> GetOrdersByVendorId(string vendorId)

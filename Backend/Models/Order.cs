@@ -1,6 +1,11 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
+/*
+    The model for an order and order item.
+    An order is a collection of order items. Each order item is a product that the customer has ordered.
+*/
+
 namespace Backend.Models;
 
 public class Order
