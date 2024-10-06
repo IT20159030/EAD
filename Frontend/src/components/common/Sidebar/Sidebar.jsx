@@ -5,8 +5,6 @@ import {
   BsGrid3X3Gap,
   BsGrid3X2Gap,
   BsBag,
-  BsCardList,
-  BsClipboardCheck,
   BsPeople,
   BsPerson,
   BsCaretDownFill,
@@ -93,18 +91,6 @@ const Sidebar = () => {
           roles: ["admin"],
         },
       ],
-    },
-    {
-      title: "Inventory",
-      path: "/inventory",
-      icon: <BsCardList />,
-      roles: ["admin", "vendor"],
-    },
-    {
-      title: "Reports",
-      path: "/reports",
-      icon: <BsClipboardCheck />,
-      roles: ["admin"],
     },
   ];
 
