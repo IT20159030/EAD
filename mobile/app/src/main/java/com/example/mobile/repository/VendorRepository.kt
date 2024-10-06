@@ -18,6 +18,10 @@ class VendorRepository @Inject constructor (
         mainApiService.getVendorById(id)
     }
 
+    fun getVendors() = apiRequestFlow {
+        mainApiService.getVendors()
+    }
+
     fun addVendorRating(vendorReview: AddReview) = apiRequestFlow {
         mainApiService.addVendorRating(vendorReview)
     }
