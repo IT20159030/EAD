@@ -41,6 +41,9 @@ public class Review
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
+    [BsonElement("prodictId")]
+    public required string ProductId { get; set; }
+
     [BsonElement("reviewerId")]
     public required string ReviewerId { get; set; }
 

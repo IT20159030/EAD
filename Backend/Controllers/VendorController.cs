@@ -41,6 +41,7 @@ public class VendorController : ControllerBase
         {
             Id = review.Id!,
             ReviewerId = review.ReviewerId,
+            ProductId = review.ProductId,
             ReviewerName = review.ReviewerName,
             ReviewRating = review.ReviewRating,
             ReviewText = review.ReviewText
@@ -55,6 +56,7 @@ public class VendorController : ControllerBase
         Reviews = dto.Reviews.Select(review => new Review
         {
             Id = review.Id,
+            ProductId = review.ProductId,
             ReviewerId = review.ReviewerId,
             ReviewerName = review.ReviewerName,
             ReviewRating = review.ReviewRating,
@@ -66,6 +68,7 @@ public class VendorController : ControllerBase
     private Review ConvertToReviewModel(CreateReviewRequestDto dto) => new Review
     {
         Id = ObjectId.GenerateNewId().ToString(),
+        ProductId = dto.ProductId,
         ReviewerId = string.Empty,
         ReviewerName = string.Empty,
         ReviewRating = dto.ReviewRating,
