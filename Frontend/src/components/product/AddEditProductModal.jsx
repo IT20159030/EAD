@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { openCloudinaryWidget } from "../../utils/uploadFile";
+import { useAuth } from "../../provider/authProvider";
 import "./AddEditModal.css";
 
 const AddEditProductModal = ({
@@ -14,6 +15,8 @@ const AddEditProductModal = ({
   isInProgress,
   categories,
 }) => {
+  const { user } = useAuth();
+  console.log(user);
   const [productName, setProductName] = useState("");
   const [productImage, setProductImage] = useState("");
   const [productCategory, setProductCategory] = useState("");
@@ -21,7 +24,7 @@ const AddEditProductModal = ({
   const [productPrice, setProductPrice] = useState("");
   const [productStock, setProductStock] = useState("");
   const [productStatus, setProductStatus] = useState(false);
-  const [productVendorId, setProductVendorId] = useState("");
+  const [productVendorId, setProductVendorId] = useState(user?.id);
 
   useEffect(() => {
     if (productToEdit) {
@@ -45,7 +48,6 @@ const AddEditProductModal = ({
     setProductPrice("");
     setProductStock("");
     setProductStatus(false);
-    setProductVendorId("");
     setProductImage(null);
   };
 
@@ -154,16 +156,6 @@ const AddEditProductModal = ({
               placeholder="Enter stock"
               value={productStock}
               onChange={(e) => setProductStock(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="productVendorId" className="mt-3">
-            <Form.Label>Vendor ID</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter vendor ID"
-              value={productVendorId}
-              onChange={(e) => setProductVendorId(e.target.value)}
             />
           </Form.Group>
         </Form>
