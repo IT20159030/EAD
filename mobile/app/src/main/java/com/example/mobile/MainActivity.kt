@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var tokenManager: TokenManager
-    private var userID: String? = null 
+    private var userID: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Fetch notifications for the user
     private fun fetchNotifications() {
         userID?.let { id ->
             notificationViewModel.getNotifications(id).observe(this, Observer { notifications ->
@@ -115,24 +116,31 @@ class MainActivity : AppCompatActivity() {
 
         notificationContainer.removeAllViews()
 
-        notifications.forEach { notification ->
-            val notificationItem = TextView(this).apply {
-                text = "${notification.message}"
-                setPadding(16, 16, 16, 16)
-                textAlignment = View.TEXT_ALIGNMENT_VIEW_START
-                setOnClickListener {
-                    notificationViewModel.markNotificationAsRead(notification.id)
-                }
-            }
-            notificationContainer.addView(notificationItem)
-        }
-
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        notifications.forEach { notification ->
+            val notificationItem = TextView(this).apply {
+                text = "${notification.message}"
+                setPadding(16, 16, 16, 16)
+                textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+
+                setOnClickListener {
+                    notificationViewModel.markNotificationAsRead(notification.id)
+
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+                    val navController = navHostFragment.navController
+                    navController.navigate(R.id.orderList)
+                    popupWindow.dismiss()
+                }
+            }
+            notificationContainer.addView(notificationItem)
+        }
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val location = IntArray(2)
@@ -145,4 +153,5 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
 }

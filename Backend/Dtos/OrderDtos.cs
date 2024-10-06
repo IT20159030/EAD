@@ -23,6 +23,7 @@ public class OrderDto
     public string OrderId { get; set; } = string.Empty;
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
     public DateTime OrderDate { get; set; }
+    public string DeliveryAddress { get; set; } = string.Empty;
     public List<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
     public decimal TotalPrice { get; set; }
     public string CustomerId { get; set; } = string.Empty;
@@ -39,6 +40,8 @@ public class CreateOrderRequestDto
 
     [Required]
     public DateTime OrderDate { get; set; }
+
+    public string DeliveryAddress { get; set; } = string.Empty;
 
     public List<CreateOrderItemRequestDto> OrderItems { get; set; } = new List<CreateOrderItemRequestDto>();
 
@@ -63,6 +66,8 @@ public class UpdateOrderRequestDto
 
     [Required]
     public DateTime OrderDate { get; set; }
+
+    public string DeliveryAddress { get; set; } = string.Empty;
 
     public List<UpdateOrderItemRequestDto> OrderItems { get; set; } = new List<UpdateOrderItemRequestDto>();
 

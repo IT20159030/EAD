@@ -71,13 +71,16 @@
             app:argType="string" />
         <argument
             android:name="productPrice"
-            app:argType="string" />
+            app:argType="float" />
         <argument
             android:name="productImageUrl"
             app:argType="string" />
         <argument
             android:name="productDescription"
             app:argType="string" />
+        <argument
+            android:name="productStock"
+            app:argType="integer" />
         <argument
             android:name="productCategory"
             app:argType="string" />

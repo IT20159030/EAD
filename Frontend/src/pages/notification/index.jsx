@@ -116,8 +116,9 @@ const Notifications = () => {
     ?.filter(
       (notification) =>
         !(
-          (user.role === "admin" || user.role === "csr") &&
-          notification.type === "LowStock"
+          (user.role === "admin" && notification.type === "LowStock") ||
+          ((user.role === "csr" || user.role === "admin") &&
+            notification.type === "OrderStatus")
         )
     )
     .filter((notification) =>

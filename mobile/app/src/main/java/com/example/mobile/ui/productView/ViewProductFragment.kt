@@ -22,6 +22,7 @@ import com.example.mobile.dto.UpdateReview
 import com.example.mobile.dto.UserInfo
 import com.example.mobile.dto.Vendor
 import com.example.mobile.ui.cart.CartViewModel
+import com.example.mobile.ui.order.OrderViewModel
 import com.example.mobile.ui.profile.ProfileViewModel
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
@@ -41,6 +42,7 @@ class ViewProductFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var vendor: Vendor
+    private var productStock: Int = 0
 
     private lateinit var productViewNameView: TextView
     private lateinit var productImageView: ImageView
@@ -57,17 +59,23 @@ class ViewProductFragment : Fragment() {
     private lateinit var productVendorUserReviewView: TextView
     private lateinit var productUserEditReviewButton: Button
     private lateinit var productLoadingIndicator: View
+    private lateinit var productUserReviewPromptView: TextView
+    private lateinit var productUserReviewPromptLayout: View
 
     private lateinit var productAddToCartButton: Button
     private lateinit var productCartMinusButton: TextView
     private lateinit var productCartPlusButton: TextView
     private lateinit var productCartCountView: TextView
+    private lateinit var productStockView: TextView
+    private lateinit var productOutOfStockView: TextView
+    private lateinit var productQuantityControls: View
 
     private lateinit var currentUserInfo: UserInfo
 
     private val cartViewModel: CartViewModel by viewModels()
     private val vendorViewModel: VendorViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
+    private val orderViewModel: OrderViewModel by viewModels()
 
     private val placeholderImage = "https://images2.alphacoders.com/655/655076.jpg"
 
@@ -95,11 +103,16 @@ class ViewProductFragment : Fragment() {
         productLoadingIndicator = binding.productViewLoadingIndicator
         productUserRatingView = binding.productViewUserRating
         productUserEditReviewButton = binding.productViewEditReviewButton
+        productUserReviewPromptView = binding.productViewAddReviewPrompt
+        productUserReviewPromptLayout = binding.productViewUserReviewPromptLayout
 
         productAddToCartButton = binding.productViewAddToCartButton
         productCartMinusButton = binding.productViewCartMinus
         productCartPlusButton = binding.productViewCartPlus
         productCartCountView = binding.productViewCartCounter
+        productStockView = binding.productViewStockText
+        productOutOfStockView = binding.productViewOutOfStockText
+        productQuantityControls = binding.productViewQuantityControls
 
         //default values
         productCartCountView.text = 1.toString()
@@ -115,8 +128,9 @@ class ViewProductFragment : Fragment() {
 
         val productId = arguments?.getString("productId")
         val productName = arguments?.getString("productName")
-        val productPrice = arguments?.getString("productPrice")
+        val productPrice = arguments?.getFloat("productPrice") ?: 0.0f
         val productDescription = arguments?.getString("productDescription")
+        productStock = arguments?.getInt("productStock") ?: 0
         val productCategory = arguments?.getString("productCategory")
         val productImageUrl = arguments?.getString("productImageUrl")
         val productVendor = arguments?.getString("productVendor")
@@ -133,25 +147,65 @@ class ViewProductFragment : Fragment() {
 
         // button listeners
         setCartCountButtonListeners()
-        setAddToCartButtonListener(productName, productId, productImageUrl)
+        setAddToCartButtonListener(productName, productId, productImageUrl, productPrice)
         addReviewButtonListener()
         userReviewEditButtonListener()
 
         val vendorName: String = if (productVendor == null || productVendor == "" )
         { "Unknown Vendor" } else { productVendor }
 
+        if (productStock == 0) {
+            productOutOfStockView.visibility = View.VISIBLE
+            productQuantityControls.visibility = View.GONE
+            productAddToCartButton.visibility = View.GONE
+        }
+
         // set views
         productViewNameView.text = productName ?: "Unknown Product"
         productViewDescriptionText.text = productDescription ?: "No Description"
         productCategoryView.text = productCategory ?: "Unknown"
-        productPriceView.text = productPrice ?: "Price Not Set"
+        productPriceView.text = String.format(Locale.getDefault(), "%s%.2f",
+            getString(R.string.currency), productPrice)
         productVendorView.text = String.format(Locale.getDefault(),
             getString(R.string.by_s), vendorName)
         Picasso.get()
             .load(productImageUrl ?: placeholderImage)
             .into(productImageView)
+        productStockView.text = String.format(Locale.getDefault(),
+            getString(R.string.choose_quantity_d_left), productStock)
 
         getCurrentUserInformation()
+
+        // check if user has this product in orders
+        getCurrentUserOrders()
+
+    }
+
+    private fun observeOrdersForCurrentProduct() {
+        orderViewModel.orderGetResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Success -> {
+                    val orderResponse = response.data
+                    val productId = arguments?.getString("productId")
+
+                    // check if user has this product in orders
+                    if (orderResponse.any { it -> it.orderItems.any { it.productId == productId } }) {
+                        productUserReviewPromptView.visibility = View.VISIBLE
+                        productVendorAddReviewButton.visibility = View.VISIBLE
+                    }
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    private fun getCurrentUserOrders() {
+        orderViewModel.getOrdersRequest(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun userReviewEditButtonListener() {
@@ -183,9 +237,10 @@ class ViewProductFragment : Fragment() {
                     String.format(Locale.getDefault(), getString(R.string.you_d),
                         vendor.reviews.first { it.reviewerId == currentUserInfo.id }.rating)
                 productUserReviewLayout.visibility = View.VISIBLE
-                productVendorAddReviewButton.visibility = View.GONE
+                productUserReviewPromptLayout.visibility = View.GONE
             } else {
                 productUserReviewLayout.visibility = View.GONE
+                observeOrdersForCurrentProduct()
             }
         }
     }
@@ -381,20 +436,20 @@ class ViewProductFragment : Fragment() {
     private fun setAddToCartButtonListener(
         productName: String?,
         productId: String?,
-        productImageUrl: String?
+        productImageUrl: String?,
+        productPrice: Float
     ) {
         productAddToCartButton.setOnClickListener {
             val quantity = productCartCountView.text.toString().toInt()
-            val price = cleanPriceText(productPriceView.text.toString())
-            val totalPrice = price * quantity
+            val totalPrice = productPrice * quantity
 
-            // Add product to cart in database
-            if (productName != null && productId != null) {
+            if (productId != null && productName != null) {
+                // Add product to cart in database
                 val rowId = cartViewModel.addToCart(
                     productId,
                     productName,
                     quantity,
-                    totalPrice,
+                    totalPrice.toDouble(),
                     productImageUrl ?: placeholderImage
                 )
 
@@ -419,13 +474,14 @@ class ViewProductFragment : Fragment() {
 
         productCartPlusButton.setOnClickListener {
             var count = (productCartCountView.text as String).toInt()
-            count++
-            productCartCountView.text = count.toString()
+
+            if (count < productStock) {
+                count++
+                productCartCountView.text = count.toString()
+            } else {
+                Toast.makeText(context, "Maximum stock reached", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun cleanPriceText(priceText: String): Double {
-        // Remove symbols like $ and commas, and convert to Double
-        return priceText.replace(Regex("[^0-9.]"), "").toDouble()
-    }
 }

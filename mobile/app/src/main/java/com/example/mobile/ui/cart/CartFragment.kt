@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile.R
 import com.example.mobile.data.model.CartItem
-
 import com.example.mobile.databinding.FragmentCartBinding
 import com.example.mobile.dto.Order
 import com.example.mobile.ui.order.OrderViewModel
@@ -66,7 +69,7 @@ class CartFragment : Fragment() {
         // get views
         val cartRecyclerView  = binding.cartRecyclerView
         cartRecyclerView.layoutManager = LinearLayoutManager(context)
-        cartAdapter = CartAdapter(cartItems) { cartItem ->
+        cartAdapter = CartAdapter(cartItems, requireContext()) { cartItem ->
             cartViewModel.removeCartItem(cartItem)
         }
         cartRecyclerView.adapter = cartAdapter
@@ -84,10 +87,56 @@ class CartFragment : Fragment() {
         // button listeners
         cartProceedButton.setOnClickListener {
             val order = createOrderObject()
-            sendCreateOrderRequest(order)
+            showOrderSummaryDialog(order)
         }
 
         orderResponseObserver()
+    }
+
+    private fun showOrderSummaryDialog(order: Order) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.order_summary_dialog, null)
+
+        // Get references to the views in the dialog
+        val listView = dialogView.findViewById<ListView>(R.id.order_items_list)
+        val subtotalTextView = dialogView.findViewById<TextView>(R.id.order_subtotal)
+        val deliveryAddressEditText = dialogView.findViewById<EditText>(R.id.delivery_address)
+
+        // Set the ListView adapter to display the order items
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            order.orderItems.map {
+                "${it.productName} x ${it.quantity} - ${getString(R.string.currency)}${
+                    String.format(Locale.getDefault(), "%.2f", it.price)}"
+            })
+        listView.adapter = adapter
+
+        // Calculate and display the subtotal
+        val subtotal = order.totalPrice
+        subtotalTextView.text = String.format(
+            Locale.getDefault(),
+            getString(R.string.sub_total_2f), getString(R.string.currency), subtotal
+        )
+
+        // Build and show the dialog
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .setTitle("Order Summary")
+            .setPositiveButton("Confirm") { _, _ ->
+                // Get the delivery address
+                val deliveryAddress = deliveryAddressEditText.text.toString()
+
+                // Add the delivery address to the order object, if needed
+                if (deliveryAddress.isNotEmpty()) order.deliveryAddress = deliveryAddress
+
+                // Send the create order request
+                sendCreateOrderRequest(order)
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
     }
 
     private fun setCartSubTotal(cartItems: List<CartItem>) {
@@ -154,6 +203,7 @@ class CartFragment : Fragment() {
             orderId = getUnixTimestamp().toString(),
             status = 0,
             orderDate = date,
+            deliveryAddress = "",
             orderItems = orderItems,
             totalPrice = String.format(Locale.getDefault(), "%.2f", totalPrice).toDouble(),
         )

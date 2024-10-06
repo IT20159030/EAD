@@ -13,6 +13,7 @@ data class Product (
     var category: String,
     var categoryName: String,
     var description: String,
+    var stock: Int,
     var price: Double,
     var isActive: Boolean,
     var vendorId: String,
