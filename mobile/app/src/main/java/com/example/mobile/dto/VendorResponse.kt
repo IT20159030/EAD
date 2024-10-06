@@ -15,6 +15,7 @@ data class Vendor(
 
 data class Review(
     @SerializedName("id") var reviewId: String,
+    var productId: String,
     var reviewerId: String,
     var reviewerName: String,
     @SerializedName("reviewRating") var rating: Int,
@@ -22,6 +23,7 @@ data class Review(
 )
 
 data class AddReview(
+    var productId: String,
     var vendorId: String,
     @SerializedName("reviewRating") var rating: Int,
     @SerializedName("reviewText") var comment: String
@@ -30,6 +32,7 @@ data class AddReview(
 data class UpdateReview(
     @SerializedName("id") var reviewId: String,
     var vendorId: String,
+    var productId: String,
     val reviewerId: String,
     val reviewerName: String,
     @SerializedName("reviewRating") var rating: Int,
