@@ -15,7 +15,4 @@ interface ProductApiService {
 
     @GET("Product/search")
     suspend fun searchProducts(@Query("query") query: String): Response<List<Product>>
-
-
-
 }

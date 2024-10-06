@@ -342,7 +342,21 @@ public class OrderController : ControllerBase
     [Authorize(Roles = "vendor")]
     public async Task<IEnumerable<OrderDto>> GetOrdersByVendorId(string vendorId)
     {
-        var orders = await _orders.Find(o => o.OrderItems.Any(oi => oi.ProductId == vendorId)).ToListAsync();
+        // get product list of vendor
+        var products = await _products.Find(p => p.VendorId == vendorId).ToListAsync();
+        if (!products.Any())
+        {
+            return Enumerable.Empty<OrderDto>();
+        }
+
+        var productIds = products.Select(p => p.Id).ToList();
+
+        // Use MongoDB filter to match OrderItems by ProductId
+        var filter = Builders<Order>.Filter.ElemMatch(o => o.OrderItems, oi => productIds.Contains(oi.ProductId));
+
+        // Find orders with products of the vendor
+        var orders = await _orders.Find(filter).ToListAsync();
+
         return orders.Select(ConvertToDto);
     }
 }
