@@ -3,7 +3,7 @@ package com.example.mobile.dto
 import com.google.gson.annotations.SerializedName
 
 /*
-* Data class for vendor request calls
+* Data class for vendorView request calls
 * */
 
 data class Vendor(
