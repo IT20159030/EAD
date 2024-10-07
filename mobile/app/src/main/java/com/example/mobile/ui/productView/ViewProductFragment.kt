@@ -32,7 +32,7 @@ import java.util.Locale
 
 /*
 * A fragment that displays the details of a product.
-* Shows the product name, description, category, price, and vendor.
+* Shows the product name, description, category, price, and vendorView.
 * */
 
 @AndroidEntryPoint
@@ -136,7 +136,7 @@ class ViewProductFragment : Fragment() {
         val productVendor = arguments?.getString("productVendor")
         val productVendorId = arguments?.getString("productVendorId")
 
-        // get vendor details
+        // get vendorView details
         if (productVendorId != null) {
             getVendorDetails(productVendorId)
         }
