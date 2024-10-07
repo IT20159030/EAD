@@ -100,6 +100,8 @@
         <item>Products</item>
         <item>Vendors</item>
     </string-array>
+
+<!--    profile strings-->
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="nic_national_identity_card_number">NIC (National Identity Card Number)</string>
@@ -107,4 +109,5 @@
     <string name="update_address">Update Address</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account_register_here">Don\'t have an account? Register here</string>
+    <string name="cancel">Cancel</string>
 </resources>

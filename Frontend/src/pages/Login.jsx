@@ -6,7 +6,7 @@ import { login } from "../api/authApi";
 
 import "./styles/Login.css";
 
-import logo from "../../public/logo.png";
+import logo from "../assets/logo.png";
 
 /*
  * The Login component is a form that allows users to log in to the application.

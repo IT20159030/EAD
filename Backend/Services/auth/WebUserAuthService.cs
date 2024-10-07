@@ -3,8 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Backend.Dtos;
 using Backend.Models;
+using Backend.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace Backend.Services;
 
@@ -14,12 +16,17 @@ namespace Backend.Services;
 */
 public class WebUserAuthService : IWebUserAuthService
 {
+
   private readonly UserManager<User> _userManager;
+
+  private readonly IMongoCollection<Vendor> _vendors;
   private readonly IConfiguration _configuration;
 
-  public WebUserAuthService(UserManager<User> userManager, IConfiguration configuration)
+
+  public WebUserAuthService(UserManager<User> userManager, MongoDBService mongoDBService, IConfiguration configuration)
   {
     _userManager = userManager;
+    _vendors = mongoDBService.Database.GetCollection<Vendor>("Vendors");
     _configuration = configuration;
   }
 
@@ -170,4 +177,59 @@ public class WebUserAuthService : IWebUserAuthService
     };
   }
 
+  public async Task<VendorInfoResponse> GetVendorInfoAsync(string userId)
+  {
+
+    var vendor = await _vendors.Find(v => v.Id == Guid.Parse(userId)).FirstOrDefaultAsync();
+    if (vendor == null)
+    {
+      return new VendorInfoResponse
+      {
+        IsSuccess = false,
+        Message = "Vendor not found"
+      };
+    }
+
+    return new VendorInfoResponse
+    {
+      IsSuccess = true,
+      VendorDetails = new VendorDetails
+      {
+        VendorName = vendor.VendorName,
+        VendorEmail = vendor.VendorEmail,
+        VendorPhone = vendor.VendorPhone,
+        VendorAddress = vendor.VendorAddress,
+        VendorCity = vendor.VendorCity
+      }
+    };
+  }
+
+  public async Task<UpdateVendorResponse> UpdateVendorAsync(string id, VendorDetails request)
+  {
+    var vendor = await _vendors.Find(v => v.Id == Guid.Parse(id)).FirstOrDefaultAsync();
+
+    if (vendor == null)
+    {
+      return new UpdateVendorResponse
+      {
+        IsSuccess = false,
+        Message = "Vendor not found",
+      };
+    }
+
+    vendor.VendorName = request.VendorName;
+    vendor.VendorEmail = request.VendorEmail;
+    vendor.VendorPhone = request.VendorPhone;
+    vendor.VendorAddress = request.VendorAddress;
+    vendor.VendorCity = request.VendorCity;
+
+    await _vendors.ReplaceOneAsync(v => v.Id == Guid.Parse(id), vendor);
+
+    return new UpdateVendorResponse
+    {
+      IsSuccess = true,
+      Message = "Vendor updated successfully"
+    };
+  }
 }
+
