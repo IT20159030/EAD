@@ -64,25 +64,13 @@
             android:layout_height="wrap_content"
             android:text="@string/save_changes"
             android:enabled="false" />
-
-<!--        <Button-->
-<!--            android:id="@+id/cancelButton"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:text="Cancel"-->
-
-<!--            android:textColor="?attr/colorSurface"-->
-<!--            app:strokeColor="?attr/colorSurface"-->
-<!--          />-->
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             />
 
         <Button

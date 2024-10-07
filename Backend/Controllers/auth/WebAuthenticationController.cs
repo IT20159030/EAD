@@ -86,6 +86,53 @@ public class WebAuthenticationController : ControllerBase
     }
   }
 
+  [HttpGet("vendor-info", Name = "Get Vendor Info")]
+  [Authorize(Roles = "vendor")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VendorInfoResponse))]
+  public async Task<IActionResult> GetVendorInfo()
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+      var result = await _userAuthService.GetVendorInfoAsync(userId);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error getting vendor info");
+      return BadRequest(ex.Message);
+    }
+  }
+
+  [HttpPut("vendor-info", Name = "Update Vendor Info")]
+  [Authorize(Roles = "vendor")]
+  [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VendorInfoResponse))]
+  public async Task<IActionResult> UpdateVendorInfo([FromBody] VendorDetails updateVendorInfoRequest)
+  {
+    try
+    {
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (string.IsNullOrEmpty(userId))
+      {
+        return BadRequest("User not found");
+      }
+      var result = await _userAuthService.UpdateVendorAsync(userId, updateVendorInfoRequest);
+
+      return result.IsSuccess ? Ok(result) : BadRequest(result.Message);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error updating vendor info");
+      return BadRequest(ex.Message);
+    }
+  }
+
+
 
 
 }
