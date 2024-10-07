@@ -357,6 +357,20 @@ public class OrderController : ControllerBase
         // Find orders with products of the vendor
         var orders = await _orders.Find(filter).ToListAsync();
 
-        return orders.Select(ConvertToDto);
+        // only return orders relevant to the vendor
+        var filteredOrders = orders.Select(order => new Order
+        {
+            Id = order.Id,
+            OrderId = order.OrderId,
+            Status = order.Status,
+            OrderDate = order.OrderDate,
+            DeliveryAddress = order.DeliveryAddress,
+            CustomerId = order.CustomerId,
+            CustomerName = order.CustomerName,
+            TotalPrice = order.TotalPrice,
+            // Filter the OrderItems to include only items with a ProductId from the vendor's products
+            OrderItems = order.OrderItems.Where(oi => productIds.Contains(oi.ProductId)).ToList()
+        });
+        return filteredOrders.Select(ConvertToDto);
     }
 }
