@@ -2,6 +2,10 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/notification";
 
+/*
+ * Notification API calls
+ */
+
 export const getAllNotifications = async () => {
   const response = await axios.get(baseUrl);
   return response.data;
