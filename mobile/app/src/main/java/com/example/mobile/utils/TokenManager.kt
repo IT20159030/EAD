@@ -2,7 +2,6 @@ package com.example.mobile.utils
 
 import android.content.Context
 import android.util.Base64
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
@@ -13,6 +12,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+
+/*
+* A class that manages the user's token. 
+*  - It saves the token to the data store.
+*  - It retrieves the token from the data store.
+*  - It deletes the token from the data store.
+* */
 
 class TokenManager(private val context: Context) {
     companion object {
@@ -66,5 +72,4 @@ class TokenManager(private val context: Context) {
 
         return userId
     }
-
 }

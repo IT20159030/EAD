@@ -1,7 +1,3 @@
-/*
-* This file contains the controller for vendor management.
-*/
-
 using System.Net;
 using Backend.Dtos;
 using Backend.Models;
@@ -9,6 +5,16 @@ using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+/*
+*  Controller for vendor management
+* Only admin can access this controller
+* Functionalities include 
+* - Get all vendor
+* - Create vendor
+* - Update vendor
+* - Delete vendor
+* - Update vendor account status
+*/
 [ApiController]
 [Authorize(Roles = "admin")]
 [Route("api/v1/vendor-management")]

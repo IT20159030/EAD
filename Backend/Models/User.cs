@@ -1,6 +1,10 @@
 using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDB.Bson.Serialization.Attributes;
 namespace Backend.Models;
+
+/*
+*  User model for the mongodb identity user
+*/
 public class User : MongoIdentityUser<Guid>
 {
   public string Name { get; set; } = string.Empty;

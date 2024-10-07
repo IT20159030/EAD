@@ -12,12 +12,17 @@ import {
   useUpdateStaffAccount,
   useUpdateStaffStatus,
 } from "../../hooks/staffManagementHooks";
-
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AddEditStaffModal from "../../components/userManagement/AddEditStaffModal.jsx";
 import { useAuth } from "../../provider/authProvider";
 import { Alert } from "react-bootstrap";
+
+/*
+ * The StaffManagement component displays a list of staff members and allows
+ * admins to add, edit, and delete staff accounts.
+ */
+
 const StaffManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [staffToEdit, setStaffToEdit] = useState(null);

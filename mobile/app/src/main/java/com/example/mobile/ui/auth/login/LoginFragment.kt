@@ -1,14 +1,11 @@
 package com.example.mobile.ui.auth.login
 
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -22,6 +19,10 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import com.example.mobile.viewModels.TokenViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
+
+/*
+* A fragment that allows the user to login.
+ */
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {

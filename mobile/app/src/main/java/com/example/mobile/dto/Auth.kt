@@ -1,6 +1,10 @@
 package com.example.mobile.dto
 import com.google.gson.annotations.SerializedName
 
+/*
+* A data class representing a login request.
+* */
+
 data class LoginRequest(
     val email: String,
     val password: String

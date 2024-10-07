@@ -5,6 +5,11 @@ import { useAuth } from "../provider/authProvider";
 import { useGetProfile, useUpdateProfile } from "../hooks/profileHooks";
 import CommonTitle from "../components/common/Title/Title";
 
+/*
+ * The Profile component displays the user's profile information and allows them to edit it.
+ * It uses the useGetProfile and useUpdateProfile hooks to fetch and update the user's profile data.
+ */
+
 const Profile = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedUser, setEditedUser] = useState({});
@@ -26,13 +31,12 @@ const Profile = () => {
 
   const handleEditClick = () => {
     setShowModal(true);
-    setErrors({}); // Clear errors when opening the modal
+    setErrors({});
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedUser({ ...editedUser, [name]: value });
-    // Clear the error for this field as the user types
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
@@ -42,7 +46,6 @@ const Profile = () => {
     let newErrors = {};
     let isValid = true;
 
-    // Check for required fields
     ["firstName", "lastName", "email", "nic"].forEach((field) => {
       if (!editedUser[field]) {
         newErrors[field] = "This field is required";
@@ -50,7 +53,6 @@ const Profile = () => {
       }
     });
 
-    // Validate first name and last name
     if (editedUser.firstName && editedUser.firstName.includes(" ")) {
       newErrors.firstName = "First name cannot contain spaces";
       isValid = false;
@@ -60,13 +62,11 @@ const Profile = () => {
       isValid = false;
     }
 
-    // Validate email
     if (editedUser.email && !/\S+@\S+\.\S+/.test(editedUser.email)) {
       newErrors.email = "Please enter a valid email address";
       isValid = false;
     }
 
-    // Validate NIC
     const nicRegex = /^(\d{12}|\d{9}[vV])$/;
     if (editedUser.nic && !nicRegex.test(editedUser.nic)) {
       newErrors.nic =

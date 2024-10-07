@@ -11,6 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/*
+* A view model class for handling token-related operations.
+ */
+
 @HiltViewModel
 class TokenViewModel @Inject constructor(
     private val tokenManager: TokenManager

@@ -1,6 +1,3 @@
-/**
-* WebAuthenticationController.cs provides the API endpoints for user authentication for the web application.
-*/
 using System.Net;
 using System.Security.Claims;
 using Backend.Dtos;
@@ -13,6 +10,9 @@ namespace Backend.Controllers;
 [ApiController]
 [Authorize(Roles = "admin, vendor, csr")]
 [Route("api/v1/web-auth")]
+/**
+* WebAuthenticationController.cs provides the API endpoints for user authentication for the web application.
+*/
 public class WebAuthenticationController : ControllerBase
 {
   private readonly ILogger<WebAuthenticationController> _logger;

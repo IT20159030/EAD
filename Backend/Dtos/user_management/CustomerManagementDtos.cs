@@ -1,8 +1,10 @@
-
 using System.ComponentModel.DataAnnotations;
-using Backend.Models;
 
 namespace Backend.Dtos;
+
+/*
+* Dtos for the customer authentication
+*/
 public class GetAllCustomerResponse
 {
   public bool IsSuccess { get; set; }

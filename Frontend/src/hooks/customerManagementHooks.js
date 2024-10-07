@@ -8,6 +8,11 @@ import {
   updateCustomerStatus,
 } from "../api/customerManagementApi";
 
+/*
+ * This file contains hooks for customer management.
+ * These hooks are used to fetch, create, update, delete customer accounts and update customer status.
+ */
+
 export const useCreateCustomerAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -17,8 +16,13 @@ import com.example.mobile.databinding.FragmentAddressBinding
 import com.example.mobile.dto.Address
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
+/*
+* A fragment that displays the user's address.
+* And allows the user to update the address.
+ */
 @AndroidEntryPoint
 class AddressFragment: Fragment() {
 
@@ -73,7 +77,7 @@ class AddressFragment: Fragment() {
     }
 
     private fun updateAddressUI(address: Address?) {
-        if (address == null) {
+        if (address == null || address.line1.isEmpty() || address.city.isEmpty() || address.postalCode.isEmpty() ) {
             binding.tvAddressStatus.text = "No address set"
             binding.btnAddUpdateAddress.text = "Add Address"
         } else {
@@ -85,13 +89,17 @@ class AddressFragment: Fragment() {
     private fun buildAddressString(address: Address): String {
         return "${address.line1}\n${address.line2}\n${address.city}, ${address.postalCode}"
     }
-
     private fun showAddressDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_address, null)
-        val etLine1 = dialogView.findViewById<EditText>(R.id.etLine1)
-        val etLine2 = dialogView.findViewById<EditText>(R.id.etLine2)
-        val etCity = dialogView.findViewById<EditText>(R.id.etCity)
-        val etPostalCode = dialogView.findViewById<EditText>(R.id.etPostalCode)
+        val tilLine1 = dialogView.findViewById<TextInputLayout>(R.id.tilLine1)
+        val tilLine2 = dialogView.findViewById<TextInputLayout>(R.id.tilLine2)
+        val tilCity = dialogView.findViewById<TextInputLayout>(R.id.tilCity)
+        val tilPostalCode = dialogView.findViewById<TextInputLayout>(R.id.tilPostalCode)
+
+        val etLine1 = tilLine1.editText!!
+        val etLine2 = tilLine2.editText!!
+        val etCity = tilCity.editText!!
+        val etPostalCode = tilPostalCode.editText!!
 
         addressData?.let {
             etLine1.setText(it.line1)
@@ -100,24 +108,66 @@ class AddressFragment: Fragment() {
             etPostalCode.setText(it.postalCode)
         }
 
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(if (addressData == null) "Add Address" else "Update Address")
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton("Save", null)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
                 val newAddress = Address(
                     etLine1.text.toString(),
                     etLine2.text.toString(),
                     etCity.text.toString(),
                     etPostalCode.text.toString()
                 )
-                viewModel.updateAddress(newAddress, object : CoroutinesErrorHandler {
-                    override fun onError(message: String) {
-                        showError(message)
-                    }
-                })
+                if (validateInput(tilLine1, tilLine2, tilCity, tilPostalCode)) {
+                    viewModel.updateAddress(newAddress, object : CoroutinesErrorHandler {
+                        override fun onError(message: String) {
+                            showError(message)
+                        }
+                    })
+                    dialog.dismiss()
+                }
             }
-            .setNegativeButton("Cancel", null)
-            .show()
+        }
+
+        dialog.show()
+    }
+
+    private fun validateInput(
+        tilLine1: TextInputLayout,
+        tilLine2: TextInputLayout,
+        tilCity: TextInputLayout,
+        tilPostalCode: TextInputLayout
+    ): Boolean {
+        var isValid = true
+
+        if (tilLine1.editText?.text.toString().isEmpty()) {
+            tilLine1.error = "Address Line 1 is required"
+            isValid = false
+        } else {
+            tilLine1.error = null
+        }
+
+        if (tilCity.editText?.text.toString().isEmpty()) {
+            tilCity.error = "City is required"
+            isValid = false
+        } else {
+            tilCity.error = null
+        }
+
+        if (tilPostalCode.editText?.text.toString().isEmpty()) {
+            tilPostalCode.error = "Postal Code is required"
+            isValid = false
+        } else {
+            tilPostalCode.error = null
+        }
+
+        return isValid
     }
 
     private fun showLoading(isLoading: Boolean) {

@@ -16,9 +16,7 @@
 
 
     <string name="orders">Orders</string>
-    <string name="wishlist">Wishlist</string>
-    <string name="addresses">Addresses</string>
-    <string name="edit_profile">Edit Profile</string>
+    <string name="address">Address</string>
     <string name="logout">Logout</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -102,4 +100,11 @@
         <item>Products</item>
         <item>Vendors</item>
     </string-array>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="nic_national_identity_card_number">NIC (National Identity Card Number)</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="update_address">Update Address</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_register_here">Don\'t have an account? Register here</string>
 </resources>

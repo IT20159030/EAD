@@ -9,14 +9,13 @@ import javax.inject.Inject
 
 /*
 * A repository class for address.
-* Handles the API calls for address.
+* Handles the API calls for address related operations.
  */
 
 
 class AddressRepository @Inject constructor(
     private val mainApiService: AddressApiService,
 ) {
-
     fun getAddresses() = apiRequestFlow {
         mainApiService.getAddresses()
     }
@@ -24,6 +23,4 @@ class AddressRepository @Inject constructor(
     fun updateAddress(address: Address) = apiRequestFlow {
         mainApiService.updateAddress(address)
     }
-
-
 }

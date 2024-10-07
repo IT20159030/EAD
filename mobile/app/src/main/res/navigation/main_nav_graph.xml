@@ -51,7 +51,7 @@
     <fragment
         android:id="@+id/editProfile"
         android:name="com.example.mobile.ui.profileEdit.EditProfile"
-        android:label="Edit Account Details"
+        android:label="Edit Profile"
         tools:layout="@layout/fragment_edit_profile">
         <argument
             android:name="firstName"
@@ -146,6 +146,6 @@
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.example.mobile.ui.profile.AddressFragment"
-        android:label="fragment_address"
+        android:label="Your Address"
         tools:layout="@layout/fragment_address" />
 </navigation>

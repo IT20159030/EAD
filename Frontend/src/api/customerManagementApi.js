@@ -2,6 +2,10 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/customer-management";
 
+/*
+ * Customer management API calls
+ */
+
 export const createCustomer = async (customerData) => {
   const response = await axios.post(baseUrl, customerData);
   return response.data;

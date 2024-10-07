@@ -8,6 +8,11 @@ import {
   updateVendorStatus,
 } from "../api/vendorManagementApi";
 
+/*
+ * This file contains hooks for vendor management.
+ * These hooks are used to fetch, create, update, delete vendor accounts and update vendor status.
+ */
+
 export const useCreateVendorAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
