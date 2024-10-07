@@ -15,8 +15,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import com.example.mobile.R
 import com.example.mobile.dto.Product
+import com.example.mobile.dto.ProductCategory
 import com.example.mobile.dto.Vendor
 import com.example.mobile.databinding.FragmentHomeBinding
 import com.example.mobile.ui.productView.ProductAdapter
@@ -102,6 +104,7 @@ class HomeFragment : Fragment() {
                     vendorsRecyclerView.visibility = View.VISIBLE
                     filterVendors(searchBar.text.toString())   // Load vendors
                 }
+
             }
         }
 
@@ -122,6 +125,7 @@ class HomeFragment : Fragment() {
         // Load initial product list
         loadProductList()
         loadVendorList()
+        loadCategories()
     }
 
     private fun loadProductList() {
@@ -175,6 +179,51 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun loadCategories() {
+        productViewModel.productCategories.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ApiResponse.Loading -> showLoading(true)
+
+                is ApiResponse.Success -> {
+                    showLoading(false)
+                    setupCategoryChips(response.data)
+                }
+
+                is ApiResponse.Failure -> {
+                    showLoading(false)
+                    Toast.makeText(context, response.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        productViewModel.getProductCategories(object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun setupCategoryChips(categories: List<ProductCategory>) {
+        val chipGroup = binding.categoryChipGroup
+        chipGroup.removeAllViews()
+
+        for (category in categories) {
+            val chip = LayoutInflater.from(context).inflate(R.layout.item_chip, chipGroup, false) as Chip
+            chip.text = category.name
+            chip.isCheckable = true
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    filterProductsByCategory(category.categoryId)
+                } else {
+                    loadProductList() // Reload all products if no category is selected
+                }
+            }
+            chipGroup.addView(chip)
+        }
+    }
+
+
     // Filter products based on search query
     private fun filterProducts(query: String) {
         showLoading(true)
@@ -194,6 +243,17 @@ class HomeFragment : Fragment() {
             searchVendors(name)
         }
     }
+
+    // Filter products based on category
+    private fun filterProductsByCategory(categoryId: String) {
+        productViewModel.getProductsByCategory(categoryId, object : CoroutinesErrorHandler {
+            override fun onError(message: String) {
+                showLoading(false)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
