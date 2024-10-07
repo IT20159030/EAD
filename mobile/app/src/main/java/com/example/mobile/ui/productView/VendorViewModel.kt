@@ -12,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 /*
-* A ViewModel class for handling vendor-related operations.
+* A ViewModel class for handling vendorView-related operations.
 * Handles the retrieval of vendors.
 * */
 
@@ -23,6 +23,9 @@ class VendorViewModel @Inject constructor (
     private val _vendor = MutableLiveData<ApiResponse<Vendor>>()
     val vendor = _vendor
 
+    private val _vendors = MutableLiveData<ApiResponse<List<Vendor>>>()
+    val vendors = _vendors
+
     fun getVendorById(id: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _vendor,
         coroutinesErrorHandler,
@@ -30,6 +33,19 @@ class VendorViewModel @Inject constructor (
         vendorRepository.getVendorById(id)
     }
 
+    fun getVendors(coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _vendors,
+        coroutinesErrorHandler,
+    ) {
+        vendorRepository.getVendors()
+    }
+
+    fun searchVendors(name: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _vendors,
+        coroutinesErrorHandler,
+    ) {
+        vendorRepository.searchVendors(name)
+    }
     fun addVendorRating(vendorReview: AddReview,
                         coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _vendor,
