@@ -22,6 +22,10 @@ class VendorRepository @Inject constructor (
         mainApiService.getVendors()
     }
 
+    fun searchVendors(name: String) = apiRequestFlow {
+        mainApiService.searchVendors(name)
+    }
+
     fun addVendorRating(vendorReview: AddReview) = apiRequestFlow {
         mainApiService.addVendorRating(vendorReview)
     }
