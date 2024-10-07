@@ -5,7 +5,6 @@ import { Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import useStore from "./store/zustandStore";
 import Login from "./pages/Login";
-// import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import ProductCategory from "./pages/product/ProductCategory";
@@ -25,6 +24,7 @@ import queryClient from "./utils/queryClient";
 
 import "./App.css";
 import Order from "./pages/Order.jsx";
+import VenderStore from "./pages/VenderStore.jsx";
 
 function App() {
   const { user, setUser, clearUser } = useStore();
@@ -65,6 +65,10 @@ function App() {
                 <Route path="products" element={<Products />} />
               </Route>
 
+              <Route element={<RoleCheck roles={["vendor"]} />}>
+                <Route path="vendor-store" element={<VenderStore />} />
+              </Route>
+
               <Route
                 path="/unauthorized"
                 element={
@@ -77,7 +81,6 @@ function App() {
             </Route>
             <Route path="/" element={<AuthLayout />}>
               <Route path="login" element={<Login />} />
-              {/* <Route path="register" element={<Register />} /> */}
               <Route path="logout" element={<Logout />} />
             </Route>
 

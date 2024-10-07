@@ -53,3 +53,12 @@ public class UpdateProfileRequest
   [Required, RegularExpression(@"^(\d{12}|\d{9}[vV])$", ErrorMessage = "NIC must be either a 12-digit number or a 9-digit number ending with 'v' or 'V'.")]
   public string NIC { get; set; } = string.Empty;
 }
+
+// ONLY FOR VENDOR ACCOUNT UPDATES
+public class VendorInfoResponse
+{
+  public bool IsSuccess { get; set; }
+  public string Message { get; set; } = string.Empty;
+  public VendorDetails VendorDetails { get; set; } = new();
+}
+
