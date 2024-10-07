@@ -22,6 +22,9 @@ interface VendorApiService {
     @GET("Vendor")
     suspend fun getVendors(): Response<List<Vendor>>
 
+    @GET("Vendor/search/{name}")
+    suspend fun searchVendors(@Path("name") name: String): Response<List<Vendor>>
+
     @POST("Vendor/rating")
     suspend fun addVendorRating(@Body vendorReview: AddReview): Response<Vendor>
 
