@@ -147,7 +147,6 @@ builder.Services.AddHostedService<MonitoringWorker>();
 //Services
 builder.Services.AddScoped<WebUserAuthService>();
 builder.Services.AddScoped<MobileUserAuthService>();
-builder.Services.AddScoped<UserManagementService>();
 builder.Services.AddScoped<StaffManagementService>();
 builder.Services.AddScoped<CustomerManagementService>();
 builder.Services.AddScoped<VendorManagementService>();
