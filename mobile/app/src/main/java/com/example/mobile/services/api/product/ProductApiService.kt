@@ -27,4 +27,10 @@ interface ProductApiService {
     @GET("Product/category/{categoryId}/active")
     suspend fun getProductsByCategory(@Path("categoryId") categoryId: String): Response<List<Product>>
 
+    @GET("ProductCategory")
+    suspend fun getProductCategories(): Response<List<ProductCategory>>
+
+    @GET("Product/category/{categoryId}/active")
+    suspend fun getProductsByCategory(@Path("categoryId") categoryId: String): Response<List<Product>>
+
 }
