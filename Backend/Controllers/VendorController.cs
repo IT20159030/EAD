@@ -248,5 +248,14 @@ public class VendorController : ControllerBase
         return Ok(ConvertToDto(vendor));
     }
 
+    // GET: api/v1/Vendor/search/{name}
+    [HttpGet("search/{name}", Name = "SearchVendor")]
+    public async Task<IActionResult> SearchVendor(string name)
+    {
+        var vendors = await _vendors.Find(v => v.VendorName.ToLower().Contains(name.ToLower())).ToListAsync();
+        return Ok(vendors.Select(vendor => ConvertToDto(vendor)));
+    }
+
+
 }
 
