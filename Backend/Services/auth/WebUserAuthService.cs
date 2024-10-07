@@ -1,5 +1,3 @@
-
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,6 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services;
+
+/*
+*  Web user authentication service
+* This service provides the functionality for the web user authentication
+*/
 public class WebUserAuthService : IWebUserAuthService
 {
   private readonly UserManager<User> _userManager;

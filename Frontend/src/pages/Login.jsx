@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import {
-  Form,
-  Button,
-  Container,
-  // Image
-} from "react-bootstrap";
+import { Form, Button, Container, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { login } from "../api/authApi";
 
 import "./styles/Login.css";
 
-// import logo from "./logo.png"; // Import your logo image
+import logo from "../../public/logo.png";
+
+/*
+ * The Login component is a form that allows users to log in to the application.
+ * It uses the login function from the authApi module to authenticate the user.
+ */
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -59,7 +59,7 @@ const Login = () => {
   return (
     <Container className="login-container">
       <div className="text-center mb-4">
-        {/* <Image src={logo} alt="Logo" fluid className="logo" /> */}
+        <Image src={logo} alt="Logo" fluid className="logo" />
       </div>
       <h2 className="text-center">Login</h2>
       <Form className="login-form" onSubmit={handleSubmit}>
@@ -99,19 +99,14 @@ const Login = () => {
           Login
         </Button>
       </Form>
-      {/* <div className="text-center mt-3">
-        <a href="/forgot-password" className="text-muted">
-          Forgot Password?
-        </a>
-      </div>
-      <div className="text-center mt-2">
-        <span> {"Don't have an account?"} </span>
-        <a href="/register" className="text-primary">
-          Create one
-        </a>
-      </div> */}
+    </Container>
+  );
+};
 
-      <div className="">
+export default Login;
+
+/*
+  <div className="">
         For development:
         <br />
         <Button
@@ -151,8 +146,4 @@ const Login = () => {
           Csr
         </Button>
       </div>
-    </Container>
-  );
-};
-
-export default Login;
+*/

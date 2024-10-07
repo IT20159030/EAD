@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Dtos;
 
+/*
+*  Dtos for the web user authentication
+*/
 public class LoginRequest
 {
   [Required, EmailAddress]

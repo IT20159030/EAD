@@ -2,6 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Dtos;
 
+/*
+*  Dtos for the customer authentication
+*/
+
 public class MLoginRequest
 {
   [Required, EmailAddress]

@@ -8,6 +8,11 @@ import {
   updateStaffStatus,
 } from "../api/staffManagementApi";
 
+/*
+ * This file contains hooks for staff management.
+ * These hooks are used to fetch, create, update, delete staff accounts and update staff status.
+ */
+
 export const useCreateStaffAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({

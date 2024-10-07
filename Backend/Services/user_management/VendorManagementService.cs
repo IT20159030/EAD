@@ -6,6 +6,12 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Backend.Services;
+
+/*
+*  Interface for the vendor management service
+* Contains methods for CRUD operations on vendors
+* and updating vendor account status
+*/
 public class VendorManagementService : IVendorManagementService
 {
   private readonly UserManager<User> _userManager;
@@ -75,9 +81,6 @@ public class VendorManagementService : IVendorManagementService
 
     return response;
   }
-
-
-
 
   public async Task<CreateVendorResponse> CreateVendorAsync(CreateVendorRequest request)
   {

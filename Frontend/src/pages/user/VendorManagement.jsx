@@ -12,12 +12,15 @@ import {
   useUpdateVendorAccount,
   useUpdateVendorStatus,
 } from "../../hooks/vendorManagementHooks";
-
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AddEditVendorModal from "../../components/userManagement/AddEditVendorModal";
 import { useAuth } from "../../provider/authProvider.jsx";
 import { Alert } from "react-bootstrap";
+
+/*
+ * The VendorManagement component displays a list of vendors and allows admins to add, edit, and delete vendors.
+ */
 const VendorManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [vendorToEdit, setVendorToEdit] = useState(null);

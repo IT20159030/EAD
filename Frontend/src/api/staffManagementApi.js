@@ -2,6 +2,10 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/staff-management";
 
+/*
+ * Staff management API calls
+ */
+
 export const createStaff = async (staffData) => {
   const response = await axios.post(baseUrl, staffData);
   return response.data;

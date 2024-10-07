@@ -1,6 +1,10 @@
 using Backend.Dtos;
 using Backend.Models;
 
+/*
+*  Interface for the staff management service
+*/
+
 public interface IStaffManagementService
 {
   Task<GetAllStaffResponse> GetAllStaffAsync();

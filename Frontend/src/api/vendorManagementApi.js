@@ -2,6 +2,9 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/vendor-management";
 
+/*
+ * Vendor management API calls
+ */
 export const createVendor = async (vendorData) => {
   const response = await axios.post(baseUrl, vendorData);
   return response.data;

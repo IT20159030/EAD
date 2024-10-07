@@ -5,12 +5,15 @@ import com.example.mobile.dto.LoginRequest
 import com.example.mobile.dto.LoginResponse
 import com.example.mobile.dto.RegisterRequest
 import com.example.mobile.dto.RegisterResponse
-import com.example.mobile.dto.UserResponse
 import com.example.mobile.repository.AuthRepository
 import com.example.mobile.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/*
+* A view model for the authentication fragments (login and register).
+* Handles login and register requests.
+* */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
@@ -35,5 +38,4 @@ class AuthViewModel @Inject constructor(
     ) {
         authRepository.register(auth)
     }
-
 }

@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 
 namespace Backend.Services;
+
+/*
+*  Customer management service
+* This service is responsible for managing customer accounts
+* It provides the functionality to retrieve, create, update, delete and update account status of customers
+*/
 public class CustomerManagementService : ICustomerManagementService
 {
   private readonly UserManager<User> _userManager;
@@ -21,7 +27,6 @@ public class CustomerManagementService : ICustomerManagementService
     var response = new GetAllCustomerResponse();
     try
     {
-
       var customerList = await _userManager.GetUsersInRoleAsync("customer");
 
       response.Customers = customerList.Select(s => new Customer
@@ -42,7 +47,6 @@ public class CustomerManagementService : ICustomerManagementService
       response.IsSuccess = false;
       response.Message = e.Message;
     }
-
     return response;
   }
   public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(string id)
@@ -268,9 +272,6 @@ public class CustomerManagementService : ICustomerManagementService
       response.IsSuccess = false;
       response.Message = e.Message;
     }
-
     return response;
   }
-
-
 }

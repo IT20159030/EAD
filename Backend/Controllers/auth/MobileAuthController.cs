@@ -1,7 +1,3 @@
-/**
-* CustomerAuthenticationController.cs provides the endpoints for the customer authentication for the mobile application.
-*/
-
 using System.Net;
 using System.Security.Claims;
 using Backend.Dtos;
@@ -10,6 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
+
+/**
+* CustomerAuthenticationController.cs provides the endpoints for the customer authentication for the mobile application.
+*/
 
 [ApiController]
 [Authorize(Roles = "customer")]

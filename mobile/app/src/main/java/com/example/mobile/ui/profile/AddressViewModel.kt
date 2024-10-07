@@ -12,6 +12,9 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/*
+* A view model for the address fragment.
+* */
 @HiltViewModel
 class AddressViewModel @Inject constructor(
     private val addressRepository: AddressRepository
@@ -33,6 +36,4 @@ class AddressViewModel @Inject constructor(
     ) {
         addressRepository.updateAddress(address)
     }
-
-
 }
