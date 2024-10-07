@@ -18,6 +18,15 @@ import { confirmDeletion } from "../../utils/helper";
 import styles from "../styles/Pages.module.css";
 import { useAuth } from "../../provider/authProvider";
 
+/**
+ * Notifications page component
+ * shows all notifications based on user role
+ * admin - all notifications
+ * vendor - notifications for vendor
+ * csr - notifications for csr
+ *
+ */
+
 const Notifications = () => {
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -99,10 +108,10 @@ const Notifications = () => {
         navigate("/products");
         break;
       case "AccountApproval":
-        navigate("/staff");
+        navigate(`/customers/approval-requests/${notification.recipientId}`);
         break;
       case "AccountActivated":
-        navigate("/staff");
+        navigate("/customers");
         break;
       case "OrderStatus":
         navigate("/orders");
