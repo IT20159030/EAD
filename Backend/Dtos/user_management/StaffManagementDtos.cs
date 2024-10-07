@@ -1,8 +1,9 @@
-
 using System.ComponentModel.DataAnnotations;
-using Backend.Models;
 
 namespace Backend.Dtos;
+/*
+* Dtos for the staff management
+*/
 public class GetAllStaffResponse
 {
   public bool IsSuccess { get; set; }

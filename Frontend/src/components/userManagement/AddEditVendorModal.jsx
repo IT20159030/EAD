@@ -4,6 +4,10 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 
+/*
+ * The AddEditVendorModal component is a form that allows admins to add or edit a vendor.
+ */
+
 const AddEditVendorModal = ({
   show,
   handleClose,

@@ -1,13 +1,23 @@
-/*
-* This file contains the controller for customer management.
-*/
-
 using System.Net;
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Controllers;
+
+/*
+*  Controller for customer management
+* Only admin and csr can access this controller
+* Functionalities include
+* - Get all customer
+* - Get customer by id
+* - Create customer
+* - Update customer
+* - Delete customer
+* - Update customer account status
+*/
 
 [ApiController]
 [Authorize(Roles = "admin,csr")]

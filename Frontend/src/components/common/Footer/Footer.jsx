@@ -11,7 +11,7 @@ const Footer = () => {
         <Row className="d-flex align-items-center justify-content-center">
           <Col md={6} className="text-center">
             <p className="footer-text">
-              &copy; 2024 Ecommerce Store. All rights reserved.
+              &copy; 2024 QuickMart. All rights reserved.
             </p>
           </Col>
         </Row>

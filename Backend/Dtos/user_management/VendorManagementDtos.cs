@@ -1,6 +1,8 @@
-
 using System.ComponentModel.DataAnnotations;
 namespace Backend.Dtos;
+/*
+* Dtos for the vendor management
+*/
 public class GetAllVendorResponse
 {
   public bool IsSuccess { get; set; }

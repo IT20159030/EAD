@@ -7,6 +7,11 @@ import com.example.mobile.dto.RegisterRequest
 import com.example.mobile.utils.apiRequestFlow
 import javax.inject.Inject
 
+/*
+* A repository class for authentication.
+* Handles the API calls for authentication.
+* */
+
 class AuthRepository @Inject constructor(
     private val authApiService: AuthApiService,
 ) {
@@ -17,9 +22,4 @@ class AuthRepository @Inject constructor(
     fun register(auth: RegisterRequest) = apiRequestFlow {
         authApiService.register(auth)
     }
-
-    fun userInfo() = apiRequestFlow {
-        authApiService.userInfo()
-    }
-
 }

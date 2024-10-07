@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 
 namespace Backend.Services;
+
+/*
+*  Staff management service
+* This service is responsible for managing staff accounts
+* It provides the functionality to retrieve, create, update, delete and update account status of staff
+*/
 public class StaffManagementService : IStaffManagementService
 {
   private readonly UserManager<User> _userManager;

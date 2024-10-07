@@ -10,7 +10,6 @@ import javax.inject.Inject
 * Handles the API calls for profile.
  */
 
-
 class ProfileRepository @Inject constructor(
     private val mainApiService: ProfileApiService,
 ) {
@@ -25,6 +24,4 @@ class ProfileRepository @Inject constructor(
     fun updateAccount(updateRequest: UserUpdateRequest) = apiRequestFlow {
         mainApiService.updateAccount(updateRequest)
     }
-
-
 }

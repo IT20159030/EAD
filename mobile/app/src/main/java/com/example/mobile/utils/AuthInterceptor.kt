@@ -6,6 +6,10 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
+/*
+* An interceptor that adds the user's token to the request header.
+* */
+
 class AuthInterceptor @Inject constructor(
     private val tokenManager: TokenManager,
 ): Interceptor {

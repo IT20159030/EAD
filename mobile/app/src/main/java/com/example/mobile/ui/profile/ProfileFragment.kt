@@ -14,10 +14,20 @@ import androidx.navigation.Navigation
 import com.example.mobile.R
 import com.example.mobile.databinding.FragmentProfileBinding
 import com.example.mobile.dto.UserInfo
+import com.example.mobile.ui.cart.CartViewModel
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import com.example.mobile.viewModels.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
+/*
+* A fragment that displays the user's profile information.
+* And allows user to
+* 1. Logout
+* 2. Navigate to View orders
+* 3. Navigate to View address
+* 4. Navigate to Edit profile
+ */
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -27,6 +37,7 @@ class ProfileFragment : Fragment() {
 
     private val viewModel: ProfileViewModel by viewModels()
     private val tokenViewModel: TokenViewModel by activityViewModels()
+    private val cartViewModel: CartViewModel by viewModels()
 
     private lateinit var navController: NavController
 
@@ -83,22 +94,12 @@ class ProfileFragment : Fragment() {
     private fun setupClickListeners() {
         with(binding) {
             logoutButton.setOnClickListener {
+                cartViewModel.clearCart()
                 tokenViewModel.deleteToken()
             }
 
-            // TODO: GUIDE TO IMPLEMENT NAVIGATION
-            //  (check the edit profile setup using navigation component with fragments)
-            //  1. create a new fragment
-            //  2. add the new fragment to the navigation graph in main_nav_graph.xml
-            //  3. navigate to the new fragment using the navigation component
-
-
             ordersButton.setOnClickListener {
                 navController.navigate(R.id.action_navigation_profile_to_orderList)
-            }
-
-            wishlistButton.setOnClickListener {
-                // TODO: Navigate to wishlist
             }
 
             addressesButton.setOnClickListener {
@@ -146,7 +147,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.actionsCard.isEnabled = !isLoading
         binding.logoutButton.isEnabled = !isLoading
     }

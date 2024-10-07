@@ -1,13 +1,22 @@
-/*
-* This file contains the controller for staff management.
-*/
-
 using System.Net;
 using Backend.Dtos;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Controllers;
+
+/*
+*  Controller for staff management
+* Only admin can access this controller
+* Functionalities include 
+* - Get all staff
+* - Create staff
+* - Update staff
+* - Delete staff
+* - Update staff account status
+*/
 
 [ApiController]
 [Authorize(Roles = "admin")]

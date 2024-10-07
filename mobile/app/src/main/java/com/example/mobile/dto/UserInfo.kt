@@ -2,7 +2,7 @@ package com.example.mobile.dto
 
 import com.google.gson.annotations.SerializedName
 /*
-* DTO for profile page calls
+* DTO for profile page calls and user update calls
  */
 
 data class UserInfoResponse (

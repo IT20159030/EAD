@@ -18,6 +18,10 @@ import com.example.mobile.viewModels.AuthViewModel
 import com.example.mobile.viewModels.CoroutinesErrorHandler
 import dagger.hilt.android.AndroidEntryPoint
 
+/*
+* A fragment that allows the user to register.
+* */
+
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
@@ -55,7 +59,7 @@ class RegisterFragment : Fragment() {
                 is ApiResponse.Loading -> showLoading(true)
                 is ApiResponse.Success -> {
                     showLoading(false)
-                    showSuccessMessage("Registration successful. Please wait for admin approval.")
+                    showSuccessMessage("Registration successful. Please wait for staff approval.")
                 }
                 is ApiResponse.Failure -> {
                     showLoading(false)
@@ -234,6 +238,4 @@ class RegisterFragment : Fragment() {
             binding.confirmPasswordLayout.error = null
         }
     }
-
-
 }

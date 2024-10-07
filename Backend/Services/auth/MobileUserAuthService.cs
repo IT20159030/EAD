@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services;
+
+/*
+*  Mobile user authentication service
+* This service provides the functionality for the mobile user authentication
+*/
 public class MobileUserAuthService : IMobileUserAuthService
 {
   private readonly UserManager<User> _userManager;
@@ -88,6 +93,16 @@ public class MobileUserAuthService : IMobileUserAuthService
       {
         IsSuccess = false,
         Message = user.Status == AccountStatus.Unapproved ? "Account not approved" : user.Status == AccountStatus.Deactivated ? "Account deactivated" : "Account rejected"
+      };
+    }
+
+    var isInRole = await _userManager.IsInRoleAsync(user, "customer");
+    if (!isInRole)
+    {
+      return new MLoginResponse
+      {
+        IsSuccess = false,
+        Message = "Invalid email or password"
       };
     }
 

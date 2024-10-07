@@ -4,6 +4,10 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 
+/*
+ * The AddEditCustomerModal component is a form that allows admins and csr to add or edit a customer.
+ */
+
 const AddEditCustomerModal = ({
   show,
   handleClose,
@@ -27,8 +31,7 @@ const AddEditCustomerModal = ({
         firstName: customerToEdit.firstName || "",
         lastName: customerToEdit.lastName || "",
         nic: customerToEdit.nic || "",
-        password: "", // Password should be empty on edit
-        email: customerToEdit.email || "",
+        password: "",
         status: customerToEdit.status || "Deactivated",
       });
     } else {

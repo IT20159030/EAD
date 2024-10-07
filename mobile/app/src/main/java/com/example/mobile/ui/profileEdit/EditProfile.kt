@@ -10,13 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
-import com.example.mobile.R
 import com.example.mobile.databinding.FragmentEditProfileBinding
 import com.example.mobile.dto.UserUpdateRequest
 import com.example.mobile.utils.ApiResponse
@@ -24,6 +21,9 @@ import com.example.mobile.viewModels.CoroutinesErrorHandler
 import com.example.mobile.viewModels.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/*
+* A fragment that allows the user to edit their profile information.
+ */
 @AndroidEntryPoint
 class EditProfile : Fragment() {
 
@@ -226,7 +226,7 @@ class EditProfile : Fragment() {
     private fun showDeactivationConfirmationDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Deactivate Account")
-            .setMessage("Are you sure you want to deactivate your account? This action cannot be undone.")
+            .setMessage("Are you sure you want to deactivate your account? To reactivate it, you will need to contact a staff member.")
             .setPositiveButton("Deactivate") { _, _ ->
                 deactivateAccount()
             }
@@ -244,7 +244,7 @@ class EditProfile : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.saveButton.isEnabled = !isLoading
         binding.cancelButton.isEnabled = !isLoading
         binding.deactivateButton.isEnabled = !isLoading

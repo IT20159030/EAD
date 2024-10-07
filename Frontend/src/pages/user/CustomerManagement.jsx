@@ -11,12 +11,15 @@ import {
   useDeleteCustomerAccount,
   useGetAllCustomerAccounts,
   useUpdateCustomerAccount,
-  // useUpdateCustomerStatus,
 } from "../../hooks/customerManagementHooks";
-
 import { MdDelete, MdEdit } from "react-icons/md";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
 import AddEditCustomerModal from "../../components/userManagement/AddEditCustomerModal";
+
+/*
+ * The CustomerManagement component displays a list of customers and allows
+ * admins and csr to add, edit, and delete customers.
+ */
 const CustomerManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [customerToEdit, setCustomerToEdit] = useState(null);
@@ -36,9 +39,6 @@ const CustomerManagement = () => {
     useUpdateCustomerAccount();
 
   const { mutate: deleteCustomerAccount } = useDeleteCustomerAccount();
-
-  // const { mutate: updateCustomerStatus, isPending: isChangingStatus } =
-  //   useUpdateCustomerStatus();
 
   const handleSaveCustomer = (customerData) => {
     if (customerToEdit) {

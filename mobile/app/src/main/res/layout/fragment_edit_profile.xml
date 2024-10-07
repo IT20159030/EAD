@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.profileEdit.EditProfile">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="First Name">
+            android:hint="@string/first_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/firstNameEditText"
@@ -33,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Last Name">
+            android:hint="@string/last_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/lastNameEditText"
@@ -48,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="NIC (National Identity Card Number)">
+            android:hint="@string/nic_national_identity_card_number">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nicEditText"
@@ -61,7 +62,7 @@
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save Changes"
+            android:text="@string/save_changes"
             android:enabled="false" />
 
 <!--        <Button-->
@@ -89,16 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Deactivate Account"
-            />
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:text="Deactivate Account" />
 
-        <ProgressBar
-            android:id="@+id/loadingSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/errorTV"
@@ -106,7 +100,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 </ScrollView>
