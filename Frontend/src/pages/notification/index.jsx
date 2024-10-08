@@ -1,6 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
-import { Button, Form, Table, Pagination } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  Table,
+  Pagination,
+  ButtonGroup,
+  ToggleButton,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import CommonTitle from "../../components/common/Title/Title";
@@ -33,7 +40,9 @@ const Notifications = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
   const [currentPage, setCurrentPage] = useState(1);
+  const [radioValue, setRadioValue] = useState(0);
   const notificationsPerPage = 10;
+
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
@@ -115,21 +124,50 @@ const Notifications = () => {
         break;
       case "OrderStatus":
         navigate("/orders");
+        break;
       default:
         navigate("/products");
         break;
     }
   };
 
+  const roleBasedFilterOptions = {
+    admin: [
+      { id: 0, label: "All" },
+      { id: 1, label: "Account Approval" },
+      { id: 2, label: "Account Activated" },
+    ],
+    csr: [
+      { id: 0, label: "All" },
+      { id: 1, label: "Account Approval" },
+      { id: 2, label: "Account Activated" },
+      { id: 4, label: "Order Status" },
+      { id: 3, label: "Low Stock" },
+    ],
+    vendor: [
+      { id: 0, label: "All" },
+      { id: 4, label: "Order Status" },
+      { id: 3, label: "Low Stock" },
+    ],
+  };
+
+  const handleButtonGroupChange = (selectedIndex) => {
+    setRadioValue(selectedIndex);
+  };
+
   const filteredNotifications = notifications
-    ?.filter(
-      (notification) =>
-        !(
-          (user.role === "admin" && notification.type === "LowStock") ||
-          ((user.role === "csr" || user.role === "admin") &&
-            notification.type === "OrderStatus")
-        )
-    )
+    ?.filter((notification) => {
+      if (radioValue === 0) return true;
+
+      const notificationTypeMap = {
+        1: "AccountApproval",
+        2: "AccountActivated",
+        3: "LowStock",
+        4: "OrderStatus",
+      };
+
+      return notification.type === notificationTypeMap[radioValue];
+    })
     .filter((notification) =>
       notification.message.toLowerCase().includes(search.toLowerCase())
     );
@@ -147,6 +185,22 @@ const Notifications = () => {
   return (
     <div className={styles.container}>
       <CommonTitle title="Notifications" />
+
+      <ButtonGroup className="mb-3">
+        {roleBasedFilterOptions[user.role]?.map((option) => (
+          <ToggleButton
+            key={option.id}
+            type="radio"
+            variant="outline-primary"
+            name="radio"
+            value={option.id}
+            checked={radioValue === option.id}
+            onClick={() => handleButtonGroupChange(option.id)}
+          >
+            {option.label}
+          </ToggleButton>
+        ))}
+      </ButtonGroup>
 
       <div className={styles.pageActions}>
         <Form className={`${styles.controls}`}>
@@ -237,13 +291,11 @@ const Notifications = () => {
         />
       </Pagination>
 
-      {showToast && (
-        <AutoClosingToast
-          title="Notification"
-          description={toastMessage}
-          type={toastType}
-        />
-      )}
+      <AutoClosingToast
+        show={showToast}
+        message={toastMessage}
+        variant={toastType}
+      />
     </div>
   );
 };
