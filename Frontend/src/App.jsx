@@ -32,7 +32,10 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route
+                index
+                element={<NotificationsPage to="/notifications" replace />}
+              />
               {/* <Route path="dashboard" element={<Dashboard />} /> */}
               <Route path="profile" element={<Profile />} />
 
