@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.vendorView.ViewVendorFragment"
-    >
+    tools:context=".ui.vendorView.ViewVendorFragment">
+
 
     <!-- Vendor name -->
     <TextView
@@ -16,82 +16,124 @@
         android:text="@string/vendor_name"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        />
-
-    <!-- Vendor phone -->
-    <TextView
-        android:id="@+id/vendor_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/vendor_phone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendor_name"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Vendor email -->
-    <TextView
-        android:id="@+id/vendor_email"
-        android:layout_width="wrap_content"
+    <!-- Vendor contact information -->
+    <LinearLayout
+        android:id="@+id/vendor_contact"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/vendor_email"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendor_phone"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/vendor_name">
 
-    <!-- Vendor address -->
-    <TextView
-        android:id="@+id/vendor_address"
-        android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_email_24"
+            android:contentDescription="@string/email_icon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/vendor_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vendor_email"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_phone_24"
+            android:contentDescription="@string/phone_icon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/vendor_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vendor_phone"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <!-- Vendor location information -->
+    <LinearLayout
+        android:id="@+id/vendor_location"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/vendor_address"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendor_email"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/vendor_contact">
 
-    <!-- Vendor city -->
-    <TextView
-        android:id="@+id/vendor_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/vendor_city"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendor_address"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_address_on_24"
+            android:contentDescription="@string/address_icon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
 
-    <!-- Vendor rating -->
-    <RatingBar
-        android:id="@+id/vendor_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendor_city"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        />
+        <TextView
+            android:id="@+id/vendor_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vendor_address"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
 
-    <!-- Vendor rating count -->
-    <TextView
-        android:id="@+id/vendor_rating_count"
-        android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_location_on_24"
+            android:contentDescription="@string/location_icon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/vendor_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vendor_city"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <!-- Rating Bar and Rating Count -->
+    <LinearLayout
+        android:id="@+id/vendor_rating_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/vendor_rating_count"
-        app:layout_constraintStart_toEndOf="@id/vendor_rating"
-        app:layout_constraintTop_toBottomOf="@id/vendor_city"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/vendor_location">
+
+        <RatingBar
+            android:id="@+id/vendor_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:progressTint="@color/purple_700"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/vendor_rating_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+
+            android:text="@string/vendor_rating_count" />
+    </LinearLayout>
 
     <!-- Vendor products list -->
     <androidx.recyclerview.widget.RecyclerView
@@ -99,11 +141,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/vendor_rating"
+        app:layout_constraintTop_toBottomOf="@id/vendor_rating_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        />
+        android:layout_marginTop="8dp" />
 
     <!-- Loading indicator -->
     <ProgressBar
@@ -115,9 +156,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:indeterminate="true"
-        />
-
+        android:indeterminate="true" />
 
     <!-- Error text -->
     <TextView
@@ -130,8 +169,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp"
-        />
+        android:layout_margin="8dp" />
 
     <!-- Vendor products list empty text -->
     <TextView
@@ -144,7 +182,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp"
-        />
+        android:layout_margin="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
