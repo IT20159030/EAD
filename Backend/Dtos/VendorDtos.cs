@@ -13,6 +13,17 @@ namespace Backend.Dtos;
 public class VendorDto
 {
     public string Id { get; set; } = string.Empty;
+
+    public string VendorName { get; set; } = string.Empty;
+
+    public string VendorEmail { get; set; } = string.Empty;
+
+    public string VendorPhone { get; set; } = string.Empty;
+
+    public string VendorAddress { get; set; } = string.Empty;
+
+    public string VendorCity { get; set; } = string.Empty;
+
     public double VendorRating { get; set; }
     public int VendorRatingCount { get; set; }
     public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();

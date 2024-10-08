@@ -5,6 +5,10 @@ namespace Backend.Models;
 
 public class ProductCategory
 {
+    /*
+    * This class represents the ProductCategory model.
+    */
+    
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }

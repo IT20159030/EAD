@@ -9,6 +9,10 @@ using MongoDB.Driver;
 
 namespace Backend.Controllers
 {
+    /*
+    * This controller is responsible for handling requests related to products.
+    */
+    
     [ApiController]
     [Route("api/v1/[controller]")]
     [Authorize]

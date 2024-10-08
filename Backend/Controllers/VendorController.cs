@@ -31,6 +31,11 @@ public class VendorController : ControllerBase
     private VendorDto ConvertToDto(Vendor vendor) => new VendorDto
     {
         Id = vendor.Id.ToString(),
+        VendorName = vendor.VendorName,
+        VendorEmail = vendor.VendorEmail,
+        VendorPhone = vendor.VendorPhone,
+        VendorAddress = vendor.VendorAddress,
+        VendorCity = vendor.VendorCity,
         VendorRating = vendor.VendorRating,
         VendorRatingCount = vendor.VendorRatingCount,
         Reviews = vendor.Reviews.Select(review => new ReviewDto
@@ -73,7 +78,13 @@ public class VendorController : ControllerBase
         ReviewText = dto.ReviewText
     };
 
-    // GET: api/v1/Vendor
+    [HttpGet(Name = "GetVendors")]
+    public async Task<IActionResult> GetVendors()
+    {
+        var vendors = await _vendors.Find(v => true).ToListAsync();
+        return Ok(vendors.Select(vendor => ConvertToDto(vendor)));
+    }
+
     [HttpGet("{id}", Name = "GetVendorDetails")]
     public async Task<IActionResult> GetVendor(string id)
     {
@@ -88,6 +99,11 @@ public class VendorController : ControllerBase
             return Ok(new VendorDto
             {
                 Id = vendor.Id.ToString(),
+                VendorName = vendor.VendorName,
+                VendorEmail = vendor.VendorEmail,
+                VendorPhone = vendor.VendorPhone,
+                VendorAddress = vendor.VendorAddress,
+                VendorCity = vendor.VendorCity,
                 VendorRating = vendor.VendorRating,
                 VendorRatingCount = vendor.VendorRatingCount,
                 Reviews = new List<ReviewDto>()
@@ -229,6 +245,15 @@ public class VendorController : ControllerBase
 
         return Ok(ConvertToDto(vendor));
     }
+
+    // GET: api/v1/Vendor/search/{name}
+    [HttpGet("search/{name}", Name = "SearchVendor")]
+    public async Task<IActionResult> SearchVendor(string name)
+    {
+        var vendors = await _vendors.Find(v => v.VendorName.ToLower().Contains(name.ToLower())).ToListAsync();
+        return Ok(vendors.Select(vendor => ConvertToDto(vendor)));
+    }
+
 
 }
 

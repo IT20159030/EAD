@@ -6,7 +6,7 @@ import { login } from "../api/authApi";
 
 import "./styles/Login.css";
 
-import logo from "../../public/logo.png";
+import logo from "../assets/logo.png";
 
 /*
  * The Login component is a form that allows users to log in to the application.
@@ -46,7 +46,7 @@ const Login = () => {
         id: res.profile.userId,
         nic: res.profile.nic,
       });
-      navigate("/", { replace: true });
+      navigate("/orders", { replace: true });
     } catch (error) {
       setError(error.response.data);
       setLoading(false);

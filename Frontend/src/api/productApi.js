@@ -2,6 +2,10 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/product";
 
+/*
+ * Product API calls
+ */
+
 export const createProduct = async (productData) => {
   const response = await axios.post(baseUrl, productData);
   return response.data;

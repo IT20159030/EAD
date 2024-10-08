@@ -2,6 +2,10 @@ import axios from "../utils/axiosInstanceWithAuth";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL + "/productcategory";
 
+/*
+ * Product Category API calls
+ */
+
 export const createProductCategory = async (productCategory) => {
   const response = await axios.post(baseUrl, productCategory);
   return response.data;

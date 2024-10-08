@@ -2,6 +2,7 @@ package com.example.mobile.ui.productView
 
 import androidx.lifecycle.MutableLiveData
 import com.example.mobile.dto.Product
+import com.example.mobile.dto.ProductCategory
 import com.example.mobile.repository.ProductRepository
 import com.example.mobile.utils.ApiResponse
 import com.example.mobile.viewModels.BaseViewModel
@@ -21,6 +22,9 @@ class ProductViewModel @Inject constructor (
     private val _products = MutableLiveData<ApiResponse<List<Product>>>()
     val products = _products
 
+    private val _productCategories = MutableLiveData<ApiResponse<List<ProductCategory>>>()
+    val productCategories = _productCategories
+
     fun getProducts(coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
         _products,
         coroutinesErrorHandler,
@@ -34,4 +38,26 @@ class ProductViewModel @Inject constructor (
     ) {
         productRepository.searchProducts(query)
     }
+
+    fun getProductsByVendor(vendorId: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _products,
+        coroutinesErrorHandler,
+    ) {
+        productRepository.getProductsByVendor(vendorId)
+    }
+
+    fun getProductCategories(coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _productCategories,
+        coroutinesErrorHandler,
+    ) {
+        productRepository.getProductCategories()
+    }
+
+    fun getProductsByCategory(categoryId: String, coroutinesErrorHandler: CoroutinesErrorHandler) = baseRequest(
+        _products,
+        coroutinesErrorHandler,
+    ) {
+        productRepository.getProductsByCategory(categoryId)
+    }
+
 }

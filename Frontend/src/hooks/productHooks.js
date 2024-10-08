@@ -15,12 +15,17 @@ import {
   deactivateProduct,
 } from "../api/productApi";
 
+/*
+ * Product API calls
+ */
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productsByVendor"] });
     },
   });
 };
@@ -87,7 +92,7 @@ export const useUpdateProduct = () => {
     mutationFn: updateProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["activeProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["productsByVendor"] });
     },
   });
 };
@@ -98,6 +103,7 @@ export const useDeleteProduct = () => {
     mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productsByVendor"] });
     },
   });
 };
@@ -108,6 +114,7 @@ export const useActivateProduct = () => {
     mutationFn: activateProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productsByVendor"] });
     },
   });
 };
@@ -118,6 +125,7 @@ export const useDeactivateProduct = () => {
     mutationFn: deactivateProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productsByVendor"] });
     },
   });
 };
