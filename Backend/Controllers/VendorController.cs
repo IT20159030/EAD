@@ -78,7 +78,6 @@ public class VendorController : ControllerBase
         ReviewText = dto.ReviewText
     };
 
-    // GET: api/v1/Vendor
     [HttpGet(Name = "GetVendors")]
     public async Task<IActionResult> GetVendors()
     {
@@ -86,7 +85,6 @@ public class VendorController : ControllerBase
         return Ok(vendors.Select(vendor => ConvertToDto(vendor)));
     }
 
-    // GET: api/v1/Vendor
     [HttpGet("{id}", Name = "GetVendorDetails")]
     public async Task<IActionResult> GetVendor(string id)
     {
