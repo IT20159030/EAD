@@ -30,12 +30,12 @@ const Sidebar = () => {
   };
 
   const navLinks = [
-    {
-      title: "Dashboard",
-      path: "/dashboard",
-      icon: <BsGrid />,
-      roles: ["admin", "vendor", "csr"],
-    },
+    // {
+    //   title: "Dashboard",
+    //   path: "/dashboard",
+    //   icon: <BsGrid />,
+    //   roles: ["admin", "vendor", "csr"],
+    // },
     {
       title: "Catalog",
       icon: <BsCommand />,

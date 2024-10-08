@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import CommonTitle from "../../components/common/Title/Title";
 import LoadingTableBody from "../../components/common/TableLoader/TableLoader";
-import AutoClosingToast from "../../components/common/Toast/AutoClosingToast";
 import { MdDelete, MdDownload } from "react-icons/md";
 import {
   useGetAllNotifications,
@@ -290,12 +289,6 @@ const Notifications = () => {
           disabled={currentPage === totalPages}
         />
       </Pagination>
-
-      <AutoClosingToast
-        show={showToast}
-        message={toastMessage}
-        variant={toastType}
-      />
     </div>
   );
 };
