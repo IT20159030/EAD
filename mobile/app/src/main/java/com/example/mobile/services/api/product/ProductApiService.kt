@@ -19,7 +19,7 @@ interface ProductApiService {
     suspend fun searchProducts(@Query("query") query: String): Response<List<Product>>
 
     @GET("Product/vendor/{vendorId}/active")
-    suspend fun getProductsByVendor(@Query("vendorId") vendorId: String): Response<List<Product>>
+    suspend fun getProductsByVendor(@Path("vendorId") vendorId: String): Response<List<Product>>
 
     @GET("ProductCategory")
     suspend fun getProductCategories(): Response<List<ProductCategory>>
