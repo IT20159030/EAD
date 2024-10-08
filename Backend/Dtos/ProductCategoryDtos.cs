@@ -2,6 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Dtos
 {
+    /*
+    * This file contains Data Transfer Objects (DTOs) for ProductCategory.
+    */
+    
     public class ProductCategoryDto
     {
         [Required]

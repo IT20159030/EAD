@@ -7,6 +7,10 @@ import {
   updateProductCategory,
 } from "../api/productCategoryApi";
 
+/*
+ * Product Category API calls
+ */
+
 export const useCreateProductCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({

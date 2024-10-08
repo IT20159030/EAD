@@ -8,6 +8,10 @@ using MongoDB.Bson;
 
 namespace Backend.Controllers
 {
+    /*
+    * This controller is responsible for handling requests related to product categories.
+    */
+    
     [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]

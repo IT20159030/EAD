@@ -15,6 +15,10 @@ import {
   deactivateProduct,
 } from "../api/productApi";
 
+/*
+ * Product API calls
+ */
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation({
