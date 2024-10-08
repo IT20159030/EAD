@@ -93,6 +93,10 @@
     <string name="vendor_rating_count">Vendor Rating Count</string>
     <string name="error_text">Error occured</string>
     <string name="vendor_products_empty_text">No products to display</string>
+    <string name="email_icon">Email icon</string>
+    <string name="phone_icon">Phone Icon</string>
+    <string name="address_icon">Address Icon</string>
+    <string name="location_icon">City Icon</string>
 
     <string-array name="search_filters">
         <item>Products</item>
