@@ -17,7 +17,7 @@
         android:inputType="text"
         android:padding="12dp"
         android:background="@android:drawable/editbox_background"
-        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawableStart="@drawable/ic_baseline_search_24"
         android:layout_margin="8dp"
         android:drawablePadding="10dp"
         android:textColor="@android:color/black"
