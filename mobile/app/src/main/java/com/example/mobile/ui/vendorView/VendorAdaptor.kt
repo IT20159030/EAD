@@ -58,6 +58,10 @@ class VendorAdapter(private var vendors: List<Vendor>, private var navController
                 val bundle = Bundle().apply {
                     putString("vendorId", vendor.vendorId)
                     putString("vendorName", vendor.vendorName)
+                    putString("vendorDescription", vendor.vendorPhone)
+                    putString("vendorPhone", vendor.vendorPhone)
+                    putString("vendorEmail", vendor.vendorEmail)
+                    putString("vendorAddress", vendor.vendorAddress)
                     putString("vendorCity", vendor.vendorCity)
                     putFloat("vendorRating", vendor.vendorRating.toFloat())
                     putInt("vendorRatingCount", vendor.vendorRatingCount)
