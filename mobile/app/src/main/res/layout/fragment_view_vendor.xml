@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.vendorView.ViewVendorFragment"
+    >
+
+    <!-- Vendor name -->
+    <TextView
+        android:id="@+id/vendor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        />
+
+    <!-- Vendor phone -->
+    <TextView
+        android:id="@+id/vendor_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vendor_name"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor email -->
+    <TextView
+        android:id="@+id/vendor_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vendor_phone"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor address -->
+    <TextView
+        android:id="@+id/vendor_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_address"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vendor_email"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor city -->
+    <TextView
+        android:id="@+id/vendor_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_city"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vendor_address"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor rating -->
+    <RatingBar
+        android:id="@+id/vendor_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vendor_city"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor rating count -->
+    <TextView
+        android:id="@+id/vendor_rating_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_rating_count"
+        app:layout_constraintStart_toEndOf="@id/vendor_rating"
+        app:layout_constraintTop_toBottomOf="@id/vendor_city"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Vendor products list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vendor_products_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/vendor_rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/vendor_loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminate="true"
+        />
+
+
+    <!-- Error text -->
+    <TextView
+        android:id="@+id/vendor_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_text"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp"
+        />
+
+    <!-- Vendor products list empty text -->
+    <TextView
+        android:id="@+id/vendor_products_empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vendor_products_empty_text"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
