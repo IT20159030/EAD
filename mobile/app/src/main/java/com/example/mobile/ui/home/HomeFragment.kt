@@ -47,6 +47,7 @@ class HomeFragment : Fragment() {
     private lateinit var searchBar: EditText
     private lateinit var productsRecyclerView: RecyclerView
     private lateinit var vendorsRecyclerView: RecyclerView
+    private lateinit var categoryScrollView: View
 
     private lateinit var navController: NavController
 
@@ -69,6 +70,7 @@ class HomeFragment : Fragment() {
         searchBar = binding.searchBar
         productsRecyclerView = binding.productsRecyclerView
         vendorsRecyclerView = binding.vendorsRecyclerView
+        categoryScrollView = binding.categoryScrollView
 
         return root
     }
@@ -98,11 +100,14 @@ class HomeFragment : Fragment() {
                     productsRecyclerView.visibility = View.VISIBLE
                     vendorsRecyclerView.visibility = View.GONE
                     filterProducts(searchBar.text.toString())  // Load products
+                    categoryScrollView.visibility = View.VISIBLE
                 }
                 R.id.vendors_toggle -> {
                     productsRecyclerView.visibility = View.GONE
                     vendorsRecyclerView.visibility = View.VISIBLE
                     filterVendors(searchBar.text.toString())   // Load vendors
+                    categoryScrollView.visibility = View.GONE
+
                 }
 
             }
