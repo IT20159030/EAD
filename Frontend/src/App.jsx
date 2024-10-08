@@ -3,9 +3,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import useStore from "./store/zustandStore";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import ProductCategory from "./pages/product/ProductCategory";
 import Products from "./pages/product/Products";
@@ -27,8 +26,6 @@ import Order from "./pages/Order.jsx";
 import VenderStore from "./pages/VenderStore.jsx";
 
 function App() {
-  const { user, setUser, clearUser } = useStore();
-
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
@@ -36,7 +33,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
+              {/* <Route path="dashboard" element={<Dashboard />} /> */}
               <Route path="profile" element={<Profile />} />
 
               <Route path="categories" element={<ProductCategory />} />

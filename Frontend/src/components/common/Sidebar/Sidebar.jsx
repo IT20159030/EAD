@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  BsGrid,
+  // BsGrid,
   BsCommand,
   BsGrid3X3Gap,
   BsGrid3X2Gap,
@@ -32,11 +32,17 @@ const Sidebar = () => {
   };
 
   const navLinks = [
+    // {
+    //   title: "Dashboard",
+    //   path: "/dashboard",
+    //   icon: <BsGrid />,
+    //   roles: ["admin", "vendor", "csr"],
+    // },
     {
-      title: "Dashboard",
-      path: "/dashboard",
-      icon: <BsGrid />,
-      roles: ["admin", "vendor", "csr"],
+      title: "Orders",
+      path: "/orders",
+      icon: <BsBag />,
+      roles: ["admin", "vendor"],
     },
     {
       title: "Catalog",
@@ -56,12 +62,6 @@ const Sidebar = () => {
           roles: ["admin"],
         },
       ],
-    },
-    {
-      title: "Orders",
-      path: "/orders",
-      icon: <BsBag />,
-      roles: ["admin", "vendor"],
     },
     {
       title: "Users",

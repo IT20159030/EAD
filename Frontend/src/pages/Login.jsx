@@ -46,7 +46,7 @@ const Login = () => {
         id: res.profile.userId,
         nic: res.profile.nic,
       });
-      navigate("/", { replace: true });
+      navigate("/orders", { replace: true });
     } catch (error) {
       setError(error.response.data);
       setLoading(false);
