@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  BsGrid,
+  // BsGrid,
   BsCommand,
   BsGrid3X3Gap,
   BsGrid3X2Gap,
@@ -9,10 +9,12 @@ import {
   BsPerson,
   BsCaretDownFill,
   BsCaretUpFill,
+  BsHouse,
 } from "react-icons/bs";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import { useAuth } from "../../../provider/authProvider";
+import logo from "../../../assets/logo.png";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -37,6 +39,12 @@ const Sidebar = () => {
     //   roles: ["admin", "vendor", "csr"],
     // },
     {
+      title: "Orders",
+      path: "/orders",
+      icon: <BsBag />,
+      roles: ["admin", "vendor"],
+    },
+    {
       title: "Catalog",
       icon: <BsCommand />,
       roles: ["admin", "vendor"],
@@ -54,12 +62,6 @@ const Sidebar = () => {
           roles: ["admin"],
         },
       ],
-    },
-    {
-      title: "Orders",
-      path: "/orders",
-      icon: <BsBag />,
-      roles: ["admin", "vendor"],
     },
     {
       title: "Users",
@@ -92,6 +94,12 @@ const Sidebar = () => {
         },
       ],
     },
+    {
+      path: "/vendor-store",
+      title: "Store",
+      icon: <BsHouse />,
+      roles: ["vendor"],
+    },
   ];
 
   const filteredNavLinks = navLinks.filter((link) => link.roles.includes(role));
@@ -99,7 +107,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebarLogo">
-        <img src="/logo.png" alt="logo" />
+        <img src={logo} alt="logo" />
       </div>
       <div className="sidebarContent">
         {filteredNavLinks.map((link, index) => (
