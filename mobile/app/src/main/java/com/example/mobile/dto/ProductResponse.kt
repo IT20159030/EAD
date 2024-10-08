@@ -19,3 +19,8 @@ data class Product (
     var vendorId: String,
     var vendorName: String
 )
+
+data class ProductCategory (
+    @SerializedName("id") var categoryId: String,
+    var name: String
+)

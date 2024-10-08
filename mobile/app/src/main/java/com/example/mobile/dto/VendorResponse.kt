@@ -3,11 +3,16 @@ package com.example.mobile.dto
 import com.google.gson.annotations.SerializedName
 
 /*
-* Data class for vendor request calls
+* Data class for vendorView request calls
 * */
 
 data class Vendor(
     @SerializedName("id") var vendorId: String,
+    var vendorName: String = null.toString(),
+    var vendorEmail: String = null.toString(),
+    var vendorPhone: String = null.toString(),
+    var vendorAddress: String = null.toString(),
+    var vendorCity: String = null.toString(),
     var vendorRating: Double,
     var vendorRatingCount: Int,
     var reviews: List<Review>

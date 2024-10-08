@@ -75,8 +75,13 @@ class ProductAdapter(private var products: List<Product>, private var navControl
                     putString("productVendorId", product.vendorId)
                 }
                 // navigate to product view
-                navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)
+                if (navController.currentDestination?.id == R.id.navigation_home) {
+                    navController.navigate(R.id.action_navigation_home_to_viewProduct, bundle)
+                } else if (navController.currentDestination?.id == R.id.viewVendor) {
+                    navController.navigate(R.id.action_viewVendor_to_viewProduct, bundle)
+                }
             }
         }
     }
+
 }

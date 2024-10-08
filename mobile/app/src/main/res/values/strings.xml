@@ -52,7 +52,7 @@
     <string name="s_2f">%s%.2f</string>
     <string name="cancel_order">Cancel Order</string>
     <string name="product_image">Product Image</string>
-    <string name="search_for_products">Search for products…</string>
+    <string name="search_for_products">Search entire store...</string>
     <string name="orderid_s">OrderID: %s</string>
     <string name="date_s">Date: %s</string>
     <string name="show_items">Show Items ▼</string>
@@ -77,8 +77,30 @@
     <string name="enter_delivery_address">Enter Delivery Address</string>
     <string name="out_of_stock">Out of stock</string>
     <string name="review_request_prompt">You have purchased this item before. Would you like to leave a review?</string>
+    <string name="vendor_name">Vendor Name</string>
+    <string name="vendor_city">Vendor City\n</string>
+    <string name="vendor_rating">4.5</string>
+    <string name="vendor_details">Vendor Details</string>
+    <string name="products">Products</string>
+    <string name="vendors">Vendors</string>
+    <string name="sample_chip_text">Sample</string>
+    <string name="vendor_phone">Vendor Phone</string>
+    <string name="vendor_email">Vendor email</string>
+    <string name="vendor_address">Vendor Address</string>
+    <string name="rating_count">Rating count</string>
+    <string name="vendor_rating_count">Vendor Rating Count</string>
+    <string name="error_text">Error occured</string>
+    <string name="vendor_products_empty_text">No products to display</string>
+    <string name="email_icon">Email icon</string>
+    <string name="phone_icon">Phone Icon</string>
+    <string name="address_icon">Address Icon</string>
+    <string name="location_icon">City Icon</string>
 
-<!--    profile strings-->
+    <string-array name="search_filters">
+        <item>Products</item>
+        <item>Vendors</item>
+    </string-array>
+
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="nic_national_identity_card_number">NIC (National Identity Card Number)</string>

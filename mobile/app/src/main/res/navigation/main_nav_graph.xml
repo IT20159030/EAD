@@ -18,6 +18,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_navigation_home_to_viewVendor"
+            app:destination="@id/viewVendor"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -93,6 +100,43 @@
         <argument
             android:name="productVendorId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewVendor"
+        android:name="com.example.mobile.ui.vendorView.ViewVendorFragment"
+        android:label="@string/vendor_details"
+        tools:layout="@layout/fragment_view_vendor" >
+        <action
+            android:id="@+id/action_viewVendor_to_viewProduct"
+            app:destination="@id/viewProduct" >
+            <argument
+                android:name="productId"
+                app:argType="string" />
+            <argument
+                android:name="productName"
+                app:argType="string" />
+            <argument
+                android:name="productPrice"
+                app:argType="float" />
+            <argument
+                android:name="productImageUrl"
+                app:argType="string" />
+            <argument
+                android:name="productDescription"
+                app:argType="string" />
+            <argument
+                android:name="productStock"
+                app:argType="integer" />
+            <argument
+                android:name="productCategory"
+                app:argType="string" />
+            <argument
+                android:name="productVendor"
+                app:argType="string" />
+            <argument
+                android:name="productVendorId"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/orderList"
