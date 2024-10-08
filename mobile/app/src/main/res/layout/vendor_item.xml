@@ -53,14 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:isIndicator="true"
-                android:progressTint="@color/purple_700"
-                android:numStars="5"
-                android:rating="4.5"
-                android:stepSize="0.1"
-                android:layout_gravity="start"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                tools:rating="@string/vendor_rating" />
+                android:progressTint="@color/purple_700" />
 
             <!-- Rating Count -->
             <TextView
