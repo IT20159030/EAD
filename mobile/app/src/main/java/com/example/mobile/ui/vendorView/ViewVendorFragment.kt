@@ -121,10 +121,12 @@ class ViewVendorFragment : Fragment() {
                     this.vendorCity.text = vendor.vendorCity
                     this.vendorRating.rating = vendor.vendorRating.toFloat()
                     this.vendorRatingCount.text = String.format("(%d)", vendor.vendorRatingCount)
+                    vendorLoadingIndicator.visibility = View.GONE
                 }
                 is ApiResponse.Failure -> {
                     vendorErrorText.visibility = View.VISIBLE
                     vendorErrorText.text = response.errorMessage
+                    vendorLoadingIndicator.visibility = View.GONE
                 }
 
                 ApiResponse.Loading -> {
@@ -143,10 +145,12 @@ class ViewVendorFragment : Fragment() {
                     } else {
                         productAdapter.updateList(products)
                     }
+                    vendorLoadingIndicator.visibility = View.GONE
                 }
                 is ApiResponse.Failure -> {
                     vendorErrorText.visibility = View.VISIBLE
                     vendorErrorText.text = response.errorMessage
+                    vendorLoadingIndicator.visibility = View.GONE
                 }
 
                 ApiResponse.Loading -> {
