@@ -201,6 +201,23 @@ const AddEditStaffModal = ({
           <Spinner animation="border" variant="primary" />
         ) : (
           <>
+            {!staffToEdit && (
+              <Button
+                variant="outline-danger"
+                onClick={() =>
+                  setFormData({
+                    firstName: "John",
+                    lastName: "Doe",
+                    nic: "982121213v",
+                    email: "newcsr@example.com",
+                    password: "password",
+                    role: "csr",
+                  })
+                }
+              >
+                DEMO FILL
+              </Button>
+            )}
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>

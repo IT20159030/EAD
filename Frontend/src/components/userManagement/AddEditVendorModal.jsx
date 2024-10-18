@@ -312,6 +312,30 @@ const AddEditVendorModal = ({
           <Spinner animation="border" variant="primary" />
         ) : (
           <>
+            {!vendorToEdit && (
+              <Button
+                variant="outline-danger"
+                onClick={() =>
+                  setFormData({
+                    vendorDetails: {
+                      vendorName: "Neo Tech Store",
+                      vendorEmail: "info@neotech.com",
+                      vendorPhone: "0112345678",
+                      vendorAddress: "No. 100, Galle Road, Bambalapitiya",
+                      vendorCity: "Colombo 04",
+                    },
+                    vendorAccountDetails: {
+                      name: "Han Solo",
+                      email: "newvendor@example.com",
+                      nic: "982121212v",
+                      password: "password",
+                    },
+                  })
+                }
+              >
+                DEMO FILL
+              </Button>
+            )}
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>

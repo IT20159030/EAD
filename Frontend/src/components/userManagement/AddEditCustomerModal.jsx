@@ -31,6 +31,7 @@ const AddEditCustomerModal = ({
         firstName: customerToEdit.firstName || "",
         lastName: customerToEdit.lastName || "",
         nic: customerToEdit.nic || "",
+        email: customerToEdit.email || "",
         password: "",
         status: customerToEdit.status || "Deactivated",
       });
@@ -222,6 +223,22 @@ const AddEditCustomerModal = ({
           <Spinner animation="border" variant="primary" />
         ) : (
           <>
+            {!customerToEdit && (
+              <Button
+                variant="outline-danger"
+                onClick={() =>
+                  setFormData({
+                    firstName: "Shawn",
+                    lastName: "Williams",
+                    nic: "982121211v",
+                    email: "newcustomer@example.com",
+                    password: "password",
+                  })
+                }
+              >
+                DEMO FILL
+              </Button>
+            )}
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
